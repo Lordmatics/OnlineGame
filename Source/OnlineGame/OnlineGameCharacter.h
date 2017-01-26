@@ -12,8 +12,6 @@ struct FPlayerData
 
 		//Always make USTRUCT variables into UPROPERTY()
 		//    any non-UPROPERTY() struct vars are not replicated
-
-
 	UPROPERTY(EditAnywhere)
 		FString PlayerName;
 
