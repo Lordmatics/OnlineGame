@@ -13,6 +13,10 @@ class ONLINEGAME_API AOnlineGameLobbyPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
+private:
+
+public:
+
 	
 	
 	
