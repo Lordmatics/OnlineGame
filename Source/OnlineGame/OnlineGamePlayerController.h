@@ -57,6 +57,4 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "C++ Functions")
 		void LoadGameViaSlot(const FString& SlotName, int32 UserIndex);
 
-private:
-
 };

@@ -20,3 +20,9 @@ void UOnlineGameInstance::DestroySessionCaller(AOnlineGamePlayerController* MyPl
 	}
 }
 
+void UOnlineGameInstance::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	//DOREPLIFETIME(AOnlineGameGameMode, 5.0f);
+}

@@ -38,9 +38,9 @@ public:
 	//	void RespawnPlayer(APlayerController* _PlayerController, ACharacter* _PlayerCharacter);
 	//virtual void RespawnPlayer_Implementation(APlayerController* _PlayerController, ACharacter* _PlayerCharacter);
 
-	UFUNCTION(Reliable, Server, WithValidation)
-		void ServerRespawnPlayerNetwork(APlayerController* _PlayerController, ACharacter* _PlayerCharacter);
-	virtual void ServerRespawnPlayerNetwork_Implementation(APlayerController* _PlayerController, ACharacter* _PlayerCharacter);
-	virtual bool ServerRespawnPlayerNetwork_Validate(APlayerController* _PlayerController, ACharacter* _PlayerCharacter);
+	UFUNCTION(BlueprintCallable, Category = "C++ Functions", Reliable, Server, WithValidation)
+		void ServerRespawnPlayerNetwork(APlayerController* _PlayerController, TSubclassOf<class ACharacter> _PlayerCharacter);
+	virtual void ServerRespawnPlayerNetwork_Implementation(APlayerController* _PlayerController, TSubclassOf<class ACharacter> _PlayerCharacter);
+	virtual bool ServerRespawnPlayerNetwork_Validate(APlayerController* _PlayerController, TSubclassOf<class ACharacter> _PlayerCharacter);
 
 };

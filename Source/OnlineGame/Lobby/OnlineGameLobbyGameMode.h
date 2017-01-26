@@ -13,7 +13,10 @@ class ONLINEGAME_API AOnlineGameLobbyGameMode : public AGameMode
 {
 	GENERATED_BODY()
 	
-	
+private:
+
+public:
+
 	
 	
 };

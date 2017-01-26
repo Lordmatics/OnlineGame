@@ -15,9 +15,21 @@ class ONLINEGAME_API UOnlineGameInstance : public UGameInstance
 	
 private:
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Transient)
+		bool bSaveFileExists;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Transient)
+		FString PlayerSaveString = FString(("PlayerSaveString"));
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Replicated)
+		FString TheServerName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Replicated)
+		int MaxNumberOfPlayers = 0;
 public:
 
 	void DestroySessionCaller(class AOnlineGamePlayerController* MyPlayerController);
 	
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	
 };

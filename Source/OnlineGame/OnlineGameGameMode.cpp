@@ -5,6 +5,7 @@
 #include "OnlineGameCharacter.h"
 #include "OnlineGamePlayerController.h"
 #include "GameInstance/OnlineGameInstance.h"
+#include "OnlineGameCharacter.h"
 #include "EngineUtils.h"
 
 AOnlineGameGameMode::AOnlineGameGameMode()
@@ -42,7 +43,7 @@ void AOnlineGameGameMode::Logout(AController* Exiting)
 	}
 }
 
-void AOnlineGameGameMode::ServerRespawnPlayerNetwork_Implementation(APlayerController* _PlayerController, ACharacter* _PlayerCharacter)
+void AOnlineGameGameMode::ServerRespawnPlayerNetwork_Implementation(APlayerController* _PlayerController, TSubclassOf<ACharacter> _PlayerCharacter)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnlineGameMode: RespawnPlayerNetwork Ran"));
 	// If World Failed for some reason 
@@ -69,14 +70,14 @@ void AOnlineGameGameMode::ServerRespawnPlayerNetwork_Implementation(APlayerContr
 	// Respawn There.
 	int SpawnIndex = FMath::RandRange(0, PlayerStarts.Num() - 1);
 	const FTransform SpawnTransform = PlayerStarts[SpawnIndex]->GetActorTransform();
-	ACharacter* SpawnedCharacter = World->SpawnActor<ACharacter>(_PlayerCharacter->GetClass(), SpawnTransform);
+	AOnlineGameCharacter* SpawnedCharacter = World->SpawnActor<AOnlineGameCharacter>(_PlayerCharacter, SpawnTransform);
 	if (SpawnedCharacter != nullptr)
 	{
 		_PlayerController->Possess(SpawnedCharacter);
 	}
 }
 
-bool AOnlineGameGameMode::ServerRespawnPlayerNetwork_Validate(APlayerController* _PlayerController, ACharacter* _PlayerCharacter)
+bool AOnlineGameGameMode::ServerRespawnPlayerNetwork_Validate(APlayerController* _PlayerController, TSubclassOf<ACharacter> _PlayerCharacter)
 {
 	return true;
 }

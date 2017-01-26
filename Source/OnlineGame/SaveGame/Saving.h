@@ -14,7 +14,7 @@ class ONLINEGAME_API USaving : public USaveGame
 	GENERATED_BODY()
 	
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated, Category = "C++ Variables", meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Replicated, Category = "C++ Variables", meta = (AllowPrivateAccess = true))
 		FMyPlayerInfo PlayerSettings;
 public:
 
