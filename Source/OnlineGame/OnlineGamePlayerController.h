@@ -19,11 +19,10 @@ public:
 
 	virtual void BeginPlay() override;
 	
-	//UFUNCTION(reliable, server, WithValidation)
-	//void ServerPassCharacterInfoToPlayer();
-
-	//virtual void PassCharacterInfoToPlayer_Implementation();
-	//virtual bool PassCharacterInfoToPlayer_Validate();
+	UFUNCTION(Reliable, Server, WithValidation)
+		void PassCharacterInfoToPlayer();
+	virtual void PassCharacterInfoToPlayer_Implementation();
+	virtual bool PassCharacterInfoToPlayer_Validate();
 	
 private:
 

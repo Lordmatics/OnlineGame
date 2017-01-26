@@ -13,17 +13,12 @@ void AOnlineGamePlayerController::BeginPlay()
 	Super::BeginPlay();
 }
 
-//void AOnlineGamePlayerController::ServerPassCharacterInfoToPlayer()
-//{
-//	UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: PassCharacterInfoToPlayer Ran"));
-//}
-//
-//void AOnlineGamePlayerController::ServerPassCharacterInfoToPlayer_Implementation()
-//{
-//	ServerPassCharacterInfoToPlayer();
-//}
-//
-//bool AOnlineGamePlayerController::ServerPassCharacterInfoToPlayer_Validate()
-//{
-//	return true;
-//}
+void AOnlineGamePlayerController::PassCharacterInfoToPlayer_Implementation()
+{
+	UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: PassCharacterInfoToPlayer Ran"));
+}
+
+bool AOnlineGamePlayerController::PassCharacterInfoToPlayer_Validate()
+{
+	return true;
+}
