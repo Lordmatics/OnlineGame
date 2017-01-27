@@ -53,16 +53,16 @@ public:
 
 	// Utility Functions
 	UFUNCTION(BlueprintCallable, Category = "C++ Functions")
-		void SaveGameCheck();
+		void SaveGameCheckCode();
 
 	UFUNCTION(BlueprintCallable, Category = "C++ Functions")
-		void LoadGame();
+		void LoadGameCode();
 
 	UFUNCTION(BlueprintCallable, Category = "C++ Functions")
-		void SaveGame();
+		void SaveGameCode();
 
 	UFUNCTION(BlueprintCallable, Category = "C++ Functions")
-		void CharacterCheck();
+		void CharacterCheckCode();
 
 	// Server / Client functions
 

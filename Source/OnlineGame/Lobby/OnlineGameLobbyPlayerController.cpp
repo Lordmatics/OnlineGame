@@ -18,22 +18,22 @@ void AOnlineGameLobbyPlayerController::GetLifetimeReplicatedProps(TArray<FLifeti
 	//DOREPLIFETIME(AOnlineGameGameMode, 5.0f);
 }
 
-void AOnlineGameLobbyPlayerController::SaveGameCheck()
+void AOnlineGameLobbyPlayerController::SaveGameCheckCode()
 {
 	const FString& SlotName = PlayerSaveString;
 	bool bSaveExist = UGameplayStatics::DoesSaveGameExist(SlotName, 0);
 	if (bSaveExist)
 	{
-		LoadGame();
-		SaveGame();
+		LoadGameCode();
+		SaveGameCode();
 	}
 	else
 	{
-		SaveGame();
+		SaveGameCode();
 	}
 }
 
-void AOnlineGameLobbyPlayerController::SaveGame()
+void AOnlineGameLobbyPlayerController::SaveGameCode()
 {
 	const FString& SlotName = PlayerSaveString;
 	if (PlayerSaveGameRef == nullptr)
@@ -49,7 +49,7 @@ void AOnlineGameLobbyPlayerController::SaveGame()
 	UGameplayStatics::SaveGameToSlot(PlayerSaveGameRef, SlotName, 0);
 }
 
-void AOnlineGameLobbyPlayerController::LoadGame()
+void AOnlineGameLobbyPlayerController::LoadGameCode()
 {
 	const FString& SlotName = PlayerSaveString;
 	USaving* SaveData = Cast<USaving>(UGameplayStatics::LoadGameFromSlot(SlotName, 0));
@@ -61,7 +61,7 @@ void AOnlineGameLobbyPlayerController::LoadGame()
 	}
 }
 
-void AOnlineGameLobbyPlayerController::CharacterCheck()
+void AOnlineGameLobbyPlayerController::CharacterCheckCode()
 {
 	UWorld* const World = GetWorld();
 	if (World == nullptr) return;
@@ -85,7 +85,7 @@ void AOnlineGameLobbyPlayerController::CharacterCheck()
 void AOnlineGameLobbyPlayerController::InitialSetup_Implementation()
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: InitialSetup Ran"));
-	SaveGameCheck();
+	SaveGameCheckCode();
 	CallUpdate(ThePlayerSettings, false);
 }
 
@@ -221,7 +221,7 @@ void AOnlineGameLobbyPlayerController::AssignSelectedCharacter_Implementation(in
 	PreviousSelectionIndex = SelectedCharacterIndex;
 	PlayerLogo = _CharImage;
 	SelectedCharacterIndex = _CharID;
-	CharacterCheck();
+	CharacterCheckCode();
 
 }
 
@@ -235,7 +235,7 @@ void AOnlineGameLobbyPlayerController::AssignPlayer_Implementation(TSubclassOf<c
 	UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: AssignPlayer Ran"));
 	ThePlayerSettings.CharacterClass = CharClass;
 	ThePlayerSettings.PlayerLogo = _CharImage;
-	SaveGame();
+	SaveGameCode();
 	CallUpdate(ThePlayerSettings, false);
 }
 
