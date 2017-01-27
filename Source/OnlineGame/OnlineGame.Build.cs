@@ -6,7 +6,7 @@ public class OnlineGame : ModuleRules
 {
 	public OnlineGame(TargetInfo Target)
 	{
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "UMG", "Slate", "SlateCore", "OnlineSubsystem" });
 
         DynamicallyLoadedModuleNames.Add("OnlineSubsystemSteam");
     }

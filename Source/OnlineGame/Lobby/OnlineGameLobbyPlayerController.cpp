@@ -4,6 +4,7 @@
 #include "OnlineGameLobbyPlayerController.h"
 #include "Lobby/OnlineGameLobbyGameMode.h"
 #include "SaveGame/Saving.h"
+#include "Runtime/UMG/Public/UMG.h"
 
 void AOnlineGameLobbyPlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
@@ -82,6 +83,7 @@ void AOnlineGameLobbyPlayerController::CharacterCheckCode()
 	AssignPlayer(LobbyGameMode->GetCharactersArray()[SelectedCharacterIndex]->GetClass(), PlayerLogo);
 }
 
+// Check for save game, then update the Server
 void AOnlineGameLobbyPlayerController::InitialSetup_Implementation()
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: InitialSetup Ran"));
@@ -94,14 +96,31 @@ bool AOnlineGameLobbyPlayerController::InitialSetup_Validate()
 	return true;
 }
 
+// Setup and Display Lobby Menu
 void AOnlineGameLobbyPlayerController::SetupLobbyMenu_Implementation(const FString& _ServerName)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: SetupLobbyMenu Ran"));
-	bShowMouseCursor = true;
 	// Create Lobby Menu Widget , pass in _ServerName, then set this widget to variable
 	// Add to Viewport
 	// Set Input mode to Game + UI
-
+	if (TestLobbyWidgetClass != nullptr)
+	{
+		if (!TestLobbyWidgetInstance)
+		{
+			// MIGHT NEED TO MAKE A CHILD OF UUSERWIDGET FOR SERVER NAME PASS IN
+			TestLobbyWidgetInstance = CreateWidget<UUserWidget>(this, TestLobbyWidgetClass);
+			if (!TestLobbyWidgetInstance->GetIsVisible())
+			{
+				TestLobbyWidgetInstance->AddToViewport();
+				FInputModeGameAndUI Mode;
+				Mode.SetHideCursorDuringCapture(true);
+				Mode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+				Mode.SetWidgetToFocus(TestLobbyWidgetInstance->GetCachedWidget());
+				SetInputMode(Mode);
+				bShowMouseCursor = true;
+			}
+		}
+	}
 }
 
 bool AOnlineGameLobbyPlayerController::SetupLobbyMenu_Validate(const FString& _ServerName)
@@ -109,6 +128,7 @@ bool AOnlineGameLobbyPlayerController::SetupLobbyMenu_Validate(const FString& _S
 	return true;
 }
 
+// Assigns the updated character selection / Tells everyone to update their lobby menus
 void AOnlineGameLobbyPlayerController::CallUpdate_Implementation(FMyPlayerInfo _PlayerSettings, bool bChangedStatus)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: CallUpdate Ran"));
@@ -128,17 +148,23 @@ bool AOnlineGameLobbyPlayerController::CallUpdate_Validate(FMyPlayerInfo _Player
 	return true;
 }
 
+// Update player List when called
 void AOnlineGameLobbyPlayerController::AddPlayerInfo_Implementation(const TArray<FMyPlayerInfo>& _ConnectedPlayerInfoArray)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: AddPlayerInfo Ran"));
 	ConnectedPlayersInfoArray = _ConnectedPlayerInfoArray;
 	// If Lobby Menu Widget is valid
-	// Clear Player List
-	size_t Length = ConnectedPlayersInfoArray.Num();
-	for (size_t i = 0; i < Length; i++)
+	if (TestLobbyWidgetInstance != nullptr)
 	{
-		// Lobby Menu Widget -> UpdatePlayerWindow(ConnectedPlayersInfoArray[i]);
+		//TestLobbyWidgetInstance->ClearPlayerList();
+		// Clear Player List
+		size_t Length = ConnectedPlayersInfoArray.Num();
+		for (size_t i = 0; i < Length; i++)
+		{
+			//TestLobbyWidgetInstance->UpdatePlayerWindow(ConnectedPlayersInfoArray[i]);
+		}
 	}
+
 }
 
 bool AOnlineGameLobbyPlayerController::AddPlayerInfo_Validate(const TArray<FMyPlayerInfo>& _ConnectedPlayerInfoArray)
@@ -146,6 +172,7 @@ bool AOnlineGameLobbyPlayerController::AddPlayerInfo_Validate(const TArray<FMyPl
 	return true;
 }
 
+// Update Lobby info on clients
 void AOnlineGameLobbyPlayerController::UpdateLobbySettings_Implementation(UTexture2D* _MapImage, const FString& _MapName, const FString& _MapTime)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: UpdateLobbySettings Ran"));
@@ -153,6 +180,12 @@ void AOnlineGameLobbyPlayerController::UpdateLobbySettings_Implementation(UTextu
 	// And Name
 	// And Time
 	// ETC
+	if (TestLobbyWidgetInstance != nullptr)
+	{
+		//TestLobbyWidgetInstance->SetMapImage(_MapImage);
+		//TestLobbyWidgetInstance->SetMapName(_MapName);
+		//TestLobbyWidgetInstance->SetMapTime(_MapTime);
+	}
 }
 
 bool AOnlineGameLobbyPlayerController::UpdateLobbySettings_Validate(UTexture2D* _MapImage, const FString& _MapName, const FString& _MapTime)
@@ -160,12 +193,22 @@ bool AOnlineGameLobbyPlayerController::UpdateLobbySettings_Validate(UTexture2D* 
 	return true;
 }
 
+// Replace Lobby with LoadingScreen
 void AOnlineGameLobbyPlayerController::ShowLoadingScreen_Implementation()
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: Show LoadingScreen Ran"));
 	// Remove Lobby Menu Widget from Parent
 	// Create Loading Screen Widget
 	// Add to Viewport
+	if (TestLobbyWidgetInstance != nullptr)
+	{
+		TestLobbyWidgetInstance->RemoveFromParent();
+		UUserWidget* LoadingWidget = CreateWidget<UUserWidget>(this, LoadingScreenWidgetClass);
+		if (LoadingWidget != nullptr)
+		{
+			LoadingWidget->AddToViewport();
+		}
+	}
 }
 
 bool AOnlineGameLobbyPlayerController::ShowLoadingScreen_Validate()
@@ -173,11 +216,16 @@ bool AOnlineGameLobbyPlayerController::ShowLoadingScreen_Validate()
 	return true;
 }
 
+// Update Current Number of Players in Lobby
 void AOnlineGameLobbyPlayerController::UpdateNumberOfPlayers_Implementation(int CurrentNum, int TotalNum)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: Update Num Of Players Ran"));
 	// If Lobby Menu Widget is Valid
 	// Set Text to Cur of Total 
+	if (TestLobbyWidgetInstance != nullptr)
+	{
+		//TestLobbyWidgetInstance->UpdatePlayersNumberDisplay(CurrentNum, TotalNum);
+	}
 }
 
 bool AOnlineGameLobbyPlayerController::UpdateNumberOfPlayers_Validate(int CurrentNum, int TotalNum)
@@ -197,16 +245,20 @@ bool AOnlineGameLobbyPlayerController::Kicked_Validate()
 	return true;
 }
 
+// Update Available Characters - Make others inactive
 void AOnlineGameLobbyPlayerController::UpdateAvailableCharacters_Implementation(const TArray<bool>& _AvailCharacters)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: UpdateAvailableCharacters Ran"));
 	bAvailableCharactersArray = _AvailCharacters;
 	// If LobbyMenuWidget is Valid
-	// Use Character Select and Character Array from Widget
-	size_t Length = 5; // LobbyMenuWidget.Array.Num();
-	for (size_t i = 0; i < Length; i++)
+	if (TestLobbyWidgetInstance != nullptr)
 	{
-		//LobbyArray[i]->SetEnabled(!bAvailableCharactersArray[LobbyArray[i]]);
+		// Use Character Select and Character Array from Widget
+		size_t Length = 5; // LobbyMenuWidget.Array.Num();
+		for (size_t i = 0; i < Length; i++)
+		{
+			//LobbyArray[i]->SetEnabled(!bAvailableCharactersArray[LobbyArray[i]]);
+		}
 	}
 }
 
@@ -215,6 +267,7 @@ bool AOnlineGameLobbyPlayerController::UpdateAvailableCharacters_Validate(const 
 	return true;
 }
 
+// Handle Character Selection / Swapping Etc
 void AOnlineGameLobbyPlayerController::AssignSelectedCharacter_Implementation(int _CharID, UTexture2D* _CharImage)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: AssignSelectedCharacter Ran"));
@@ -230,6 +283,7 @@ bool AOnlineGameLobbyPlayerController::AssignSelectedCharacter_Validate(int _Cha
 	return true;
 }
 
+// Assign Selected Player - And Update for all Clients
 void AOnlineGameLobbyPlayerController::AssignPlayer_Implementation(TSubclassOf<class ACharacter> CharClass, UTexture2D* _CharImage)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: AssignPlayer Ran"));
@@ -244,6 +298,7 @@ bool AOnlineGameLobbyPlayerController::AssignPlayer_Validate(TSubclassOf<class A
 	return true;
 }
 
+// Process incoming chat message and tells all player controllers to run update chat
 void AOnlineGameLobbyPlayerController::GetMyChatMessage_Implementation(const FString& TextToSend)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: GetMyChatMessage Ran"));
@@ -272,10 +327,15 @@ bool AOnlineGameLobbyPlayerController::GetMyChatMessage_Validate(const FString& 
 	return true;
 }
 
+// Update Display
 void AOnlineGameLobbyPlayerController::UpdateMyChat_Implementation(const FString& _SenderName, const FString& _SenderText)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: UpdateChat Ran"));
 	// LobbyMenu Widget -> Chat Window -> UpdateChatWindow(SenderName,SenderText);
+	if (TestLobbyWidgetInstance != nullptr)
+	{
+		//TestLobbyWidgetInstance->UpdateChatWindow(_SenderName, _SenderText);
+	}
 }
 
 bool AOnlineGameLobbyPlayerController::UpdateMyChat_Validate(const FString& _SenderName, const FString& _SenderText)

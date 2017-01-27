@@ -15,6 +15,16 @@ class ONLINEGAME_API AOnlineGameLobbyPlayerController : public APlayerController
 	GENERATED_BODY()
 	
 private:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Transient)
+		TSubclassOf<class UUserWidget> LoadingScreenWidgetClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Transient)
+		TSubclassOf<class UUserWidget> TestLobbyWidgetClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Transient)
+		class UUserWidget* TestLobbyWidgetInstance;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Transient)
 		FString PlayerSaveString = FString(TEXT("PlayerSaveString"));
 

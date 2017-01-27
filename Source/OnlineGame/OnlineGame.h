@@ -6,6 +6,8 @@
 //#include "Engine.h"
 
 #include "MyStructs.h"
-
+#include "UnrealNetwork.h"
+#include "Online.h"
+//#include "Online.h"
 
 #endif
