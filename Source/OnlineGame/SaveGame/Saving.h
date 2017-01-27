@@ -19,6 +19,8 @@ private:
 public:
 
 	FORCEINLINE FMyPlayerInfo GetPlayerStruct() const { return PlayerSettings; }
+	
+	FORCEINLINE void SetPlayerStruct(FMyPlayerInfo _NewPlayerInfo) { PlayerSettings = _NewPlayerInfo; }
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 

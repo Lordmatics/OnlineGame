@@ -55,6 +55,15 @@ private:
 		int MaxNumberOfPlayers;
 public:
 
+	FORCEINLINE TArray<APlayerController*> GetPlayerControllersArray() const { return PlayerControllersArray; }
+
+	FORCEINLINE TArray<TSubclassOf<ACharacter>> GetCharactersArray() const { return CharactersArray; }
+
+	FORCEINLINE TArray<bool> GetAvailableCharactersArray() const { return bAvailableCharactersArray; }
+
+	FORCEINLINE void SetAvailableCharactersArrayElement(int _Index, bool _Condition) { bAvailableCharactersArray[_Index] = _Condition; }
+
+
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	
 };
