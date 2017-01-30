@@ -20,15 +20,20 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
 		int HelloWorld = 0;
 
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
-	//	UTextBlock* TestTextBlock;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", Replicated)
+		FText TextForBind;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
+		UTextBlock* ActualText;
 
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
 	//	UButton* TestButton;
 
+	void SetActualText(FText Message);
 protected:
 	virtual void NativeConstruct() override;
 
 	TSharedRef<SWidget> RebuildWidget() override;
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };

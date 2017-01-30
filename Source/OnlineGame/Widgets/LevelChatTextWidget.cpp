@@ -56,3 +56,18 @@ TSharedRef<SWidget> ULevelChatTextWidget::RebuildWidget()
 
 	return Widget;
 }
+
+void ULevelChatTextWidget::SetActualText(FText Message)
+{
+	if (ActualText != nullptr)
+	{
+		ActualText->Text = Message;
+	}
+}
+
+void ULevelChatTextWidget::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	//DOREPLIFETIME(AOnlineGameGameMode, 5.0f);
+}
