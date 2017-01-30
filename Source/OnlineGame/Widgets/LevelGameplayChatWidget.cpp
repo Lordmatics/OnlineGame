@@ -6,3 +6,7 @@
 
 
 
+void ULevelGameplayChatWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+}

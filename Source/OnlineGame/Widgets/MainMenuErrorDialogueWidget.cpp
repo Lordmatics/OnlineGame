@@ -6,3 +6,7 @@
 
 
 
+void UMainMenuErrorDialogueWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+}

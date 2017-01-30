@@ -6,3 +6,7 @@
 
 
 
+void ULobbyGameSettingsWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+}

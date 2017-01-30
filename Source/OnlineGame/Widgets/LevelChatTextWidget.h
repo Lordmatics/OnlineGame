@@ -20,4 +20,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
 		int HelloWorld = 0;
 	
+protected:
+	virtual void NativeConstruct() override;
+
 };

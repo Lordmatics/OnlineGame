@@ -16,6 +16,9 @@ class ONLINEGAME_API UMainMenuErrorDialogueWidget : public UUserWidget
 private:
 
 public:
+
+protected:
+	virtual void NativeConstruct() override;
 	
 	
 };

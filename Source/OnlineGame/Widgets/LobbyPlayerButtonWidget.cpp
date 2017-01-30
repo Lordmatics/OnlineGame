@@ -6,3 +6,7 @@
 
 
 
+void ULobbyPlayerButtonWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+}

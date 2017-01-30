@@ -6,3 +6,7 @@
 
 
 
+void UMainMenuWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+}

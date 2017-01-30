@@ -6,3 +6,7 @@
 
 
 
+void ULobbyCharacterSelectWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+}

@@ -16,6 +16,9 @@ class ONLINEGAME_API ULevelGameplayChatWidget : public UUserWidget
 private:
 
 public:
+
+protected:
+	virtual void NativeConstruct() override;
 	
 	
 };

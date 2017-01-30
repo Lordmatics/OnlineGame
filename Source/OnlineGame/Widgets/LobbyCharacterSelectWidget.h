@@ -17,5 +17,8 @@ class ONLINEGAME_API ULobbyCharacterSelectWidget : public UUserWidget
 private:
 
 public:
+
+protected:
+	virtual void NativeConstruct() override;
 	
 };

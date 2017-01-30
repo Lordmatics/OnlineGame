@@ -6,3 +6,7 @@
 
 
 
+void ULevelLoadingScreenWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+}

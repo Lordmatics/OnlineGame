@@ -6,3 +6,7 @@
 
 
 
+void ULobbyUserWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+}

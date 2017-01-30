@@ -17,5 +17,8 @@ class ONLINEGAME_API UMainMenuWidget : public UUserWidget
 private:
 
 public:
+
+protected:
+	virtual void NativeConstruct() override;
 	
 };
