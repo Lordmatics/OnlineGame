@@ -70,7 +70,9 @@ void AOnlineGameGameMode::ServerRespawnPlayerNetwork_Implementation(APlayerContr
 	// Respawn There.
 	int SpawnIndex = FMath::RandRange(0, PlayerStarts.Num() - 1);
 	const FTransform SpawnTransform = PlayerStarts[SpawnIndex]->GetActorTransform();
-	AOnlineGameCharacter* SpawnedCharacter = World->SpawnActor<AOnlineGameCharacter>(_PlayerCharacter, SpawnTransform);
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	AOnlineGameCharacter* SpawnedCharacter = World->SpawnActor<AOnlineGameCharacter>(_PlayerCharacter, SpawnTransform, SpawnParams);
 	if (SpawnedCharacter != nullptr)
 	{
 		_PlayerController->Possess(SpawnedCharacter);

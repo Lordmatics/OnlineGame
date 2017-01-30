@@ -28,6 +28,10 @@ private:
 		int MaxNumberOfPlayers = 0;
 public:
 
+	FORCEINLINE FString GetServerName() const { return TheServerName; }
+	
+	FORCEINLINE int GetMaxNumOfPlayers() const { return MaxNumberOfPlayers; }
+
 	void DestroySessionCaller(class AOnlineGamePlayerController* MyPlayerController);
 	
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;

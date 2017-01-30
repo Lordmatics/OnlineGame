@@ -73,9 +73,9 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	
 	UFUNCTION(BlueprintCallable, Category = "C++ Functions", Reliable, Server, WithValidation)
-		void RespawnPlayers();
-	virtual void RespawnPlayers_Implementation();
-	virtual bool RespawnPlayers_Validate();
+		void RespawnPlayers(APlayerController* _PlayerController);
+	virtual void RespawnPlayers_Implementation(APlayerController* _PlayerController);
+	virtual bool RespawnPlayers_Validate(APlayerController* _PlayerController);
 
 	UFUNCTION(BlueprintCallable, Category = "C++ Functions", Reliable, Server, WithValidation)
 		void EveryoneUpdate();
@@ -83,23 +83,23 @@ public:
 	virtual bool EveryoneUpdate_Validate();
 
 	UFUNCTION(BlueprintCallable, Category = "C++ Functions", Reliable, Server, WithValidation)
-		void ServerUpdateGameSettings();
-	virtual void ServerUpdateGameSettings_Implementation();
-	virtual bool ServerUpdateGameSettings_Validate();
+		void ServerUpdateGameSettings(UTexture2D* _MapImage, const FString& _MapName, const FString& _MapTime, int _MapID);
+	virtual void ServerUpdateGameSettings_Implementation(UTexture2D* _MapImage, const FString& _MapName, const FString& _MapTime, int _MapID);
+	virtual bool ServerUpdateGameSettings_Validate(UTexture2D* _MapImage, const FString& _MapName, const FString& _MapTime, int _MapID);
 
 	UFUNCTION(BlueprintCallable, Category = "C++ Functions")//, Reliable, Server, WithValidation)
 		void LaunchTheGame();
 
 	UFUNCTION(BlueprintCallable, Category = "C++ Functions", Reliable, Server, WithValidation)
-		void YouHaveBeenKicked();
-	virtual void YouHaveBeenKicked_Implementation();
-	virtual bool YouHaveBeenKicked_Validate();
+		void YouHaveBeenKicked(int _PlayerID);
+	virtual void YouHaveBeenKicked_Implementation(int _PlayerID);
+	virtual bool YouHaveBeenKicked_Validate(int _PlayerID);
 
 	UFUNCTION(BlueprintCallable, Category = "C++ Functions")//, Reliable, Server, WithValidation)
 		void AddToKickList();
 	
 	UFUNCTION(BlueprintCallable, Category = "C++ Functions", Reliable, Server, WithValidation)
-		void SwapCharacters();
-	virtual void SwapCharacters_Implementation();
-	virtual bool SwapCharacters_Validate();
+		void SwapCharacters(APlayerController* _PlayerController, TSubclassOf<class AOnlineGameCharacter> _CharacterClass, bool _bChangeStatus);
+	virtual void SwapCharacters_Implementation(APlayerController* _PlayerController, TSubclassOf<class AOnlineGameCharacter> _CharacterClass, bool _bChangeStatus);
+	virtual bool SwapCharacters_Validate(APlayerController* _PlayerController, TSubclassOf<class AOnlineGameCharacter> _CharacterClass, bool _bChangeStatus);
 };

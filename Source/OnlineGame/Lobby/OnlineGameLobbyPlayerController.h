@@ -61,6 +61,11 @@ public:
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
+	FORCEINLINE FMyPlayerInfo GetPlayerSettings() const { return ThePlayerSettings; }
+
+	FORCEINLINE int GetSelectedCharacterIndex() const { return SelectedCharacterIndex; }
+
+	FORCEINLINE class UUserWidget* GetLobbyWidgetInstance() const { return TestLobbyWidgetInstance; }
 	// Utility Functions
 	UFUNCTION(BlueprintCallable, Category = "C++ Functions")
 		void SaveGameCheckCode();
