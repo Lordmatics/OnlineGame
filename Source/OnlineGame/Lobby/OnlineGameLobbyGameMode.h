@@ -64,6 +64,42 @@ public:
 	FORCEINLINE void SetAvailableCharactersArrayElement(int _Index, bool _Condition) { bAvailableCharactersArray[_Index] = _Condition; }
 
 
+	/** Called after a successful login.  This is the first place it is safe to call replicated functions on the PlayerAController. */
+	virtual void PostLogin(APlayerController* NewPlayer) override;
+
+	/** Called when a Controller with a PlayerState leaves the match. */
+	virtual void Logout(AController* Exiting) override;
+
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	
+	UFUNCTION(BlueprintCallable, Category = "C++ Functions", Reliable, Server, WithValidation)
+		void RespawnPlayers();
+	virtual void RespawnPlayers_Implementation();
+	virtual bool RespawnPlayers_Validate();
+
+	UFUNCTION(BlueprintCallable, Category = "C++ Functions", Reliable, Server, WithValidation)
+		void EveryoneUpdate();
+	virtual void EveryoneUpdate_Implementation();
+	virtual bool EveryoneUpdate_Validate();
+
+	UFUNCTION(BlueprintCallable, Category = "C++ Functions", Reliable, Server, WithValidation)
+		void ServerUpdateGameSettings();
+	virtual void ServerUpdateGameSettings_Implementation();
+	virtual bool ServerUpdateGameSettings_Validate();
+
+	UFUNCTION(BlueprintCallable, Category = "C++ Functions")//, Reliable, Server, WithValidation)
+		void LaunchTheGame();
+
+	UFUNCTION(BlueprintCallable, Category = "C++ Functions", Reliable, Server, WithValidation)
+		void YouHaveBeenKicked();
+	virtual void YouHaveBeenKicked_Implementation();
+	virtual bool YouHaveBeenKicked_Validate();
+
+	UFUNCTION(BlueprintCallable, Category = "C++ Functions")//, Reliable, Server, WithValidation)
+		void AddToKickList();
+	
+	UFUNCTION(BlueprintCallable, Category = "C++ Functions", Reliable, Server, WithValidation)
+		void SwapCharacters();
+	virtual void SwapCharacters_Implementation();
+	virtual bool SwapCharacters_Validate();
 };
