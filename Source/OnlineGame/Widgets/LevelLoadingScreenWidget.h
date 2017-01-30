@@ -14,6 +14,8 @@ class ONLINEGAME_API ULevelLoadingScreenWidget : public UUserWidget
 	GENERATED_BODY()
 	
 	
-	
+private:
+
+public:
 	
 };

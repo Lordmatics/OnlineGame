@@ -13,7 +13,11 @@ class ONLINEGAME_API ULevelChatTextWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
+private:
+
+public:
 	
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
+		int HelloWorld = 0;
 	
 };

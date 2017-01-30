@@ -13,7 +13,9 @@ class ONLINEGAME_API ULobbyPlayerButtonWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
-	
+private:
+
+public:
 	
 	
 };

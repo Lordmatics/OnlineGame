@@ -14,6 +14,8 @@ class ONLINEGAME_API ULobbyCharacterSelectWidget : public UUserWidget
 	GENERATED_BODY()
 	
 	
-	
+private:
+
+public:
 	
 };

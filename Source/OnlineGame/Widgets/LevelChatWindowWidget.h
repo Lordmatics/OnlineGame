@@ -14,6 +14,8 @@ class ONLINEGAME_API ULevelChatWindowWidget : public UUserWidget
 	GENERATED_BODY()
 	
 	
-	
+private:
+
+public:
 	
 };

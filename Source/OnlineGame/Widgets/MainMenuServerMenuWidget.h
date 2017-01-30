@@ -14,6 +14,8 @@ class ONLINEGAME_API UMainMenuServerMenuWidget : public UUserWidget
 	GENERATED_BODY()
 	
 	
-	
+private:
+
+public:
 	
 };
