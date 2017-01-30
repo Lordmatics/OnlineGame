@@ -18,8 +18,17 @@ private:
 
 public:
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", Replicated)
+		int CharSelectionID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
+		TArray<UTexture2D*> CharacterImagesArray;
+
 protected:
 	virtual void NativeConstruct() override;
 	
 	TSharedRef<SWidget> RebuildWidget() override;
+
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };

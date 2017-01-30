@@ -17,9 +17,28 @@ private:
 
 public:
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", Replicated)
+		FMyPlayerInfo ThePlayerInfo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", Replicated)
+		FText ThePlayerName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", Replicated)
+		UTexture2D* ThePlayersAvatar;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", Replicated)
+		UTexture2D* ThePlayersCharacterImage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", Replicated)
+		FText ThePlayerStatus;
+
+
+
 protected:
 	virtual void NativeConstruct() override;
 	
 	
 	TSharedRef<SWidget> RebuildWidget() override;
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };

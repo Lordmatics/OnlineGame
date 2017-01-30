@@ -19,55 +19,55 @@ void AOnlineGameLobbyGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
 	// Only for Sevrver
-	if (Role == ROLE_Authority)
-	{
-		if(NewPlayer != nullptr)
-			PlayerControllersArray.Add(NewPlayer);
-		UWorld* const World = GetWorld();
-		if (World != nullptr)
-		{
-			for (TActorIterator<APlayerStart> ActorItr(World); ActorItr; ++ActorItr)
-			{
-				// Fill in Respawn PlayerStarts Array
-				PlayerStartsArray.Add(*ActorItr);
-			}
-			UOnlineGameInstance* MyGameInstance = Cast<UOnlineGameInstance>(World->GetGameInstance());
-			if (MyGameInstance != nullptr)
-			{
-				ServerName = MyGameInstance->GetServerName();
-				MaxNumberOfPlayers = MyGameInstance->GetMaxNumOfPlayers();
-				AOnlineGameLobbyPlayerController* LobbyPC = Cast<AOnlineGameLobbyPlayerController>(NewPlayer);
-				if (LobbyPC != nullptr)
-				{
-					LobbyPC->InitialSetup();
-					LobbyPC->SetupLobbyMenu(ServerName);
-					LobbyPC->UpdateLobbySettings(GameModeMapImage, GameModeMapName, GameModeMapTime);
-					RespawnPlayers(LobbyPC);
-				}
-			}
-		}
-	}
+	//if (Role == ROLE_Authority)
+	//{
+	//	if(NewPlayer != nullptr)
+	//		PlayerControllersArray.Add(NewPlayer);
+	//	UWorld* const World = GetWorld();
+	//	if (World != nullptr)
+	//	{
+	//		for (TActorIterator<APlayerStart> ActorItr(World); ActorItr; ++ActorItr)
+	//		{
+	//			// Fill in Respawn PlayerStarts Array
+	//			PlayerStartsArray.Add(*ActorItr);
+	//		}
+	//		UOnlineGameInstance* MyGameInstance = Cast<UOnlineGameInstance>(World->GetGameInstance());
+	//		if (MyGameInstance != nullptr)
+	//		{
+	//			ServerName = MyGameInstance->GetServerName();
+	//			MaxNumberOfPlayers = MyGameInstance->GetMaxNumOfPlayers();
+	//			AOnlineGameLobbyPlayerController* LobbyPC = Cast<AOnlineGameLobbyPlayerController>(NewPlayer);
+	//			if (LobbyPC != nullptr)
+	//			{
+	//				LobbyPC->InitialSetup();
+	//				LobbyPC->SetupLobbyMenu(ServerName);
+	//				LobbyPC->UpdateLobbySettings(GameModeMapImage, GameModeMapName, GameModeMapTime);
+	//				RespawnPlayers(LobbyPC);
+	//			}
+	//		}
+	//	}
+	//}
 }
 
 // Removes player from lists, and updates arrays
 void AOnlineGameLobbyGameMode::Logout(AController* Exiting)
 {
 	Super::Logout(Exiting);
-	for (size_t i = 0; i < PlayerControllersArray.Num(); i++)
-	{
-		if (PlayerControllersArray[i] == Exiting)
-		{
-			AOnlineGameLobbyPlayerController* LobbyPC = Cast<AOnlineGameLobbyPlayerController>(PlayerControllersArray[i]);
-			if (LobbyPC != nullptr)
-			{
-				bAvailableCharactersArray[LobbyPC->GetSelectedCharacterIndex()] = false;
-				PlayerControllersArray.RemoveAt(i);
-				ConnectedPlayersArray.RemoveAt(i);
-				EveryoneUpdate();
-				break;
-			}
-		}
-	}
+	//for (size_t i = 0; i < PlayerControllersArray.Num(); i++)
+	//{
+	//	if (PlayerControllersArray[i] == Exiting)
+	//	{
+	//		AOnlineGameLobbyPlayerController* LobbyPC = Cast<AOnlineGameLobbyPlayerController>(PlayerControllersArray[i]);
+	//		if (LobbyPC != nullptr)
+	//		{
+	//			bAvailableCharactersArray[LobbyPC->GetSelectedCharacterIndex()] = false;
+	//			PlayerControllersArray.RemoveAt(i);
+	//			ConnectedPlayersArray.RemoveAt(i);
+	//			EveryoneUpdate();
+	//			break;
+	//		}
+	//	}
+	//}
 }
 
 // Spawn player as base character when arriving into the lobby - Update all lobbies

@@ -36,10 +36,11 @@ void AOnlineGameLobbyPlayerController::SaveGameCheckCode()
 
 void AOnlineGameLobbyPlayerController::SaveGameCode()
 {
+	if (SaveClass == nullptr) return;
 	const FString& SlotName = PlayerSaveString;
 	if (PlayerSaveGameRef == nullptr)
 	{
-		USaving* SaveData = Cast<USaving>(UGameplayStatics::CreateSaveGameObject(PlayerSaveGameRef->GetClass()));
+		USaving* SaveData = Cast<USaving>(UGameplayStatics::CreateSaveGameObject(SaveClass));// PlayerSaveGameRef->GetClass()));
 		if (SaveData != nullptr)
 		{
 			PlayerSaveGameRef = SaveData;

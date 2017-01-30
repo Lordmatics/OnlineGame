@@ -52,3 +52,10 @@ TSharedRef<SWidget> ULobbyConnectedPlayerWidget::RebuildWidget()
 
 	return Widget;
 }
+
+void ULobbyConnectedPlayerWidget::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	//DOREPLIFETIME(AOnlineGameGameMode, 5.0f);
+}

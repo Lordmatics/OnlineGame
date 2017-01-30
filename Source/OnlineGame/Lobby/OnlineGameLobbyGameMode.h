@@ -59,6 +59,8 @@ public:
 
 	FORCEINLINE TArray<TSubclassOf<ACharacter>> GetCharactersArray() const { return CharactersArray; }
 
+	FORCEINLINE TArray<FMyPlayerInfo> GetConnectedPlayersArray() const { return ConnectedPlayersArray; }
+
 	FORCEINLINE TArray<bool> GetAvailableCharactersArray() const { return bAvailableCharactersArray; }
 
 	FORCEINLINE void SetAvailableCharactersArrayElement(int _Index, bool _Condition) { bAvailableCharactersArray[_Index] = _Condition; }

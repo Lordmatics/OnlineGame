@@ -52,3 +52,10 @@ TSharedRef<SWidget> ULobbyCharacterSelectWidget::RebuildWidget()
 
 	return Widget;
 }
+
+void ULobbyCharacterSelectWidget::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	//DOREPLIFETIME(AOnlineGameGameMode, 5.0f);
+}

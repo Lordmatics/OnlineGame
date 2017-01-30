@@ -32,6 +32,9 @@ private:
 		class USaving* PlayerSaveGameRef;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Transient)
+		TSubclassOf<class USaving> SaveClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Transient)
 		UTexture2D* PlayerLogo;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Replicated)

@@ -12,7 +12,7 @@ void ULevelChatWindowWidget::NativeConstruct()
 	//RebuildWidget();
 	//RebuildBorder(TEXT("C++ Border"));
 
-	TextBox->OnTextCommitted.AddDynamic(this, &ULevelChatWindowWidget::TextCommitted);
+	//TextBox->OnTextCommitted.AddDynamic(this, &ULevelChatWindowWidget::TextCommitted);
 }
 
 void ULevelChatWindowWidget::RebuildBorder(FString VariableName)

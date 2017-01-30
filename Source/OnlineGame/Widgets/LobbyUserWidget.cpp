@@ -2,13 +2,33 @@
 
 #include "OnlineGame.h"
 #include "LobbyUserWidget.h"
-
+#include "Lobby/OnlineGameLobbyPlayerController.h"
 
 
 
 void ULobbyUserWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	//AOnlineGameLobbyPlayerController* LobbyPC = Cast<AOnlineGameLobbyPlayerController>(GetOwningPlayer());
+	//if (LobbyPC != nullptr)
+	//{
+	//	bool bIsServer = UKismetSystemLibrary::IsServer(this);
+	//	if (bIsServer)
+	//	{
+	//		TheReadyButtonText = FText::FromString(TEXT("Start Session!"));
+	//		// Host only needs to say host as opposed to the readying up
+	//		LobbyPC->GetPlayerSettings.PlayerState = TEXT("Host");
+	//	}
+	//	else
+	//	{
+	//		TheReadyButtonText = FText::FromString(TEXT("Toggle Ready!"));
+	//		// Clients shouldnt have access to settings
+	//		// Might just do this in the BP to be safe
+	//		if(TheGameSettingsButton != nullptr)
+	//			TheGameSettingsButton->RemoveFromParent();
+	//	}
+	//}
 }
 
 TSharedRef<SWidget> ULobbyUserWidget::RebuildWidget()
@@ -51,4 +71,16 @@ TSharedRef<SWidget> ULobbyUserWidget::RebuildWidget()
 
 
 	return Widget;
+}
+
+void ULobbyUserWidget::EnableTheReadyStartButton()
+{
+
+}
+
+void ULobbyUserWidget::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	//DOREPLIFETIME(AOnlineGameGameMode, 5.0f);
 }

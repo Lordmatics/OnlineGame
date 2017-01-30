@@ -2,8 +2,8 @@
 
 #include "OnlineGame.h"
 #include "LobbyGameSettingsWidget.h"
-
-
+#include "Lobby/OnlineGameLobbyGameMode.h"
+#include "Widgets/LobbyPlayerButtonWidget.h"
 
 
 void ULobbyGameSettingsWidget::NativeConstruct()
@@ -51,4 +51,37 @@ TSharedRef<SWidget> ULobbyGameSettingsWidget::RebuildWidget()
 
 
 	return Widget;
+}
+
+void ULobbyGameSettingsWidget::FillThePlayersWindow()
+{
+	UWorld* const World = GetWorld();
+	if (World == nullptr) return;
+	AOnlineGameLobbyGameMode* LobbyGM = Cast<AOnlineGameLobbyGameMode>(World->GetAuthGameMode());
+	if (LobbyGM != nullptr)
+	{
+		if (ChatScrollBox != nullptr)
+		{
+			ChatScrollBox->ClearChildren();
+			for (size_t i = 0; i < LobbyGM->GetConnectedPlayersArray().Num(); i++)
+			{
+				if (i > 0)
+				{
+					ULobbyPlayerButtonWidget* PlayerButton = CreateWidget<ULobbyPlayerButtonWidget>(World, PlayerButtonWidgetClass);
+					if (PlayerButton != nullptr)
+					{
+						ChatScrollBox->AddChild(PlayerButton);
+					}
+				}
+			}
+		}
+		
+	}
+
+}
+void ULobbyGameSettingsWidget::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	//DOREPLIFETIME(AOnlineGameGameMode, 5.0f);
 }
