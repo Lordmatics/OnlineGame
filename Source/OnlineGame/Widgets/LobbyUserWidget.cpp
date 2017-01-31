@@ -3,8 +3,10 @@
 #include "OnlineGame.h"
 #include "LobbyUserWidget.h"
 #include "Lobby/OnlineGameLobbyPlayerController.h"
-
-
+#include "Lobby/OnlineGameLobbyGameMode.h"
+#include "Widgets/LobbyConnectedPlayerWidget.h"
+#include "Widgets/LobbyGameSettingsWidget.h"
+#include "Widgets/LobbyCharacterSelectWidget.h"
 
 void ULobbyUserWidget::NativeConstruct()
 {
@@ -83,4 +85,138 @@ void ULobbyUserWidget::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	//DOREPLIFETIME(AOnlineGameGameMode, 5.0f);
+}
+
+// Called in BP Event Construct
+void ULobbyUserWidget::CodeConstruct()
+{
+	// In BP Construct - Button and Vertical Box Initialised
+	// And Game Settings 
+	AOnlineGameLobbyPlayerController* LobbyPC = Cast<AOnlineGameLobbyPlayerController>(GetOwningPlayer());
+	if (LobbyPC != nullptr)
+	{
+		bool bIsServer = UKismetSystemLibrary::IsServer(this);
+		if (bIsServer)
+		{
+			TheReadyButtonText = FText::FromString(TEXT("Start Session!"));
+			LobbyPC->GetPlayerSettings().PlayerLobbyStatus = TEXT("Host");
+		}
+		else
+		{
+			TheReadyButtonText = FText::FromString(TEXT("Toggle Ready!"));
+			// Initialise these values to prevent UI BUG
+			TheReadyStatus = FText::FromString(TEXT("Not Ready!"));
+			bFlipFlopIsReady = false;
+			// Clients dont want access to Game Settings
+			if(TheGameSettingsButton != nullptr)
+				TheGameSettingsButton->RemoveFromParent();
+		}
+	}
+
+
+}
+
+void ULobbyUserWidget::ReadyButtonClicked()
+{
+	UWorld* const World = GetWorld();
+	if (World == nullptr) return;
+	bool bIsServer = UKismetSystemLibrary::IsServer(this);
+	if (bIsServer)
+	{
+		AOnlineGameLobbyGameMode* LobbyGM = Cast<AOnlineGameLobbyGameMode>(World->GetAuthGameMode());
+		if (LobbyGM != nullptr)
+		{	
+			for (APlayerController* PC : LobbyGM->GetPlayerControllersArray())
+			{
+				AOnlineGameLobbyPlayerController* LobbyPC = Cast<AOnlineGameLobbyPlayerController>(PC);
+				if (LobbyPC != nullptr)
+				{
+					// Push Loading Screen onto everyones clients since replicated
+					LobbyPC->ShowLoadingScreen();
+					// Server Travel from Host - Pushing all clients to chosen level
+					// NOTE: This might need doing outside the for loop, im not sure, since not replicated
+					LobbyGM->LaunchTheGame();
+				}
+			}
+		}
+	}
+	else
+	{
+		UpdateReadyStatus();
+	}
+}
+
+void ULobbyUserWidget::UpdateReadyStatus()
+{
+	switch (bFlipFlopIsReady)
+	{
+		case true:
+		{
+			TheReadyStatus = FText::FromString(TEXT("Ready!"));
+			break;
+		}
+		case false:
+		{
+			TheReadyStatus = FText::FromString(TEXT("Not Ready!"));
+			break;
+		}
+	}
+	AOnlineGameLobbyPlayerController* LobbyPC = Cast<AOnlineGameLobbyPlayerController>(GetOwningPlayer());
+	if (LobbyPC != nullptr)
+	{
+		LobbyPC->GetPlayerSettings().PlayerLobbyStatus = TheReadyStatus.ToString();
+		LobbyPC->CallUpdate(LobbyPC->GetPlayerSettings(), false);
+		bFlipFlopIsReady = !bFlipFlopIsReady;
+	}
+}
+
+void ULobbyUserWidget::ClearPlayerWindow()
+{
+	if (ThePlayerWindow != nullptr)
+	{
+		ThePlayerWindow->ClearChildren();
+	}
+}
+
+void ULobbyUserWidget::UpdatePlayerWindow_Implementation(FMyPlayerInfo IncomingPlayerInfo)
+{
+	ULobbyConnectedPlayerWidget* ConnectedPlayerWidget = CreateWidget<ULobbyConnectedPlayerWidget>(GetOwningPlayer(), PlayerConnectedWidgetClass);
+	if (ConnectedPlayerWidget != nullptr)
+	{
+		if (ThePlayerWindow != nullptr)
+		{
+			ThePlayerWindow->AddChild(ConnectedPlayerWidget);
+		}
+	}
+	
+}
+
+bool ULobbyUserWidget::UpdatePlayerWindow_Validate(FMyPlayerInfo IncomingPlayerInfo)
+{
+	return true;
+}
+
+void ULobbyUserWidget::GameSettingsClicked()
+{
+	if (TheGameSettings != nullptr)
+	{
+		if (!TheGameSettings->IsVisible())
+		{
+			TheGameSettings->SetVisibility(ESlateVisibility::Visible);
+			TheGameSettings->FillThePlayersWindow();
+		}
+	}
+}
+
+void ULobbyUserWidget::CharacterButtonClicked()
+{
+	if (TheCharacterSelect != nullptr)
+	{
+		if (!TheCharacterSelect->IsVisible())
+		{
+			TheCharacterSelect->bIsFocusable = true;
+			TheCharacterSelect->SetVisibility(ESlateVisibility::Visible);
+			TheCharacterSelect->SetUserFocus(GetOwningPlayer());
+		}
+	}
 }
