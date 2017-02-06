@@ -43,7 +43,7 @@ struct FMyPlayerInfo
 		float PlayerExperiencePoints;
 
 	UPROPERTY(EditDefaultsOnly)
-		TMap<int32,float>  PlayerEXPTNL;
+		TMap<int, float>  PlayerEXPTNL;
 
 	//Constructor
 	FMyPlayerInfo()

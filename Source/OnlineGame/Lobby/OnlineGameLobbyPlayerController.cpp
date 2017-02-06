@@ -15,10 +15,20 @@
 // UpdateLobbySettings(UTexture2D* _MapImage, const FString& _MapName, const FString& _MapTime);
 // ShowLoadingScreen();
 // UpdateNumberOfPlayers(int CurrentNum, int TotalNum);
+// InitialSetup_Implementation()
+// CallUpdate_Implementation(FMyPlayerInfo _PlayerSettings, bool bChangedStatus)
+// AssignPlayer_Implementation(TSubclassOf<class ACharacter> CharClass, UTexture2D* _CharImage)
 // Kicked();
 // UpdateAvailableCharacters(const TArray<bool>& _AvailCharacters);
 // GetMyChatMessage(const FString& TextToSend);
 // UpdateMyChat(const FString& _SenderName, const FString& _SenderText);
+// CharacterCheckCode()
+// AssignSelectedCharacter_Implementation(int _CharID, UTexture2D* _CharImage)
+
+// Overall, all this class in code does now is,
+// Check if data exists
+// Save Data
+// Load Data
 
 void AOnlineGameLobbyPlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
@@ -79,31 +89,31 @@ void AOnlineGameLobbyPlayerController::LoadGameCode()
 
 void AOnlineGameLobbyPlayerController::CharacterCheckCode()
 {
-	UWorld* const World = GetWorld();
-	if (World == nullptr) return;
-	AOnlineGameLobbyGameMode* LobbyGameMode = Cast<AOnlineGameLobbyGameMode>(World->GetAuthGameMode());
-	if (LobbyGameMode == nullptr) return;
+	//UWorld* const World = GetWorld();
+	//if (World == nullptr) return;
+	//AOnlineGameLobbyGameMode* LobbyGameMode = Cast<AOnlineGameLobbyGameMode>(World->GetAuthGameMode());
+	//if (LobbyGameMode == nullptr) return;
 
-	if (SelectedCharacterIndex == 0)
-	{
-		LobbyGameMode->SetAvailableCharactersArrayElement(SelectedCharacterIndex, false);
-	}
-	else
-	{
-		if (LobbyGameMode->GetAvailableCharactersArray()[SelectedCharacterIndex] != 0)
-		{
-			LobbyGameMode->SetAvailableCharactersArrayElement(SelectedCharacterIndex, true);
-		}
-	}
-	AssignPlayer(LobbyGameMode->GetCharactersArray()[SelectedCharacterIndex]->GetClass(), PlayerLogo);
+	//if (SelectedCharacterIndex == 0)
+	//{
+	//	LobbyGameMode->SetAvailableCharactersArrayElement(SelectedCharacterIndex, false);
+	//}
+	//else
+	//{
+	//	if (LobbyGameMode->GetAvailableCharactersArray()[SelectedCharacterIndex] != 0)
+	//	{
+	//		LobbyGameMode->SetAvailableCharactersArrayElement(SelectedCharacterIndex, true);
+	//	}
+	//}
+	//AssignPlayer(LobbyGameMode->GetCharactersArray()[SelectedCharacterIndex]->GetClass(), PlayerLogo);
 }
 
 // Check for save game, then update the Server
 void AOnlineGameLobbyPlayerController::InitialSetup_Implementation()
 {
-	UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: InitialSetup Ran"));
-	SaveGameCheckCode();
-	CallUpdate(ThePlayerSettings, false);
+	//UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: InitialSetup Ran"));
+	//SaveGameCheckCode();
+	//CallUpdate(ThePlayerSettings, false);
 }
 
 bool AOnlineGameLobbyPlayerController::InitialSetup_Validate()
@@ -148,16 +158,16 @@ bool AOnlineGameLobbyPlayerController::SetupLobbyMenu_Validate(const FString& _S
 // Assigns the updated character selection / Tells everyone to update their lobby menus
 void AOnlineGameLobbyPlayerController::CallUpdate_Implementation(FMyPlayerInfo _PlayerSettings, bool bChangedStatus)
 {
-	UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: CallUpdate Ran"));
-	ThePlayerSettings = _PlayerSettings;
-	UWorld* const World = GetWorld();
-	if (World == nullptr) return;
-	AOnlineGameLobbyGameMode* LobbyGameMode = Cast<AOnlineGameLobbyGameMode>(World->GetAuthGameMode());
-	if (LobbyGameMode != nullptr)
-	{
-		//LobbyGameMode->SwapCharacters(this, ThePlayerSettings.CharacterClass, bChangedStatus);
-		//LobbyGameMode->EveryoneRunUpdate();
-	}
+	//UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: CallUpdate Ran"));
+	//ThePlayerSettings = _PlayerSettings;
+	//UWorld* const World = GetWorld();
+	//if (World == nullptr) return;
+	//AOnlineGameLobbyGameMode* LobbyGameMode = Cast<AOnlineGameLobbyGameMode>(World->GetAuthGameMode());
+	//if (LobbyGameMode != nullptr)
+	//{
+	//	//LobbyGameMode->SwapCharacters(this, ThePlayerSettings.CharacterClass, bChangedStatus);
+	//	//LobbyGameMode->EveryoneRunUpdate();
+	//}
 }
 
 bool AOnlineGameLobbyPlayerController::CallUpdate_Validate(FMyPlayerInfo _PlayerSettings, bool bChangedStatus)
@@ -299,11 +309,11 @@ bool AOnlineGameLobbyPlayerController::UpdateAvailableCharacters_Validate(const 
 // Handle Character Selection / Swapping Etc
 void AOnlineGameLobbyPlayerController::AssignSelectedCharacter_Implementation(int _CharID, UTexture2D* _CharImage)
 {
-	UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: AssignSelectedCharacter Ran"));
-	PreviousSelectionIndex = SelectedCharacterIndex;
-	PlayerLogo = _CharImage;
-	SelectedCharacterIndex = _CharID;
-	CharacterCheckCode();
+	//UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: AssignSelectedCharacter Ran"));
+	//PreviousSelectionIndex = SelectedCharacterIndex;
+	//PlayerLogo = _CharImage;
+	//SelectedCharacterIndex = _CharID;
+	//CharacterCheckCode();
 
 }
 
@@ -315,11 +325,11 @@ bool AOnlineGameLobbyPlayerController::AssignSelectedCharacter_Validate(int _Cha
 // Assign Selected Player - And Update for all Clients
 void AOnlineGameLobbyPlayerController::AssignPlayer_Implementation(TSubclassOf<class ACharacter> CharClass, UTexture2D* _CharImage)
 {
-	UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: AssignPlayer Ran"));
-	ThePlayerSettings.CharacterClass = CharClass;
-	ThePlayerSettings.PlayerLogo = _CharImage;
-	SaveGameCode();
-	CallUpdate(ThePlayerSettings, false);
+	//UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: AssignPlayer Ran"));
+	//ThePlayerSettings.CharacterClass = CharClass;
+	//ThePlayerSettings.PlayerLogo = _CharImage;
+	//SaveGameCode();
+	//CallUpdate(ThePlayerSettings, false);
 }
 
 bool AOnlineGameLobbyPlayerController::AssignPlayer_Validate(TSubclassOf<class ACharacter> CharClass, UTexture2D* _CharImage)

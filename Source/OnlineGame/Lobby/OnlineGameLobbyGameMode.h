@@ -101,7 +101,7 @@ public:
 		void AddToKickList();
 	
 	UFUNCTION(BlueprintCallable, Category = "C++ Functions", Reliable, Server, WithValidation)
-		void SwapCharacters(APlayerController* _PlayerController, TSubclassOf<class AOnlineGameCharacter> _CharacterClass, bool _bChangeStatus);
-	virtual void SwapCharacters_Implementation(APlayerController* _PlayerController, TSubclassOf<class AOnlineGameCharacter> _CharacterClass, bool _bChangeStatus);
-	virtual bool SwapCharacters_Validate(APlayerController* _PlayerController, TSubclassOf<class AOnlineGameCharacter> _CharacterClass, bool _bChangeStatus);
+		void SwapCharacters(APlayerController* _PlayerController, TSubclassOf<class ACharacter> _CharacterClass, bool _bChangeStatus);
+	virtual void SwapCharacters_Implementation(APlayerController* _PlayerController, TSubclassOf<class ACharacter> _CharacterClass, bool _bChangeStatus);
+	virtual bool SwapCharacters_Validate(APlayerController* _PlayerController, TSubclassOf<class ACharacter> _CharacterClass, bool _bChangeStatus);
 };

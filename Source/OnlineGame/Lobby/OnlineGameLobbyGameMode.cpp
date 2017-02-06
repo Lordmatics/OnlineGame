@@ -258,7 +258,7 @@ void AOnlineGameLobbyGameMode::AddToKickList()
 }
 
 // Change Character
-void AOnlineGameLobbyGameMode::SwapCharacters_Implementation(APlayerController* _PlayerController, TSubclassOf<class AOnlineGameCharacter> _CharacterClass, bool _bChangeStatus)
+void AOnlineGameLobbyGameMode::SwapCharacters_Implementation(APlayerController* _PlayerController, TSubclassOf<class ACharacter> _CharacterClass, bool _bChangeStatus)
 {
 	UWorld* const World = GetWorld();
 	if (World == nullptr) return;
@@ -279,7 +279,7 @@ void AOnlineGameLobbyGameMode::SwapCharacters_Implementation(APlayerController* 
 					SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 					if (_CharacterClass != nullptr)
 					{
-						AOnlineGameCharacter* SpawnedCharacter = World->SpawnActor<AOnlineGameCharacter>(_CharacterClass, SpawnTransform, SpawnParams);
+						ACharacter* SpawnedCharacter = World->SpawnActor<ACharacter>(_CharacterClass, SpawnTransform, SpawnParams);
 						if (SpawnedCharacter != nullptr)
 						{
 							UE_LOG(LogTemp, Warning, TEXT("SwapChar_Imple : LobbyGM , possess success"));
@@ -292,7 +292,7 @@ void AOnlineGameLobbyGameMode::SwapCharacters_Implementation(APlayerController* 
 	}
 }
 
-bool AOnlineGameLobbyGameMode::SwapCharacters_Validate(APlayerController* _PlayerController, TSubclassOf<class AOnlineGameCharacter> _CharacterClass, bool _bChangeStatus)
+bool AOnlineGameLobbyGameMode::SwapCharacters_Validate(APlayerController* _PlayerController, TSubclassOf<class ACharacter> _CharacterClass, bool _bChangeStatus)
 {
 	return true;
 }

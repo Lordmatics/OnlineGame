@@ -15,6 +15,31 @@ class ONLINEGAME_API UMainMenuOptionsMenuWidget : public UUserWidget
 	
 private:
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = "true"))
+		ESlateVisibility TheWelcomeMessageEnabled;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = "true"))
+		FString TheEnterredPlayerName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = "true"))
+		FMyPlayerInfo ThePlayerInfo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = "true"))
+		UTexture2D* TheAvatarImage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = "true"))
+		FString PlayerSaveString = FString(TEXT("PlayerSaveString"));
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = "true"))
+		TArray<UTexture2D*> TheAvatarArray;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = "true"))
+		int TheAvatarCount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = "true"))
+		bool TheAcceptEnabled;
+
+
 public:
 
 protected:
