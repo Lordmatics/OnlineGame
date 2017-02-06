@@ -7,6 +7,21 @@
 #include "Lobby/OnlineGameLobbyPlayerController.h"
 #include "OnlineGameCharacter.h"
 
+// OKAY
+// THIS CLASS
+// ALL VARIABLES USED FROM C++ IN BP
+// FUNCTIONS, DONE IN PURE BP - 
+// PostLogin(APlayerController* NewPlayer)
+// Logout(AController* Exiting)
+// RespawnPlayers_Implementation(APlayerController* _PlayerController)
+// EveryoneUpdate_Implementation()
+// ServerUpdateGameSettings_Implementation(UTexture2D* _MapImage, const FString& _MapName, const FString& _MapTime, int _MapID)
+// YouHaveBeenKicked_Implementation(int _PlayerID)
+// AddToKickList()
+
+// So only launching the game, and changing character is done in here now
+// This is mainly due to the fact, that all the lobby stuff, is 95% all UI based
+
 void AOnlineGameLobbyGameMode::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -73,39 +88,39 @@ void AOnlineGameLobbyGameMode::Logout(AController* Exiting)
 // Spawn player as base character when arriving into the lobby - Update all lobbies
 void AOnlineGameLobbyGameMode::RespawnPlayers_Implementation(APlayerController* _PlayerController)
 {
-	UWorld* const World = GetWorld();
-	if (World == nullptr) return;
-	if (_PlayerController != nullptr)
-	{
-		APawn* ControllerPawn = _PlayerController->GetPawn();
-		if (ControllerPawn != nullptr)
-		{
-			ControllerPawn->Destroy();
-			if (PlayerStartsArray.Num() > 0)
-			{
-				int SpawnIndex = FMath::RandRange(0, PlayerStartsArray.Num() - 1);
+	//UWorld* const World = GetWorld();
+	//if (World == nullptr) return;
+	//if (_PlayerController != nullptr)
+	//{
+	//	APawn* ControllerPawn = _PlayerController->GetPawn();
+	//	if (ControllerPawn != nullptr)
+	//	{
+	//		ControllerPawn->Destroy();
+	//		if (PlayerStartsArray.Num() > 0)
+	//		{
+	//			int SpawnIndex = FMath::RandRange(0, PlayerStartsArray.Num() - 1);
 
-				if (PlayerStartsArray[SpawnIndex] != nullptr)
-				{
-					FTransform SpawnTransform = PlayerStartsArray[SpawnIndex]->GetActorTransform();
-					FActorSpawnParameters SpawnParams;
-					SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-					if (CharactersArray.Num() > 0)
-					{
-						if (CharactersArray[0] != nullptr)
-						{
-							AOnlineGameCharacter* BaseCharacter = World->SpawnActor<AOnlineGameCharacter>(CharactersArray[0], SpawnTransform, SpawnParams);
-							if (BaseCharacter != nullptr)
-							{
-								_PlayerController->Possess(BaseCharacter);
-								EveryoneUpdate();
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+	//			if (PlayerStartsArray[SpawnIndex] != nullptr)
+	//			{
+	//				FTransform SpawnTransform = PlayerStartsArray[SpawnIndex]->GetActorTransform();
+	//				FActorSpawnParameters SpawnParams;
+	//				SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	//				if (CharactersArray.Num() > 0)
+	//				{
+	//					if (CharactersArray[0] != nullptr)
+	//					{
+	//						AOnlineGameCharacter* BaseCharacter = World->SpawnActor<AOnlineGameCharacter>(CharactersArray[0], SpawnTransform, SpawnParams);
+	//						if (BaseCharacter != nullptr)
+	//						{
+	//							_PlayerController->Possess(BaseCharacter);
+	//							EveryoneUpdate();
+	//						}
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 }
 
 bool AOnlineGameLobbyGameMode::RespawnPlayers_Validate(APlayerController* _PlayerController)
@@ -121,42 +136,42 @@ bool AOnlineGameLobbyGameMode::RespawnPlayers_Validate(APlayerController* _Playe
 // Updates all Connected players lobby information when called
 void AOnlineGameLobbyGameMode::EveryoneUpdate_Implementation()
 {
-	CurrentNumberOfPlayers = PlayerControllersArray.Num();
-	if (CurrentNumberOfPlayers > 0)
-	{
-		ConnectedPlayersArray.Empty();
-		for (APlayerController* PC : PlayerControllersArray)
-		{
-			AOnlineGameLobbyPlayerController* LobbyPC = Cast<AOnlineGameLobbyPlayerController>(PC);
-			if (LobbyPC != nullptr)
-			{
-				ConnectedPlayersArray.Add(LobbyPC->GetPlayerSettings());
-				LobbyPC->UpdateNumberOfPlayers(CurrentNumberOfPlayers, MaxNumberOfPlayers);
-			}
-		}
-		for (APlayerController* PC2 : PlayerControllersArray)
-		{
-			AOnlineGameLobbyPlayerController* LobbyPC2 = Cast<AOnlineGameLobbyPlayerController>(PC2);
-			if (LobbyPC2 != nullptr)
-			{
-				LobbyPC2->AddPlayerInfo(ConnectedPlayersArray);
-				LobbyPC2->UpdateAvailableCharacters(bAvailableCharactersArray);
-				AddToKickList();
-			}
-		}
-		for (FMyPlayerInfo PlayerInf : ConnectedPlayersArray)
-		{
-			if (PlayerInf.CharacterClass == CharactersArray[0])
-			{
-				bCanWeStart = false;
-				break;
-			}
-			else
-			{
-				bCanWeStart = true;
-			}
-		}
-	}
+	//CurrentNumberOfPlayers = PlayerControllersArray.Num();
+	//if (CurrentNumberOfPlayers > 0)
+	//{
+	//	ConnectedPlayersArray.Empty();
+	//	for (APlayerController* PC : PlayerControllersArray)
+	//	{
+	//		AOnlineGameLobbyPlayerController* LobbyPC = Cast<AOnlineGameLobbyPlayerController>(PC);
+	//		if (LobbyPC != nullptr)
+	//		{
+	//			ConnectedPlayersArray.Add(LobbyPC->GetPlayerSettings());
+	//			LobbyPC->UpdateNumberOfPlayers(CurrentNumberOfPlayers, MaxNumberOfPlayers);
+	//		}
+	//	}
+	//	for (APlayerController* PC2 : PlayerControllersArray)
+	//	{
+	//		AOnlineGameLobbyPlayerController* LobbyPC2 = Cast<AOnlineGameLobbyPlayerController>(PC2);
+	//		if (LobbyPC2 != nullptr)
+	//		{
+	//			LobbyPC2->AddPlayerInfo(ConnectedPlayersArray);
+	//			LobbyPC2->UpdateAvailableCharacters(bAvailableCharactersArray);
+	//			AddToKickList();
+	//		}
+	//	}
+	//	for (FMyPlayerInfo PlayerInf : ConnectedPlayersArray)
+	//	{
+	//		if (PlayerInf.CharacterClass == CharactersArray[0])
+	//		{
+	//			bCanWeStart = false;
+	//			break;
+	//		}
+	//		else
+	//		{
+	//			bCanWeStart = true;
+	//		}
+	//	}
+	//}
 }
 
 bool AOnlineGameLobbyGameMode::EveryoneUpdate_Validate()
@@ -167,18 +182,18 @@ bool AOnlineGameLobbyGameMode::EveryoneUpdate_Validate()
 // Server has made changes , tell each client to update their lobby information
 void AOnlineGameLobbyGameMode::ServerUpdateGameSettings_Implementation(UTexture2D* _MapImage, const FString& _MapName, const FString& _MapTime, int _MapID)
 {
-	GameModeMapImage = _MapImage;
-	GameModeMapName = _MapName;
-	GameModeMapTime = _MapTime;
-	GameModeMapID = _MapID;
-	for (APlayerController* PC : PlayerControllersArray)
-	{
-		AOnlineGameLobbyPlayerController* LobbyPC = Cast<AOnlineGameLobbyPlayerController>(PC);
-		if (LobbyPC != nullptr)
-		{
-			LobbyPC->UpdateLobbySettings(GameModeMapImage, GameModeMapName, GameModeMapTime);
-		}
-	}
+	//GameModeMapImage = _MapImage;
+	//GameModeMapName = _MapName;
+	//GameModeMapTime = _MapTime;
+	//GameModeMapID = _MapID;
+	//for (APlayerController* PC : PlayerControllersArray)
+	//{
+	//	AOnlineGameLobbyPlayerController* LobbyPC = Cast<AOnlineGameLobbyPlayerController>(PC);
+	//	if (LobbyPC != nullptr)
+	//	{
+	//		LobbyPC->UpdateLobbySettings(GameModeMapImage, GameModeMapName, GameModeMapTime);
+	//	}
+	//}
 }
 
 bool AOnlineGameLobbyGameMode::ServerUpdateGameSettings_Validate(UTexture2D* _MapImage, const FString& _MapName, const FString& _MapTime, int _MapID)
@@ -215,11 +230,11 @@ void AOnlineGameLobbyGameMode::LaunchTheGame()
 // Removes player from lists, and updates arrays
 void AOnlineGameLobbyGameMode::YouHaveBeenKicked_Implementation(int _PlayerID)
 {
-	AOnlineGameLobbyPlayerController* LobbyPC = Cast<AOnlineGameLobbyPlayerController>(PlayerControllersArray[_PlayerID]);
-	if (LobbyPC != nullptr)
-	{
-		LobbyPC->Kicked();
-	}
+	//AOnlineGameLobbyPlayerController* LobbyPC = Cast<AOnlineGameLobbyPlayerController>(PlayerControllersArray[_PlayerID]);
+	//if (LobbyPC != nullptr)
+	//{
+	//	LobbyPC->Kicked();
+	//}
 }
 
 bool AOnlineGameLobbyGameMode::YouHaveBeenKicked_Validate(int _PlayerID)
@@ -231,15 +246,15 @@ bool AOnlineGameLobbyGameMode::YouHaveBeenKicked_Validate(int _PlayerID)
 // Auto refresh it
 void AOnlineGameLobbyGameMode::AddToKickList()
 {
-	AOnlineGameLobbyPlayerController* LobbyPC = Cast<AOnlineGameLobbyPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
-	if (LobbyPC != nullptr)
-	{
-		// NEED TO MAKE UUSERWIDGET CUSTOM CLASSES
-		//if (LobbyPC->GetLobbyWidgetInstance()->GameSettings.IsVisible())
-		//{
-		//	LobbyPC->GetLobbyWidgetInstance()->GameSettings.FillPlayersWindow();
-		//}
-	}
+	//AOnlineGameLobbyPlayerController* LobbyPC = Cast<AOnlineGameLobbyPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	//if (LobbyPC != nullptr)
+	//{
+	//	// NEED TO MAKE UUSERWIDGET CUSTOM CLASSES
+	//	//if (LobbyPC->GetLobbyWidgetInstance()->GameSettings.IsVisible())
+	//	//{
+	//	//	LobbyPC->GetLobbyWidgetInstance()->GameSettings.FillPlayersWindow();
+	//	//}
+	//}
 }
 
 // Change Character
@@ -267,6 +282,7 @@ void AOnlineGameLobbyGameMode::SwapCharacters_Implementation(APlayerController* 
 						AOnlineGameCharacter* SpawnedCharacter = World->SpawnActor<AOnlineGameCharacter>(_CharacterClass, SpawnTransform, SpawnParams);
 						if (SpawnedCharacter != nullptr)
 						{
+							UE_LOG(LogTemp, Warning, TEXT("SwapChar_Imple : LobbyGM , possess success"));
 							_PlayerController->Possess(SpawnedCharacter);
 						}
 					}	
