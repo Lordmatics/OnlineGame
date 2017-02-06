@@ -5,6 +5,17 @@
 #include "OnlineGameGameMode.h"
 #include "SaveGame/Saving.h"
 
+// OKAY
+// THIS CLASS
+// ALL VARIABLES USED FROM C++ IN BP
+// FUNCTIONS, DONE IN PURE BP - 
+// PassCharacterInfoToServer_Implementation(FMyPlayerInfo PlayerSettingsInfo)
+// SetupMyChatWindow_Implementation()
+// GetMyChatMessage_Implementation(const FString& TextToSend)
+// UpdateMyChat_Implementation(const FString& _SenderName, const FString& _SenderText)
+
+// So this class handles loading the players data pretty much
+
 AOnlineGamePlayerController::AOnlineGamePlayerController()
 {
 
@@ -29,16 +40,16 @@ void AOnlineGamePlayerController::GetLifetimeReplicatedProps(TArray<FLifetimePro
 
 void AOnlineGamePlayerController::PassCharacterInfoToServer_Implementation(FMyPlayerInfo PlayerSettingsInfo)
 {
-	UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: PassCharacterInfoToServer Ran"));
-	PlayerSettings = PlayerSettingsInfo;
-	UWorld* const World = GetWorld();
-	if (World == nullptr) return;
-	AOnlineGameGameMode* MyGameMode = Cast<AOnlineGameGameMode>(World->GetAuthGameMode());
-	if (MyGameMode != nullptr)
-	{
-		MyGameMode->ServerRespawnPlayerNetwork(this, PlayerSettings.CharacterClass);
-		SetupMyChatWindow();
-	}
+	//UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: PassCharacterInfoToServer Ran"));
+	//PlayerSettings = PlayerSettingsInfo;
+	//UWorld* const World = GetWorld();
+	//if (World == nullptr) return;
+	//AOnlineGameGameMode* MyGameMode = Cast<AOnlineGameGameMode>(World->GetAuthGameMode());
+	//if (MyGameMode != nullptr)
+	//{
+	//	MyGameMode->ServerRespawnPlayerNetwork(this, PlayerSettings.CharacterClass);
+	//	SetupMyChatWindow();
+	//}
 }
 
 bool AOnlineGamePlayerController::PassCharacterInfoToServer_Validate(FMyPlayerInfo PlayerSettingsInfo)
@@ -48,7 +59,7 @@ bool AOnlineGamePlayerController::PassCharacterInfoToServer_Validate(FMyPlayerIn
 
 void AOnlineGamePlayerController::SetupMyChatWindow_Implementation()
 {
-	UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: SetupMyChatWindow Ran"));
+	//UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: SetupMyChatWindow Ran"));
 	// TODO
 	// Create GameplayChatWidget -> Set Variable
 	// Add to Viewport -> Done in BP coz widgets
@@ -62,25 +73,25 @@ bool AOnlineGamePlayerController::SetupMyChatWindow_Validate()
 
 void AOnlineGamePlayerController::GetMyChatMessage_Implementation(const FString& TextToSend)
 {
-	UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: GetMyChatMessage Ran"));
-	SenderText = TextToSend;
-	SenderName = PlayerSettings.PlayerName;
-	UWorld* const World = GetWorld();
-	if (World == nullptr) return;
-	AOnlineGameGameMode* MyGameMode = Cast<AOnlineGameGameMode>(World->GetAuthGameMode());
-	if (MyGameMode != nullptr)
-	{
-		size_t Length = MyGameMode->PlayerControllers.Num();
-		if (Length <= 0) return;
-		for (size_t i = 0; i < Length; i++)
-		{
-			AOnlineGamePlayerController* PlayerController = Cast<AOnlineGamePlayerController>(MyGameMode->PlayerControllers[i]);
-			if (PlayerController != nullptr)
-			{
-				PlayerController->UpdateMyChat(SenderName, SenderText);
-			}
-		}
-	}
+	//UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: GetMyChatMessage Ran"));
+	//SenderText = TextToSend;
+	//SenderName = PlayerSettings.PlayerName;
+	//UWorld* const World = GetWorld();
+	//if (World == nullptr) return;
+	//AOnlineGameGameMode* MyGameMode = Cast<AOnlineGameGameMode>(World->GetAuthGameMode());
+	//if (MyGameMode != nullptr)
+	//{
+	//	size_t Length = MyGameMode->PlayerControllers.Num();
+	//	if (Length <= 0) return;
+	//	for (size_t i = 0; i < Length; i++)
+	//	{
+	//		AOnlineGamePlayerController* PlayerController = Cast<AOnlineGamePlayerController>(MyGameMode->PlayerControllers[i]);
+	//		if (PlayerController != nullptr)
+	//		{
+	//			PlayerController->UpdateMyChat(SenderName, SenderText);
+	//		}
+	//	}
+	//}
 }
 
 bool AOnlineGamePlayerController::GetMyChatMessage_Validate(const FString& TextToSend)
@@ -90,7 +101,7 @@ bool AOnlineGamePlayerController::GetMyChatMessage_Validate(const FString& TextT
 
 void AOnlineGamePlayerController::UpdateMyChat_Implementation(const FString& _SenderName, const FString& _SenderText)
 {
-	UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: UpdateMyChat Ran"));
+	//UE_LOG(LogTemp, Warning, TEXT("OnlineGamePlayerController: UpdateMyChat Ran"));
 	// TODO
 	// Get Chat Window variable from Widget
 	// Call UpdateChatWindow on it
