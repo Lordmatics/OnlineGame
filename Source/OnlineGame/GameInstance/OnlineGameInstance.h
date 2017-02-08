@@ -22,13 +22,13 @@ private:
 		FString PlayerSaveString = FString(("PlayerSaveString"));
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Replicated)
-		FString TheServerName;
+		FText TheServerName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Replicated)
 		int MaxNumberOfPlayers = 0;
 public:
 
-	FORCEINLINE FString GetServerName() const { return TheServerName; }
+	FORCEINLINE FText GetServerName() const { return TheServerName; }
 	
 	FORCEINLINE int GetMaxNumOfPlayers() const { return MaxNumberOfPlayers; }
 

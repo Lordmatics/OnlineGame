@@ -34,13 +34,13 @@ private:
 		TArray<FMyPlayerInfo> ConnectedPlayersArray;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Replicated)
-		FString ServerName;
+		FText ServerName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Replicated)
-		FString GameModeMapName = FString(TEXT("Level_001"));
+		FText GameModeMapName; // = FString(TEXT("Level_001"));
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Replicated)
-		FString GameModeMapTime = FString(TEXT("10 : 00"));
+		FText GameModeMapTime; // = FString(TEXT("10 : 00"));
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Replicated)
 		UTexture2D* GameModeMapImage;

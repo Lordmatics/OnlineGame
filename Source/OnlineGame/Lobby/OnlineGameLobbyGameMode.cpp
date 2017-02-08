@@ -125,12 +125,13 @@ void AOnlineGameLobbyGameMode::RespawnPlayers_Implementation(APlayerController* 
 
 bool AOnlineGameLobbyGameMode::RespawnPlayers_Validate(APlayerController* _PlayerController)
 {
-	if (_PlayerController != nullptr)
-	{
-		return true;
-	}
-	else
-		return false;
+	//if (_PlayerController != nullptr)
+	//{
+	//	return true;
+	//}
+	//else
+	//	return false;
+	return true;
 }
 
 // Updates all Connected players lobby information when called

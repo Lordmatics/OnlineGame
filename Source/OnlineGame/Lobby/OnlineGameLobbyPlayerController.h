@@ -16,14 +16,14 @@ class ONLINEGAME_API AOnlineGameLobbyPlayerController : public APlayerController
 	
 private:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Transient)
-		TSubclassOf<class UUserWidget> LoadingScreenWidgetClass;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Transient)
+	//	TSubclassOf<class UUserWidget> LoadingScreenWidgetClass;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Transient)
-		TSubclassOf<class UUserWidget> TestLobbyWidgetClass;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Transient)
+	//	TSubclassOf<class UUserWidget> TestLobbyWidgetClass;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Transient)
-		class UUserWidget* TestLobbyWidgetInstance;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Transient)
+	//	class UUserWidget* TestLobbyWidgetInstance;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Transient)
 		FString PlayerSaveString = FString(TEXT("PlayerSaveString"));
@@ -47,10 +47,10 @@ private:
 		TArray<FMyPlayerInfo> ConnectedPlayersInfoArray;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Replicated)
-		FString SenderText;
+		FText SenderText;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Replicated)
-		FString SenderName;
+		FText SenderName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Replicated)
 		int SelectedCharacterIndex;
@@ -68,7 +68,7 @@ public:
 
 	FORCEINLINE int GetSelectedCharacterIndex() const { return SelectedCharacterIndex; }
 
-	FORCEINLINE class UUserWidget* GetLobbyWidgetInstance() const { return TestLobbyWidgetInstance; }
+//	FORCEINLINE class UUserWidget* GetLobbyWidgetInstance() const { return TestLobbyWidgetInstance; }
 	// Utility Functions
 	UFUNCTION(BlueprintCallable, Category = "C++ Functions")
 		void SaveGameCheckCode();

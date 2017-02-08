@@ -83,6 +83,7 @@ void AOnlineGameLobbyPlayerController::LoadGameCode()
 	{
 		ThePlayerSettings.PlayerName = SaveData->GetPlayerStruct().PlayerName;
 		ThePlayerSettings.PlayerLogo = SaveData->GetPlayerStruct().PlayerLogo;
+		ThePlayerSettings.AvatarLogo = SaveData->GetPlayerStruct().AvatarLogo;
 		// Potentially, load stats here too, not sure yet
 	}
 }

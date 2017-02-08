@@ -20,10 +20,10 @@ private:
 		FMyPlayerInfo PlayerSettings;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Replicated)
-		FString SenderText;
+		FText SenderText;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Replicated)
-		FString SenderName;
+		FText SenderName;
 public:
 
 	AOnlineGamePlayerController();
