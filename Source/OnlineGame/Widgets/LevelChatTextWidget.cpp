@@ -65,10 +65,10 @@
 //	}
 //}
 
-void ULevelChatTextWidget::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME(ULevelChatTextWidget, TextForBind);
-	//DOREPLIFETIME(AOnlineGameGameMode, 5.0f);
-}
+//void ULevelChatTextWidget::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+//{
+//	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+//
+//	DOREPLIFETIME(ULevelChatTextWidget, TextForBind);
+//	//DOREPLIFETIME(AOnlineGameGameMode, 5.0f);
+//}

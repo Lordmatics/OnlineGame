@@ -52,8 +52,7 @@ void AOnlineGameGameMode::Logout(AController* Exiting)
 	//}
 }
 
-
-void AOnlineGameGameMode::ServerRespawnPlayerNetwork_Implementation(APlayerController* _PlayerController, TSubclassOf<ACharacter> _PlayerCharacter)
+void AOnlineGameGameMode::CodeRespawn(APlayerController* _PlayerController, TSubclassOf<ACharacter> _PlayerCharacter)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnlineGameMode: RespawnPlayerNetwork Ran"));
 	// If World Failed for some reason 
@@ -87,6 +86,19 @@ void AOnlineGameGameMode::ServerRespawnPlayerNetwork_Implementation(APlayerContr
 	{
 		_PlayerController->Possess(SpawnedCharacter);
 	}
+}
+
+void AOnlineGameGameMode::ServerRespawnPlayerNetwork_Implementation(APlayerController* _PlayerController, TSubclassOf<ACharacter> _PlayerCharacter)
+{
+	if (Role == ROLE_Authority)
+	{
+		CodeRespawn(_PlayerController, _PlayerCharacter);
+	}
+	else
+	{
+		CodeRespawn(_PlayerController, _PlayerCharacter);
+	}
+
 }
 
 bool AOnlineGameGameMode::ServerRespawnPlayerNetwork_Validate(APlayerController* _PlayerController, TSubclassOf<ACharacter> _PlayerCharacter)

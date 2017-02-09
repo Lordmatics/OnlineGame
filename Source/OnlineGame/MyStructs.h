@@ -22,7 +22,7 @@ struct FMyPlayerInfo
 		UTexture2D* ThePlayerProfileLogo;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class ACharacter> CharacterClass;
+		TSubclassOf<class AOnlineGameCharacter> CharacterClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UTexture2D* TheCharacterImage;

@@ -17,14 +17,14 @@ private:
 
 public:
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
-		int HelloWorld = 0;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
+	//	int HelloWorld = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", Replicated)
-		FText TextForBind;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", Replicated)
+	//	FText TextForBind;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
-		UTextBlock* ActualText;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
+	//	UTextBlock* ActualText;
 
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
 	//	UButton* TestButton;
@@ -35,5 +35,5 @@ public:
 //
 //	TSharedRef<SWidget> RebuildWidget() override;
 
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	//virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };

@@ -61,6 +61,7 @@ void AOnlineGameLobbyPlayerController::SaveGameCheckCode()
 {
 	const FString& SlotName = PlayerSaveString;
 	bool bSaveExist = UGameplayStatics::DoesSaveGameExist(SlotName, 0);
+	UE_LOG(LogTemp, Warning, TEXT("SaveGameCheckCode ran : does save exist ? %s"), bSaveExist ? TEXT("true") : TEXT("False"));
 	if (bSaveExist)
 	{
 		LoadGameCode();
@@ -97,7 +98,7 @@ void AOnlineGameLobbyPlayerController::LoadGameCode()
 	{
 		ThePlayerSettings.PlayerName = SaveData->GetPlayerStruct().PlayerName;
 		ThePlayerSettings.ThePlayerProfileLogo = SaveData->GetPlayerStruct().ThePlayerProfileLogo;
-		ThePlayerSettings.TheCharacterImage = SaveData->GetPlayerStruct().TheCharacterImage;
+		//ThePlayerSettings.TheCharacterImage = SaveData->GetPlayerStruct().TheCharacterImage;
 		// Potentially, load stats here too, not sure yet
 	}
 }

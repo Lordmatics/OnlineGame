@@ -15,7 +15,7 @@ class ONLINEGAME_API AOnlineGameLobbyGameMode : public AGameMode
 	GENERATED_BODY()
 	
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Transient)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true))
 		bool bCanWeStart;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Replicated)
@@ -28,7 +28,7 @@ private:
 		TArray<APlayerStart*> PlayerStartsArray;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Replicated)
-		TArray<TSubclassOf<ACharacter>> CharactersArray;
+		TArray<TSubclassOf<class AOnlineGameCharacter>> CharactersArray;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Replicated)
 		TArray<FMyPlayerInfo> ConnectedPlayersArray;
@@ -54,12 +54,12 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Replicated)
 		int MaxNumberOfPlayers;
 
-	void DoSwap(APlayerController* _PlayerController, TSubclassOf<class ACharacter> _CharacterClass, bool _bChangeStatus);
+	void DoSwap(APlayerController* _PlayerController, TSubclassOf<class AOnlineGameCharacter> _CharacterClass, bool _bChangeStatus);
 public:
 
 	FORCEINLINE TArray<APlayerController*> GetPlayerControllersArray() const { return PlayerControllersArray; }
 
-	FORCEINLINE TArray<TSubclassOf<ACharacter>> GetCharactersArray() const { return CharactersArray; }
+	FORCEINLINE TArray<TSubclassOf<class AOnlineGameCharacter>> GetCharactersArray() const { return CharactersArray; }
 
 	FORCEINLINE TArray<FMyPlayerInfo> GetConnectedPlayersArray() const { return ConnectedPlayersArray; }
 
@@ -103,7 +103,7 @@ public:
 		void AddToKickList();
 	
 	UFUNCTION(BlueprintCallable, Category = "C++ Functions", Reliable, Server, WithValidation)
-		void SwapCharacters(APlayerController* _PlayerController, TSubclassOf<class ACharacter> _CharacterClass, bool _bChangeStatus);
-	virtual void SwapCharacters_Implementation(APlayerController* _PlayerController, TSubclassOf<class ACharacter> _CharacterClass, bool _bChangeStatus);
-	virtual bool SwapCharacters_Validate(APlayerController* _PlayerController, TSubclassOf<class ACharacter> _CharacterClass, bool _bChangeStatus);
+		void SwapCharacters(APlayerController* _PlayerController, TSubclassOf<class AOnlineGameCharacter> _CharacterClass, bool _bChangeStatus);
+	virtual void SwapCharacters_Implementation(APlayerController* _PlayerController, TSubclassOf<class AOnlineGameCharacter> _CharacterClass, bool _bChangeStatus);
+	virtual bool SwapCharacters_Validate(APlayerController* _PlayerController, TSubclassOf<class AOnlineGameCharacter> _CharacterClass, bool _bChangeStatus);
 };

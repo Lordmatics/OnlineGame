@@ -285,7 +285,7 @@ void AOnlineGameLobbyGameMode::AddToKickList()
 }
 
 // Change Character
-void AOnlineGameLobbyGameMode::SwapCharacters_Implementation(APlayerController* _PlayerController, TSubclassOf<class ACharacter> _CharacterClass, bool _bChangeStatus)
+void AOnlineGameLobbyGameMode::SwapCharacters_Implementation(APlayerController* _PlayerController, TSubclassOf<class AOnlineGameCharacter> _CharacterClass, bool _bChangeStatus)
 {
 	if (Role == ROLE_Authority)
 	{
@@ -293,13 +293,15 @@ void AOnlineGameLobbyGameMode::SwapCharacters_Implementation(APlayerController* 
 	}
 	else
 	{
-		DoSwap(_PlayerController, _CharacterClass, _bChangeStatus);
+		//DoSwap(_PlayerController, _CharacterClass, _bChangeStatus);
 	}
 	
 }
 
-void AOnlineGameLobbyGameMode::DoSwap(APlayerController* _PlayerController, TSubclassOf<class ACharacter> _CharacterClass, bool _bChangeStatus)
+void AOnlineGameLobbyGameMode::DoSwap(APlayerController* _PlayerController, TSubclassOf<class AOnlineGameCharacter> _CharacterClass, bool _bChangeStatus)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Do Swap Ran : Lobby GM Enterred"));
+
 	UWorld* const World = GetWorld();
 	if (World == nullptr) return;
 	if (!_bChangeStatus)
@@ -319,7 +321,7 @@ void AOnlineGameLobbyGameMode::DoSwap(APlayerController* _PlayerController, TSub
 					SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 					if (_CharacterClass != nullptr)
 					{
-						ACharacter* SpawnedCharacter = World->SpawnActor<ACharacter>(_CharacterClass, SpawnTransform, SpawnParams);
+						AOnlineGameCharacter* SpawnedCharacter = World->SpawnActor<AOnlineGameCharacter>(_CharacterClass, SpawnTransform, SpawnParams);
 						if (SpawnedCharacter != nullptr)
 						{
 							UE_LOG(LogTemp, Warning, TEXT("SwapChar_Imple : LobbyGM , possess success"));
@@ -332,7 +334,7 @@ void AOnlineGameLobbyGameMode::DoSwap(APlayerController* _PlayerController, TSub
 	}
 }
 
-bool AOnlineGameLobbyGameMode::SwapCharacters_Validate(APlayerController* _PlayerController, TSubclassOf<class ACharacter> _CharacterClass, bool _bChangeStatus)
+bool AOnlineGameLobbyGameMode::SwapCharacters_Validate(APlayerController* _PlayerController, TSubclassOf<class AOnlineGameCharacter> _CharacterClass, bool _bChangeStatus)
 {
 	return true;
 }

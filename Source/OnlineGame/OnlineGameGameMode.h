@@ -18,6 +18,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated, Category = "C++ Game Info")
 		TArray<APlayerStart*> PlayerStarts;
 
+	void CodeRespawn(APlayerController* _PlayerController, TSubclassOf<ACharacter> _PlayerCharacter);
 public:
 
 	/**
