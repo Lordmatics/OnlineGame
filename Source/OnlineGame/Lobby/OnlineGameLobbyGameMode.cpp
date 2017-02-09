@@ -261,6 +261,19 @@ void AOnlineGameLobbyGameMode::AddToKickList()
 // Change Character
 void AOnlineGameLobbyGameMode::SwapCharacters_Implementation(APlayerController* _PlayerController, TSubclassOf<class ACharacter> _CharacterClass, bool _bChangeStatus)
 {
+	if (Role == ROLE_Authority)
+	{
+		DoSwap(_PlayerController, _CharacterClass, _bChangeStatus);
+	}
+	else
+	{
+		DoSwap(_PlayerController, _CharacterClass, _bChangeStatus);
+	}
+	
+}
+
+void AOnlineGameLobbyGameMode::DoSwap(APlayerController* _PlayerController, TSubclassOf<class ACharacter> _CharacterClass, bool _bChangeStatus)
+{
 	UWorld* const World = GetWorld();
 	if (World == nullptr) return;
 	if (!_bChangeStatus)
@@ -286,7 +299,7 @@ void AOnlineGameLobbyGameMode::SwapCharacters_Implementation(APlayerController* 
 							UE_LOG(LogTemp, Warning, TEXT("SwapChar_Imple : LobbyGM , possess success"));
 							_PlayerController->Possess(SpawnedCharacter);
 						}
-					}	
+					}
 				}
 			}
 		}

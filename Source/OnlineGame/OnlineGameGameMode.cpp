@@ -52,6 +52,7 @@ void AOnlineGameGameMode::Logout(AController* Exiting)
 	//}
 }
 
+
 void AOnlineGameGameMode::ServerRespawnPlayerNetwork_Implementation(APlayerController* _PlayerController, TSubclassOf<ACharacter> _PlayerCharacter)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnlineGameMode: RespawnPlayerNetwork Ran"));

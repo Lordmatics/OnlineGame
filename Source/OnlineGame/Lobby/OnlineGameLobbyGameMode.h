@@ -53,6 +53,8 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = true), Replicated)
 		int MaxNumberOfPlayers;
+
+	void DoSwap(APlayerController* _PlayerController, TSubclassOf<class ACharacter> _CharacterClass, bool _bChangeStatus);
 public:
 
 	FORCEINLINE TArray<APlayerController*> GetPlayerControllersArray() const { return PlayerControllersArray; }
