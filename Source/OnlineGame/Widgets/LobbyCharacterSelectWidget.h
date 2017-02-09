@@ -25,9 +25,9 @@ public:
 		TArray<UTexture2D*> CharacterImagesArray;
 
 protected:
-	virtual void NativeConstruct() override;
-	
-	TSharedRef<SWidget> RebuildWidget() override;
+	//virtual void NativeConstruct() override;
+	//
+	//TSharedRef<SWidget> RebuildWidget() override;
 
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;

@@ -18,34 +18,34 @@ private:
 
 public:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
-		UBorder* Border;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
+	//	UBorder* Border;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
-		UVerticalBox* VerticalBox;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
+	//	UVerticalBox* VerticalBox;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
-		UScrollBox* ScrollBox;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
+	//	UScrollBox* ScrollBox;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
-		UEditableTextBox* TextBox;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
+	//	UEditableTextBox* TextBox;
 
-	UFUNCTION(BlueprintCallable, Category = "C++ Functions")
-		void RebuildBorder(FString Name);
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
-		TSubclassOf<class ULevelChatTextWidget> ChatTextWidgetClass;
-
-	UFUNCTION(BlueprintCallable, Category = "C++ Functions", Reliable, Client, WithValidation)
-		void UpdateChatWindow(const FString& _Sender, const FString& _Text);
-	virtual void UpdateChatWindow_Implementation(const FString& _Sender, const FString& _Text);
-	virtual bool UpdateChatWindow_Validate(const FString& _Sender, const FString& _Text);
-
-
-	void TextCommitted(const FText& Text, ETextCommit::Type CommitMethod);
-
-protected:
-	virtual void NativeConstruct() override;
-	
-	TSharedRef<SWidget> RebuildWidget() override;
+//	UFUNCTION(BlueprintCallable, Category = "C++ Functions")
+//		void RebuildBorder(FString Name);
+//
+//	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
+//		TSubclassOf<class ULevelChatTextWidget> ChatTextWidgetClass;
+//
+//	UFUNCTION(BlueprintCallable, Category = "C++ Functions", Reliable, Client, WithValidation)
+//		void UpdateChatWindow(const FString& _Sender, const FString& _Text);
+//	virtual void UpdateChatWindow_Implementation(const FString& _Sender, const FString& _Text);
+//	virtual bool UpdateChatWindow_Validate(const FString& _Sender, const FString& _Text);
+//
+//
+//	void TextCommitted(const FText& Text, ETextCommit::Type CommitMethod);
+//
+//protected:
+//	virtual void NativeConstruct() override;
+//	
+//	TSharedRef<SWidget> RebuildWidget() override;
 };

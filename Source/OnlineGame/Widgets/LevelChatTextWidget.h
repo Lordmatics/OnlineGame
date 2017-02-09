@@ -29,11 +29,11 @@ public:
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
 	//	UButton* TestButton;
 
-	void SetActualText(FText Message);
-protected:
-	virtual void NativeConstruct() override;
-
-	TSharedRef<SWidget> RebuildWidget() override;
+//	void SetActualText(FText Message);
+//protected:
+//	virtual void NativeConstruct() override;
+//
+//	TSharedRef<SWidget> RebuildWidget() override;
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };

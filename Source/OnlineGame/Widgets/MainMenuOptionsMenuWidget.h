@@ -19,7 +19,7 @@ private:
 		ESlateVisibility TheWelcomeMessageEnabled;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = "true"))
-		FString TheEnterredPlayerName;
+		FText TheEnterredPlayerName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = "true"))
 		FMyPlayerInfo ThePlayerInfo;
@@ -43,7 +43,7 @@ private:
 public:
 
 protected:
-	virtual void NativeConstruct() override;
-	
-	TSharedRef<SWidget> RebuildWidget() override;
+	//virtual void NativeConstruct() override;
+	//
+	//TSharedRef<SWidget> RebuildWidget() override;
 };

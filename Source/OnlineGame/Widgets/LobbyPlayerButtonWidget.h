@@ -18,7 +18,8 @@ private:
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = "true"))
-		FString ThePlayerName;
+		FText ThePlayerName;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = "true"))
 		UTexture2D* ThePlayerImage;
 
@@ -32,9 +33,9 @@ public:
 		int ThePlayerIDToKick;
 
 protected:
-	virtual void NativeConstruct() override;
-	
-	TSharedRef<SWidget> RebuildWidget() override;
+	//virtual void NativeConstruct() override;
+	//
+	//TSharedRef<SWidget> RebuildWidget() override;
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };

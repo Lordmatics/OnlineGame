@@ -18,8 +18,8 @@ private:
 public:
 
 protected:
-	virtual void NativeConstruct() override;
-	
-	TSharedRef<SWidget> RebuildWidget() override;
+	//virtual void NativeConstruct() override;
+	//
+	//TSharedRef<SWidget> RebuildWidget() override;
 	
 };

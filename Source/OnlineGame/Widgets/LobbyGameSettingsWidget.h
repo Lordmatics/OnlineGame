@@ -33,19 +33,19 @@ private:
 
 public:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
-		UScrollBox* ChatScrollBox;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
+	//	UScrollBox* ChatScrollBox;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
-		TSubclassOf<UUserWidget> PlayerButtonWidgetClass;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables")
+	//	TSubclassOf<UUserWidget> PlayerButtonWidgetClass;
 
-	UFUNCTION(BlueprintCallable, Category = "C++ Functions")
-		void FillThePlayersWindow();
+	//UFUNCTION(BlueprintCallable, Category = "C++ Functions")
+	//	void FillThePlayersWindow();
 
 protected:
-	virtual void NativeConstruct() override;
-	
-	TSharedRef<SWidget> RebuildWidget() override;
+	//virtual void NativeConstruct() override;
+	//
+	//TSharedRef<SWidget> RebuildWidget() override;
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };
