@@ -9,5 +9,5 @@ void USaving::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeP
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	//DOREPLIFETIME(AOnlineGameGameMode, 5.0f);
+	DOREPLIFETIME(USaving, PlayerSettings);
 }

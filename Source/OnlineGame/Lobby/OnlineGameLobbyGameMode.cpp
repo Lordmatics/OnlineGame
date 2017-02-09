@@ -26,6 +26,32 @@ void AOnlineGameLobbyGameMode::GetLifetimeReplicatedProps(TArray<FLifetimeProper
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	DOREPLIFETIME(AOnlineGameLobbyGameMode, bCanWeStart);
+
+	DOREPLIFETIME(AOnlineGameLobbyGameMode, bAvailableCharactersArray);
+
+	DOREPLIFETIME(AOnlineGameLobbyGameMode, PlayerControllersArray);
+
+	DOREPLIFETIME(AOnlineGameLobbyGameMode, PlayerStartsArray);
+
+	DOREPLIFETIME(AOnlineGameLobbyGameMode, CharactersArray);
+
+	DOREPLIFETIME(AOnlineGameLobbyGameMode, ConnectedPlayersArray);
+
+	DOREPLIFETIME(AOnlineGameLobbyGameMode, ServerName);
+
+	DOREPLIFETIME(AOnlineGameLobbyGameMode, GameModeMapName);
+
+	DOREPLIFETIME(AOnlineGameLobbyGameMode, GameModeMapTime);
+
+	DOREPLIFETIME(AOnlineGameLobbyGameMode, GameModeMapImage);
+
+	DOREPLIFETIME(AOnlineGameLobbyGameMode, GameModeMapID);
+
+	DOREPLIFETIME(AOnlineGameLobbyGameMode, CurrentNumberOfPlayers);
+
+	DOREPLIFETIME(AOnlineGameLobbyGameMode, MaxNumberOfPlayers);
+
 	//DOREPLIFETIME(AOnlineGameGameMode, 5.0f);
 }
 

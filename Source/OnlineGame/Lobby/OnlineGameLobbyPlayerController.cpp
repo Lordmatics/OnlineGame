@@ -40,6 +40,20 @@ void AOnlineGameLobbyPlayerController::GetLifetimeReplicatedProps(TArray<FLifeti
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	DOREPLIFETIME(AOnlineGameLobbyPlayerController, bAvailableCharactersArray);
+
+	DOREPLIFETIME(AOnlineGameLobbyPlayerController, ThePlayerSettings);
+
+	DOREPLIFETIME(AOnlineGameLobbyPlayerController, ConnectedPlayersInfoArray);
+
+	DOREPLIFETIME(AOnlineGameLobbyPlayerController, SenderText);
+
+	DOREPLIFETIME(AOnlineGameLobbyPlayerController, SenderName);
+
+	DOREPLIFETIME(AOnlineGameLobbyPlayerController, SelectedCharacterIndex);
+
+	DOREPLIFETIME(AOnlineGameLobbyPlayerController, PreviousSelectionIndex);
+
 	//DOREPLIFETIME(AOnlineGameGameMode, 5.0f);
 }
 

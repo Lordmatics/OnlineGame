@@ -69,5 +69,6 @@ void ULevelChatTextWidget::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	DOREPLIFETIME(ULevelChatTextWidget, TextForBind);
 	//DOREPLIFETIME(AOnlineGameGameMode, 5.0f);
 }

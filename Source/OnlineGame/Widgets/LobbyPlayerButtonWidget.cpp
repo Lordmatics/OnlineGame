@@ -57,5 +57,9 @@ void ULobbyPlayerButtonWidget::GetLifetimeReplicatedProps(TArray<FLifetimeProper
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	DOREPLIFETIME(ULobbyPlayerButtonWidget, ThePlayerInfo);
+
+	DOREPLIFETIME(ULobbyPlayerButtonWidget, ThePlayerIDToKick);
+
 	//DOREPLIFETIME(AOnlineGameGameMode, 5.0f);
 }

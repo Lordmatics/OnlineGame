@@ -24,5 +24,7 @@ void UOnlineGameInstance::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	//DOREPLIFETIME(AOnlineGameGameMode, 5.0f);
+	DOREPLIFETIME(UOnlineGameInstance, TheServerName);
+
+	DOREPLIFETIME(UOnlineGameInstance, MaxNumberOfPlayers);
 }

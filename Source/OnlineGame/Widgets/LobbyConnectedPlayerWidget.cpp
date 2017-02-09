@@ -57,5 +57,15 @@ void ULobbyConnectedPlayerWidget::GetLifetimeReplicatedProps(TArray<FLifetimePro
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	DOREPLIFETIME(ULobbyConnectedPlayerWidget, ThePlayerInfo);
+
+	DOREPLIFETIME(ULobbyConnectedPlayerWidget, ThePlayerName);
+
+	DOREPLIFETIME(ULobbyConnectedPlayerWidget, ThePlayersAvatar);
+
+	DOREPLIFETIME(ULobbyConnectedPlayerWidget, ThePlayersCharacterImage);
+
+	DOREPLIFETIME(ULobbyConnectedPlayerWidget, ThePlayerStatus);
+
 	//DOREPLIFETIME(AOnlineGameGameMode, 5.0f);
 }

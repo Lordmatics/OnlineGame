@@ -83,5 +83,15 @@ void ULobbyGameSettingsWidget::GetLifetimeReplicatedProps(TArray<FLifetimeProper
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	DOREPLIFETIME(ULobbyGameSettingsWidget, TheMapID);
+
+	DOREPLIFETIME(ULobbyGameSettingsWidget, TheTimeID);
+
+	DOREPLIFETIME(ULobbyGameSettingsWidget, DisplayMapName);
+
+	DOREPLIFETIME(ULobbyGameSettingsWidget, DisplayMapTime);
+
+	DOREPLIFETIME(ULobbyGameSettingsWidget, DisplayMapImage);
+
 	//DOREPLIFETIME(AOnlineGameGameMode, 5.0f);
 }

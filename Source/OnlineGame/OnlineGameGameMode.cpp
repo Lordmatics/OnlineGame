@@ -98,5 +98,11 @@ void AOnlineGameGameMode::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	DOREPLIFETIME(AOnlineGameGameMode, PlayerControllers);
+
+	DOREPLIFETIME(AOnlineGameGameMode, PlayerStarts);
+
+
+	
 	//DOREPLIFETIME(AOnlineGameGameMode, 5.0f);
 }

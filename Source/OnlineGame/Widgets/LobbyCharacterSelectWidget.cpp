@@ -57,5 +57,6 @@ void ULobbyCharacterSelectWidget::GetLifetimeReplicatedProps(TArray<FLifetimePro
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	DOREPLIFETIME(ULobbyCharacterSelectWidget, CharSelectionID);
 	//DOREPLIFETIME(AOnlineGameGameMode, 5.0f);
 }
