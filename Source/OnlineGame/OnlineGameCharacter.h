@@ -26,10 +26,33 @@ private:
 	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Animations")
 		class UAnimationComponent* AnimationStorage;
 
+	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Weapon")
+		class URaycastComponent* RaycastComponent;
+
+	// LOGIC FOR DOING ATTACKS - FINISHED AND SMOOTH
+	UPROPERTY(VisibleAnywhere, Category = "C++ Variables")
+		uint32 bAttackBufferActive : 1;
+
+	UPROPERTY(VisibleAnywhere, Category = "C++ Variables")
+		uint32 bAttackPressedCached : 1;
+
+	FTimerHandle BeginAttackHandle;
+	FTimerHandle AttackHandle;
+	FTimerHandle BufferAttackHandle;
+	// END LOGIC FOR DOING ATTACKS - FINISHED AND SMOOTH
 private:
 	// My Functions
+	// SHOOTING FUNCTIONS
+	UFUNCTION()
+		void BeginContinuousAttack();
 	UFUNCTION()
 		void Attack();
+	UFUNCTION()
+		void EndAttackBuffer();
+	UFUNCTION()
+		void ResetAttack();
+	FHitResult ShootRay();
+	// END SHOOTING FUNCTIONS
 public:
 	AOnlineGameCharacter();
 

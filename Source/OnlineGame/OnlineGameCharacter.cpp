@@ -3,8 +3,11 @@
 #include "OnlineGame.h"
 #include "Kismet/HeadMountedDisplayFunctionLibrary.h"
 #include "OnlineGameCharacter.h"
+#include "Classes/Animation/AnimMontage.h"
 #include "WeaponComponents/OnlineGameWeapon.h"
+#include "WeaponComponents/RaycastComponent.h"
 #include "Animation/AnimationComponent.h"
+#include "OnlineGamePlayerController.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AOnlineGameCharacter
@@ -45,6 +48,8 @@ AOnlineGameCharacter::AOnlineGameCharacter()
 	
 	WeaponComponent = CreateDefaultSubobject<UOnlineGameWeapon>(TEXT("WeaponComponent"));
 
+	RaycastComponent = CreateDefaultSubobject<URaycastComponent>(TEXT("RaycastComponent"));
+
 	AnimationStorage = CreateDefaultSubobject<UAnimationComponent>(TEXT("AnimationComponent"));
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
@@ -74,7 +79,8 @@ void AOnlineGameCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAxis("MoveForward", this, &AOnlineGameCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AOnlineGameCharacter::MoveRight);
 
-	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AOnlineGameCharacter::Attack);
+	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AOnlineGameCharacter::BeginContinuousAttack);
+	PlayerInputComponent->BindAction("Attack", IE_Released, this, &AOnlineGameCharacter::ResetAttack);
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
@@ -85,6 +91,30 @@ void AOnlineGameCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AOnlineGameCharacter::LookUpAtRate);
 }
 
+void AOnlineGameCharacter::BeginContinuousAttack()
+{
+	// Cache button pressed, so it auto resumes if 
+	// It is still held down after the buffer reset
+	UWorld* const World = GetWorld();
+	bAttackPressedCached = true;
+	if (World == nullptr) return;
+	if (AnimationStorage != nullptr)
+	{
+		UAnimMontage* Anim = AnimationStorage->GetAttackAnimMontage();
+		if (Anim != nullptr && !bAttackBufferActive)
+		{
+			// Get animation length, so timer is accurate
+			// Call attack immediately to prevent
+			// waiting the Duration before first attack
+			// HENCE the need for the buffer, to prevent 
+			// Attacking at infinite attack rate
+			float Duration = Anim->GetPlayLength();
+			Attack();
+			World->GetTimerManager().SetTimer(BeginAttackHandle, this, &AOnlineGameCharacter::Attack, Duration, true);
+		}
+	}
+}
+
 void AOnlineGameCharacter::Attack()
 {
 	if (AnimationStorage != nullptr)
@@ -92,10 +122,54 @@ void AOnlineGameCharacter::Attack()
 		UAnimMontage* Anim = AnimationStorage->GetAttackAnimMontage();
 		if (Anim != nullptr)
 		{
+			// Shoot a raycast, slightly ahead of your position
+			// To determine if you have hit anything - Cast to Enemy etc
 			float Duration = PlayAnimMontage(Anim, 1.0f, NAME_None);
-			UE_LOG(LogTemp, Warning, TEXT("Attack Anim Should be okaying: %f"), Duration);
+			FHitResult Hit = ShootRay();
+			UWorld* const World = GetWorld();
+			if (World == nullptr) return;
+			// Toggle attack buffer on, and start timer to end it
+			bAttackBufferActive = true;
+			World->GetTimerManager().SetTimer(BufferAttackHandle, this, &AOnlineGameCharacter::EndAttackBuffer, Duration);
 		}
 	}
+}
+
+void AOnlineGameCharacter::EndAttackBuffer()
+{
+	UWorld* const World = GetWorld();
+	if (World == nullptr) return;
+	// Disable Attack Buffer
+	World->GetTimerManager().ClearTimer(BufferAttackHandle);
+	bAttackBufferActive = false;
+	// IF the Attack Button is still being held down by the player
+	// Resume attacking - Quality of Life Sort of optimise
+	if (bAttackPressedCached)
+	{
+		BeginContinuousAttack();
+	}
+}
+
+void AOnlineGameCharacter::ResetAttack()
+{
+	UWorld* const World = GetWorld();
+	if (World == nullptr) return;
+	// Clear Attack Anim, and confirm the 
+	// Attack button has been let go
+	World->GetTimerManager().ClearTimer(BeginAttackHandle);
+	bAttackPressedCached = false;
+}
+
+FHitResult AOnlineGameCharacter::ShootRay()
+{
+	if (RaycastComponent != nullptr)
+	{
+		// Fire a raycast through the component
+		// And return what it hits
+		FVector Direction = GetActorForwardVector();
+		return RaycastComponent->RaycastTP(GetMesh(), Direction, 150.0f);
+	}
+	return FHitResult();
 }
 
 
@@ -142,6 +216,9 @@ void AOnlineGameCharacter::LookUpAtRate(float Rate)
 // Moving Around
 void AOnlineGameCharacter::MoveForward(float Value)
 {
+	// Cant move while attacking
+	if (bAttackBufferActive) return;
+
 	if ((Controller != NULL) && (Value != 0.0f))
 	{
 		// find out which way is forward
@@ -155,6 +232,9 @@ void AOnlineGameCharacter::MoveForward(float Value)
 }
 void AOnlineGameCharacter::MoveRight(float Value)
 {
+	// Can't move while attacking
+	if (bAttackBufferActive) return;
+
 	if ( (Controller != NULL) && (Value != 0.0f) )
 	{
 		// find out which way is right
