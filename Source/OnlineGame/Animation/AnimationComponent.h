@@ -14,6 +14,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = "C++ Animations")
 		UAnimMontage* AttackAnim;
 
+	UPROPERTY(EditAnywhere, Category = "C++ Animations")
+		UAnimMontage* DeathAnim;
+
 public:	
 	// Sets default values for this component's properties
 	UAnimationComponent();
@@ -27,4 +30,7 @@ public:
 		
 	// Forceinlines
 	FORCEINLINE UAnimMontage* GetAttackAnimMontage() const { return AttackAnim; }
+	FORCEINLINE UAnimMontage* GetDeathAnimMontage() const { return DeathAnim; }
+
+
 };

@@ -12,8 +12,16 @@
 //////////////////////////////////////////////////////////////////////////
 // AOnlineGameCharacter
 
+void AOnlineGameCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	//DOREPLIFETIME(AOnlineGameCharacter, bIsDead);
+}
+
 AOnlineGameCharacter::AOnlineGameCharacter()
 {
+	bReplicates = true;
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
@@ -89,10 +97,66 @@ void AOnlineGameCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAxis("TurnRate", this, &AOnlineGameCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AOnlineGameCharacter::LookUpAtRate);
+
+	PlayerInputComponent->BindAction("Die", IE_Pressed, this, &AOnlineGameCharacter::Die);
+
+}
+
+void AOnlineGameCharacter::MulticastPlayerDied_Implementation()
+{
+	PlayerDied();
+}
+
+void AOnlineGameCharacter::ServerPlayerDied_Implementation()
+{
+	MulticastPlayerDied();
+}
+
+bool AOnlineGameCharacter::ServerPlayerDied_Validate()
+{
+	return true;
 }
 
 
+void AOnlineGameCharacter::Die()
+{
+	// It looks like this makes no sense
+	// And  you could just use
+	// MulticastPlayerDied
+	// But i tested it, and
+	// You do need the Server one apparently
+	if (HasAuthority())
+	{
+		MulticastPlayerDied();
+	}
+	else
+	{
+		ServerPlayerDied();
+	}
+}
 
+void AOnlineGameCharacter::PlayerDied()
+{
+	if (AnimationStorage != nullptr)
+	{
+		UAnimMontage* Anim = AnimationStorage->GetDeathAnimMontage();
+		if (Anim != nullptr)
+		{
+			float Duration = PlayAnimMontage(Anim, 1.0f, NAME_None);
+			UWorld* const World = GetWorld();
+			if (World == nullptr) return;
+			FTimerHandle DeathHandle;
+			World->GetTimerManager().SetTimer(DeathHandle, this, &AOnlineGameCharacter::OnDied, Duration);
+		}
+
+	}
+}
+
+void AOnlineGameCharacter::OnDied()
+{
+	bIsDead = true;
+	UE_LOG(LogTemp, Warning, TEXT("Dead !!! : %s"), bIsDead ? TEXT("True") : TEXT("False"));
+}
 
 
 

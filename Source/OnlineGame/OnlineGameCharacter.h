@@ -40,6 +40,17 @@ private:
 	FTimerHandle AttackHandle;
 	FTimerHandle BufferAttackHandle;
 	// END LOGIC FOR DOING ATTACKS - FINISHED AND SMOOTH
+
+	// DEATH VARIABLES
+	///** Replicated version of relative movement. Read-only on simulated proxies! */
+	///UPROPERTY(ReplicatedUsing = OnRep_ReplicatedBasedMovement)
+	UPROPERTY(VisibleAnywhere, Category = "C++ Variables")
+		uint32 bIsDead : 1;
+	/** Rep notify for ReplicatedBasedMovement */
+	///UFUNCTION()
+		///virtual void OnRep_ReplicatedBasedMovement();
+	// END OF DEATH VARIABLES
+
 private:
 	// My Functions
 	// SHOOTING FUNCTIONS
@@ -53,6 +64,27 @@ private:
 		void ResetAttack();
 	FHitResult ShootRay();
 	// END SHOOTING FUNCTIONS
+
+	// DEATH FUNCTIONS
+	// Function that starts the death
+	UFUNCTION()
+		void Die();
+	// Function that begins Death animation - Logic
+	UFUNCTION()
+		void PlayerDied();
+	// Function that runs PlayerDied on all clients / server
+	UFUNCTION(NetMulticast, Reliable)
+		void MulticastPlayerDied();
+	virtual void MulticastPlayerDied_Implementation();
+	// Same as above ... idk
+	UFUNCTION(Server,Reliable, WithValidation)
+		void ServerPlayerDied();
+	virtual void ServerPlayerDied_Implementation();
+	virtual bool ServerPlayerDied_Validate();
+	// Resultant function of death animation
+	UFUNCTION()
+		void OnDied();
+	// END OF DEATH FUNCTIONS
 public:
 	AOnlineGameCharacter();
 
@@ -90,6 +122,8 @@ protected:
 	// End of APawn interface
 
 	virtual void PostInitializeComponents() override;
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:
 	/** Returns CameraBoom subobject **/
