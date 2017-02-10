@@ -4,6 +4,7 @@
 #include "Kismet/HeadMountedDisplayFunctionLibrary.h"
 #include "OnlineGameCharacter.h"
 #include "WeaponComponents/OnlineGameWeapon.h"
+#include "Animation/AnimationComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AOnlineGameCharacter
@@ -43,6 +44,9 @@ AOnlineGameCharacter::AOnlineGameCharacter()
 	Weapon->SetupAttachment(GetMesh());
 	
 	WeaponComponent = CreateDefaultSubobject<UOnlineGameWeapon>(TEXT("WeaponComponent"));
+
+	AnimationStorage = CreateDefaultSubobject<UAnimationComponent>(TEXT("AnimationComponent"));
+
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
@@ -70,6 +74,8 @@ void AOnlineGameCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAxis("MoveForward", this, &AOnlineGameCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AOnlineGameCharacter::MoveRight);
 
+	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AOnlineGameCharacter::Attack);
+
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
 	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
@@ -77,6 +83,19 @@ void AOnlineGameCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAxis("TurnRate", this, &AOnlineGameCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AOnlineGameCharacter::LookUpAtRate);
+}
+
+void AOnlineGameCharacter::Attack()
+{
+	if (AnimationStorage != nullptr)
+	{
+		UAnimMontage* Anim = AnimationStorage->GetAttackAnimMontage();
+		if (Anim != nullptr)
+		{
+			float Duration = PlayAnimMontage(Anim, 1.0f, NAME_None);
+			UE_LOG(LogTemp, Warning, TEXT("Attack Anim Should be okaying: %f"), Duration);
+		}
+	}
 }
 
 

@@ -22,6 +22,14 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Weapon")
 		class UOnlineGameWeapon* WeaponComponent;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Animations")
+		class UAnimationComponent* AnimationStorage;
+
+private:
+	// My Functions
+	UFUNCTION()
+		void Attack();
 public:
 	AOnlineGameCharacter();
 
@@ -34,7 +42,7 @@ public:
 	float BaseLookUpRate;
 
 protected:
-
+	
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);
 
