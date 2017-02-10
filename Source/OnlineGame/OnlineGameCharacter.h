@@ -3,48 +3,12 @@
 #include "GameFramework/Character.h"
 #include "OnlineGameCharacter.generated.h"
 
-//If you want this to appear in BP, make sure to use this instead
-//USTRUCT(BlueprintType)
-USTRUCT()
-struct FPlayerData
-{
-	GENERATED_BODY()
-
-		//Always make USTRUCT variables into UPROPERTY()
-		//    any non-UPROPERTY() struct vars are not replicated
-	UPROPERTY(EditAnywhere)
-		FString PlayerName;
-
-	UPROPERTY(EditAnywhere)
-		int32 PlayerLevel;
-
-	UPROPERTY(EditAnywhere)
-		float PlayerDamage;
-
-	UPROPERTY(EditAnywhere)
-		float PlayerHealth;
-
-	UPROPERTY(EditAnywhere)
-		float PlayerExperiencePoints;
-
-	//Constructor
-	FPlayerData()
-	{
-		//Always initialize your USTRUCT variables!
-		//   exception is if you know the variable type has its own default constructor
-		PlayerName = FString(TEXT("Niall"));
-		PlayerLevel = 1;
-		PlayerDamage = 10.0f;
-		PlayerHealth = 500.0f;
-		PlayerExperiencePoints = 0.0f;
-	}
-};
 
 UCLASS(config=Game)
 class AOnlineGameCharacter : public ACharacter
 {
 	GENERATED_BODY()
-
+private:
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
@@ -53,8 +17,11 @@ class AOnlineGameCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Custom, meta = (AllowPrivateAccess = "true"))
-		FPlayerData PlayerStruct;
+	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Weapon")
+		USkeletalMeshComponent* Weapon;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Weapon")
+		class UOnlineGameWeapon* WeaponComponent;
 public:
 	AOnlineGameCharacter();
 
@@ -90,6 +57,8 @@ protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface
+
+	virtual void PostInitializeComponents() override;
 
 public:
 	/** Returns CameraBoom subobject **/

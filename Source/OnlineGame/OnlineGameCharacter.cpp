@@ -3,6 +3,7 @@
 #include "OnlineGame.h"
 #include "Kismet/HeadMountedDisplayFunctionLibrary.h"
 #include "OnlineGameCharacter.h"
+#include "WeaponComponents/OnlineGameWeapon.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AOnlineGameCharacter
@@ -38,8 +39,22 @@ AOnlineGameCharacter::AOnlineGameCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
+	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon"));
+	Weapon->SetupAttachment(GetMesh());
+	
+	WeaponComponent = CreateDefaultSubobject<UOnlineGameWeapon>(TEXT("WeaponComponent"));
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+}
+
+void AOnlineGameCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	if (WeaponComponent != nullptr && Weapon != nullptr)
+	{
+		Weapon->SetSkeletalMesh(WeaponComponent->GetWeaponMesh());
+		Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponComponent->GetWeaponSocketName());
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -64,19 +79,47 @@ void AOnlineGameCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AOnlineGameCharacter::LookUpAtRate);
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/// OPEN CLOSED PRINCIPLE
 // Looking Around
 void AOnlineGameCharacter::TurnAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
 }
-
 void AOnlineGameCharacter::LookUpAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
-
 // Moving Around
 void AOnlineGameCharacter::MoveForward(float Value)
 {
@@ -91,7 +134,6 @@ void AOnlineGameCharacter::MoveForward(float Value)
 		AddMovementInput(Direction, Value);
 	}
 }
-
 void AOnlineGameCharacter::MoveRight(float Value)
 {
 	if ( (Controller != NULL) && (Value != 0.0f) )
