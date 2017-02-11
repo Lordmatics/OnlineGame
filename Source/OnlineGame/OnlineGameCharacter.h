@@ -57,11 +57,33 @@ private:
 	UFUNCTION()
 		void BeginContinuousAttack();
 	UFUNCTION()
+		void StartAttacking();
+	// Function that runs PlayerDied on all clients / server
+	UFUNCTION(NetMulticast, Reliable)
+		void MulticastStartAttacking();
+	virtual void MulticastStartAttacking_Implementation();
+	// Same as above ... idk
+	UFUNCTION(Server, Reliable, WithValidation)
+		void ServerStartAttacking();
+	virtual void ServerStartAttacking_Implementation();
+	virtual bool ServerStartAttacking_Validate();
+	UFUNCTION()
 		void Attack();
 	UFUNCTION()
 		void EndAttackBuffer();
 	UFUNCTION()
 		void ResetAttack();
+	UFUNCTION()
+		void AttackReset();
+	// Function that runs PlayerDied on all clients / server
+	UFUNCTION(NetMulticast, Reliable)
+		void MulticastAttackReset();
+	virtual void MulticastAttackReset_Implementation();
+	// Same as above ... idk
+	UFUNCTION(Server, Reliable, WithValidation)
+		void ServerAttackReset();
+	virtual void ServerAttackReset_Implementation();
+	virtual bool ServerAttackReset_Validate();
 	FHitResult ShootRay();
 	// END SHOOTING FUNCTIONS
 

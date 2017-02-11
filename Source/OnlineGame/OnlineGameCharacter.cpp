@@ -117,7 +117,6 @@ bool AOnlineGameCharacter::ServerPlayerDied_Validate()
 	return true;
 }
 
-
 void AOnlineGameCharacter::Die()
 {
 	// It looks like this makes no sense
@@ -186,7 +185,32 @@ void AOnlineGameCharacter::OnDied()
 
 
 /// OPEN CLOSED PRINCIPLE
+void AOnlineGameCharacter::MulticastStartAttacking_Implementation()
+{
+	StartAttacking();
+}
+
+void AOnlineGameCharacter::ServerStartAttacking_Implementation()
+{
+	MulticastStartAttacking();
+}
+
+bool AOnlineGameCharacter::ServerStartAttacking_Validate()
+{
+	return true;
+}
 void AOnlineGameCharacter::BeginContinuousAttack()
+{
+	if (HasAuthority())
+	{
+		MulticastStartAttacking();
+	}
+	else
+	{
+		ServerStartAttacking();
+	}
+}
+void AOnlineGameCharacter::StartAttacking()
 {
 	// Cache button pressed, so it auto resumes if 
 	// It is still held down after the buffer reset
@@ -242,7 +266,34 @@ void AOnlineGameCharacter::EndAttackBuffer()
 		BeginContinuousAttack();
 	}
 }
+
+void AOnlineGameCharacter::MulticastAttackReset_Implementation()
+{
+	AttackReset();
+}
+
+void AOnlineGameCharacter::ServerAttackReset_Implementation()
+{
+	MulticastAttackReset();
+}
+
+bool AOnlineGameCharacter::ServerAttackReset_Validate()
+{
+	return true;
+}
 void AOnlineGameCharacter::ResetAttack()
+{
+	if (HasAuthority())
+	{
+		MulticastAttackReset();
+	}
+	else
+	{
+		ServerAttackReset();
+	}
+}
+
+void AOnlineGameCharacter::AttackReset()
 {
 	UWorld* const World = GetWorld();
 	if (World == nullptr) return;
