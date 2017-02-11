@@ -280,12 +280,12 @@ void AOnlineGameCharacter::SpawnProjectile()
 {
 	UWorld* const World = GetWorld();
 	if (World == nullptr) return;
-	UE_LOG(LogTemp, Warning, TEXT("Proj Attempted to Fire: OnlineGameCharacter"));
+	//UE_LOG(LogTemp, Warning, TEXT("Proj Attempted to Fire: OnlineGameCharacter"));
 	if (WeaponProjectileClass == nullptr) return;
 	AWeaponProjectile* WeaponProj = World->SpawnActor<AWeaponProjectile>(WeaponProjectileClass, GetActorLocation() + (GetActorForwardVector() * ForwardOffset), GetActorRotation());
 	if (WeaponProj != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Proj Fire Successful: OnlineGameCharacter"));
+		//UE_LOG(LogTemp, Warning, TEXT("Proj Fire Successful: OnlineGameCharacter"));
 		// For time being should just see weapon firing visually
 		WeaponProj->OnEnemyHit.AddDynamic(this, &AOnlineGameCharacter::DealDamage);
 		//WeaponProj->OnEnemyHit.BindUF
@@ -334,6 +334,13 @@ void AOnlineGameCharacter::DealDamage(AActor* _Enemy)
 				FMyPlayerInfo CurrentStats = LobbyPC->GetPlayerSettings();
 				CurrentStats.PlayerDamage += 15.0f;
 				LobbyPC->SetPlayerSettings(CurrentStats);
+				UE_LOG(LogTemp, Warning, TEXT("Damage After Killing Enemy: %f"), CurrentStats.PlayerDamage);
+			}
+			if (MyPC != nullptr)
+			{
+				FMyPlayerInfo CurrentStats = MyPC->GetPlayerData();
+				CurrentStats.PlayerDamage += 15.0f;
+				MyPC->SetPlayerData(CurrentStats);
 				UE_LOG(LogTemp, Warning, TEXT("Damage After Killing Enemy: %f"), CurrentStats.PlayerDamage);
 			}
 		}

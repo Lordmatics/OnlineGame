@@ -51,7 +51,7 @@ void AEnemyAI::Attack()
 	AOnlineGameCharacter* PlayerCharacter = Cast<AOnlineGameCharacter>(World->GetFirstPlayerController()->GetCharacter());
 	if (PlayerCharacter != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("EnemyAI: Attack: PlayerCharacterName: %s"), *PlayerCharacter->GetName());
+		//UE_LOG(LogTemp, Warning, TEXT("EnemyAI: Attack: PlayerCharacterName: %s"), *PlayerCharacter->GetName());
 
 		//PlayerCharacter->GetCharacterMovement()->AddImpulse(GetActorLocation() - PlayerCharacter->GetActorLocation());
 		//PlayerCharacter->DecreaseHealth(Damage);
@@ -60,7 +60,7 @@ void AEnemyAI::Attack()
 		AEnemyAIController* TempController = Cast<AEnemyAIController>(GetController());
 		if (TempController != nullptr)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("EnemyAI: Attack: TempController != nullptr"));
+			//UE_LOG(LogTemp, Warning, TEXT("EnemyAI: Attack: TempController != nullptr"));
 			//TempController->BlackboardComponent->SetValueAsBool("Dead", true);
 		}
 	}
@@ -126,11 +126,12 @@ bool AEnemyAI::ServerTakeDamages_Validate(float DamageIn)
 }
 void AEnemyAI::Die()
 {
-	GetMesh()->SetVisibility(false);
+	//GetMesh()->SetVisibility(false);
 	AEnemyAIController* TempController = Cast<AEnemyAIController>(GetController());
 	if (TempController != nullptr)
 	{
 		//TempController->GetBrainComponent()->StopLogic(TEXT("Dead"));
 		TempController->BlackboardComponent->SetValueAsBool("Dead", true);
 	}
+	Destroy();
 }

@@ -20,7 +20,7 @@ EBTNodeResult::Type UFindWaypointTask::ExecuteTask(UBehaviorTreeComponent& Owner
 	const FVector Loc = UNavigationSystem::GetRandomPointInNavigableRadius(MyController, SearchOrigin, SearchRadius);
 	if (Loc != FVector::ZeroVector)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("FindWaypointTask: ExecuteTask: MoveLocation Set: %s"), *Loc.ToString());
+		//UE_LOG(LogTemp, Warning, TEXT("FindWaypointTask: ExecuteTask: MoveLocation Set: %s"), *Loc.ToString());
 		OwnerComp.GetBlackboardComponent()->SetValueAsVector("MoveLocation", Loc);
 		return EBTNodeResult::Succeeded;
 	}
