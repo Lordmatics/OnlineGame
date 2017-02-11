@@ -65,7 +65,6 @@ public:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	FORCEINLINE FMyPlayerInfo GetPlayerSettings() const { return ThePlayerSettings; }
-	FORCEINLINE void SetPlayerSettings(FMyPlayerInfo NewStats) { ThePlayerSettings = NewStats; }
 
 	FORCEINLINE int GetSelectedCharacterIndex() const { return SelectedCharacterIndex; }
 

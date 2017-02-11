@@ -9,6 +9,7 @@ class AOnlineGameCharacter : public ACharacter
 {
 	GENERATED_BODY()
 private:
+
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
@@ -20,7 +21,7 @@ private:
 	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Weapon")
 		USkeletalMeshComponent* Weapon;
 
-	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Weapon")
+	UPROPERTY(EditDefaultsOnly, Category = "C++ Weapon")
 		class UOnlineGameWeapon* WeaponComponent;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Animations")
@@ -30,12 +31,18 @@ private:
 		class URaycastComponent* RaycastComponent;
 
 	// LOGIC FOR DOING ATTACKS - FINISHED AND SMOOTH
+	UPROPERTY(EditDefaultsOnly, Category = "C++ Weapon")
+		TSubclassOf<class AWeaponProjectile> WeaponProjectileClass;
+
 	UPROPERTY(VisibleAnywhere, Category = "C++ Variables")
 		uint32 bAttackBufferActive : 1;
 
 	UPROPERTY(VisibleAnywhere, Category = "C++ Variables")
 		uint32 bAttackPressedCached : 1;
 
+	UPROPERTY(EditAnywhere, Category = "C++ Variables")
+		float ForwardOffset = 100.0f;
+	
 	FTimerHandle BeginAttackHandle;
 	FTimerHandle AttackHandle;
 	FTimerHandle BufferAttackHandle;
@@ -53,6 +60,10 @@ private:
 
 private:
 	// My Functions
+	// DAMAGE ORIENTED FUNCTIONS
+	UFUNCTION()
+		void DealDamage(AActor* _Enemy);
+	// END OF DAMAGE FUNCTIONS
 	// SHOOTING FUNCTIONS
 	UFUNCTION()
 		void BeginContinuousAttack();
@@ -69,6 +80,8 @@ private:
 	virtual bool ServerStartAttacking_Validate();
 	UFUNCTION()
 		void Attack();
+	UFUNCTION()
+		void SpawnProjectile();
 	UFUNCTION()
 		void EndAttackBuffer();
 	UFUNCTION()
@@ -138,6 +151,12 @@ protected:
 	 */
 	void LookUpAtRate(float Rate);
 
+	// MOUSE TURNS
+	UFUNCTION()
+		void MouseTurn(float Rate);
+
+	UFUNCTION()
+		void MouseLook(float Rate);
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

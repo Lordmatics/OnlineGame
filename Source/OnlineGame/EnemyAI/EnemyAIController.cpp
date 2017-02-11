@@ -9,7 +9,7 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
-
+#include "EnemyAI/EnemyAI.h"
 
 AEnemyAIController::AEnemyAIController()
 {
@@ -32,10 +32,13 @@ void AEnemyAIController::UpdatePerception(TArray<AActor*>ActorsInSight)
 	APawn* TempCharacter = World->GetFirstPlayerController()->GetPawn();
 	if (TempCharacter != nullptr)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("EnemyAIController: UpdatePerception: TempCharacterName: %s"), *TempCharacter->GetName());
 		for (int i = 0; i < ActorsInSight.Num(); i++)
 		{
 			if (ActorsInSight[i] == TempCharacter)
 			{
+				// Maybe some check in here to see if value already set, then compare chase target
+				// Since multiplayer
 				BlackboardComponent->SetValueAsObject("AttackTarget", TempCharacter);
 			}
 		}
@@ -45,13 +48,13 @@ void AEnemyAIController::UpdatePerception(TArray<AActor*>ActorsInSight)
 void AEnemyAIController::Possess(APawn* InPawn)
 {
 	Super::Possess(InPawn);
-	//AQuackAIPawn* AICharacter = Cast<AQuackAIPawn>(InPawn);
-	//if (AICharacter != nullptr)
-	//{
-	//	if (AICharacter->BehaviorTree != nullptr)
-	//	{
-	//		BlackboardComponent->InitializeBlackboard(*AICharacter->BehaviorTree->BlackboardAsset);
-	//		BehaviourTreeComponent->StartTree(*AICharacter->BehaviorTree);
-	//	}
-	//}
+	AEnemyAI* AICharacter = Cast<AEnemyAI>(InPawn);
+	if (AICharacter != nullptr)
+	{
+		if (AICharacter->BehaviorTree != nullptr)
+		{
+			BlackboardComponent->InitializeBlackboard(*AICharacter->BehaviorTree->BlackboardAsset);
+			BehaviourTreeComponent->StartTree(*AICharacter->BehaviorTree);
+		}
+	}
 }

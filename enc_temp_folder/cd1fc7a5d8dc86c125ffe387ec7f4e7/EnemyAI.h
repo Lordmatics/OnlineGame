@@ -30,17 +30,17 @@ public:
 
 	virtual void Attack();
 
-	//UFUNCTION(NetMulticast, Reliable)
-	//	void MulticastTakeDamages(float DamageIn);
-	//virtual void MulticastTakeDamages_Implementation(float DamageIn);
+	UFUNCTION(NetMulticast, Reliable)
+		void MulticastTakeDamages(float DamageIn);
+	virtual void MulticastTakeDamages_Implementation(float DamageIn);
 	UFUNCTION(Server, Reliable, WithValidation)
 		void ServerTakeDamages(float DamageIn);
 	virtual void ServerTakeDamages_Implementation(float DamageIn);
 	virtual bool ServerTakeDamages_Validate(float DamageIn);
-	//UFUNCTION()
-	//	void CommitDamage(float DamageIn);
 	UFUNCTION()
-		bool TakeDamages(float DamageIn);
+		void CommitDamage(float DamageIn);
+	UFUNCTION()
+		void TakeDamages(float DamageIn);
 
 	void Die();
 

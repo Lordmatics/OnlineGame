@@ -8,7 +8,7 @@
 #include "WeaponComponents/RaycastComponent.h"
 #include "Animation/AnimationComponent.h"
 #include "OnlineGamePlayerController.h"
-#include "Lobby/OnlineGameLobbyPlayerController.h"
+
 #include "Projectiles/WeaponProjectile.h"
 #include "EnemyAI/EnemyAI.h"
 
@@ -299,44 +299,20 @@ void AOnlineGameCharacter::DealDamage(AActor* _Enemy)
 	AEnemyAI* Enemy = Cast<AEnemyAI>(_Enemy);
 	if (Enemy != nullptr)
 	{
-		float Damage = 0.0f;
-		//UE_LOG(LogTemp, Warning, TEXT("Damage Before Load: %f"), Damage);
+		float Damage = 50.0f;
+		UE_LOG(LogTemp, Warning, TEXT("Damage Before Load: %f"), Damage);
 		APlayerController* PC = Cast<APlayerController>(Controller);
-		AOnlineGamePlayerController* MyPC = Cast<AOnlineGamePlayerController>(PC);
-		AOnlineGameLobbyPlayerController* LobbyPC = Cast<AOnlineGameLobbyPlayerController>(PC);
 		if (PC != nullptr)
 		{
-			MyPC = Cast<AOnlineGamePlayerController>(PC);
+			AOnlineGamePlayerController* MyPC = Cast<AOnlineGamePlayerController>(PC);
 			if (MyPC != nullptr)
 			{
 				FMyPlayerInfo MyData = MyPC->GetPlayerData();
 				Damage = MyData.PlayerDamage;
-				UE_LOG(LogTemp, Warning, TEXT("Damage After Load, in Game, : %f"), Damage);
-			}
-			else
-			{
-				LobbyPC = Cast <AOnlineGameLobbyPlayerController>(PC);
-				if (LobbyPC != nullptr)
-				{
-					FMyPlayerInfo MyLobbyData = LobbyPC->GetPlayerSettings();
-					Damage = MyLobbyData.PlayerDamage;
-					UE_LOG(LogTemp, Warning, TEXT("Damage After Load , in Lobby, : %f"), Damage);
-				}
+				UE_LOG(LogTemp, Warning, TEXT("Damage After Load: %f"), Damage);
 			}
 		}
-		if (Enemy->TakeDamages(Damage))
-		{
-			// Enemy was Slain
-			// Gain Exp
-			// For Test Just gonna add Damage
-			if (LobbyPC != nullptr)
-			{
-				FMyPlayerInfo CurrentStats = LobbyPC->GetPlayerSettings();
-				CurrentStats.PlayerDamage += 15.0f;
-				LobbyPC->SetPlayerSettings(CurrentStats);
-				UE_LOG(LogTemp, Warning, TEXT("Damage After Killing Enemy: %f"), CurrentStats.PlayerDamage);
-			}
-		}
+		Enemy->TakeDamages(Damage);
 	}
 }
 void AOnlineGameCharacter::EndAttackBuffer()

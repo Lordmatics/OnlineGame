@@ -66,64 +66,43 @@ void AEnemyAI::Attack()
 	}
 }
 
-//void AEnemyAI::MulticastTakeDamages_Implementation(float DamageIn)
-//{
-//	TakeDamages(DamageIn);
-//}
-//
-//void AEnemyAI::ServerTakeDamages_Implementation(float DamageIn)
-//{
-//	MulticastTakeDamages(DamageIn);
-//}
-//
-//bool AEnemyAI::ServerTakeDamages_Validate(float DamageIn)
-//{
-//	return true;
-//}
-//
-//void AEnemyAI::CommitDamage(float DamageIn)
-//{
-//	EnemyHealth -= DamageIn;
-//	UE_LOG(LogTemp, Warning, TEXT("EnemyHealth: %f"), EnemyHealth);
-//	if (EnemyHealth <= 0.0f)
-//	{
-//		Die();
-//	}
-//}
-bool AEnemyAI::TakeDamages(float DamageIn)
+void AEnemyAI::MulticastTakeDamages_Implementation(float DamageIn)
 {
-	EnemyHealth -= DamageIn;
-	if (Role < ROLE_Authority)
-	{
-		ServerTakeDamages(DamageIn);
-	}
-	UE_LOG(LogTemp, Warning, TEXT("EnemyHealth: %f"), EnemyHealth);
-	if (EnemyHealth <= 0.0f)
-	{
-		Die();
-		return true;
-	}
-	return false;
-	//if (HasAuthority())
-	//{
-	//	MulticastTakeDamages(DamageIn);
-	//}
-	//else
-	//{
-	//	ServerTakeDamages(DamageIn);
-	//}
-
+	TakeDamages(DamageIn);
 }
 
 void AEnemyAI::ServerTakeDamages_Implementation(float DamageIn)
 {
-	TakeDamages(DamageIn);
+	MulticastTakeDamages(DamageIn);
 }
 
 bool AEnemyAI::ServerTakeDamages_Validate(float DamageIn)
 {
 	return true;
 }
+
+void AEnemyAI::CommitDamage(float DamageIn)
+{
+	EnemyHealth -= DamageIn;
+	UE_LOG(LogTemp, Warning, TEXT("EnemyHealth: %f"), EnemyHealth);
+	if (EnemyHealth <= 0.0f)
+	{
+		Die();
+	}
+}
+void AEnemyAI::TakeDamages(float DamageIn)
+{
+	if (HasAuthority())
+	{
+		MulticastTakeDamages(DamageIn);
+	}
+	else
+	{
+		ServerTakeDamages(DamageIn);
+	}
+
+}
+
 void AEnemyAI::Die()
 {
 	GetMesh()->SetVisibility(false);

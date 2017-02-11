@@ -87,7 +87,6 @@ void AOnlineGameLobbyPlayerController::SaveGameCode()
 	}
 
 	PlayerSaveGameRef->SetPlayerStruct(ThePlayerSettings);
-	UE_LOG(LogTemp, Warning, TEXT("Player Data Saved : LobbyPC : Damage: %f"), ThePlayerSettings.PlayerDamage);
 	UGameplayStatics::SaveGameToSlot(PlayerSaveGameRef, SlotName, 0);
 }
 
@@ -101,11 +100,6 @@ void AOnlineGameLobbyPlayerController::LoadGameCode()
 		ThePlayerSettings.ThePlayerProfileLogo = SaveData->GetPlayerStruct().ThePlayerProfileLogo;
 		//ThePlayerSettings.TheCharacterImage = SaveData->GetPlayerStruct().TheCharacterImage;
 		// Potentially, load stats here too, not sure yet
-		ThePlayerSettings.PlayerDamage = SaveData->GetPlayerStruct().PlayerDamage;
-		ThePlayerSettings.PlayerExperiencePoints = SaveData->GetPlayerStruct().PlayerExperiencePoints;
-		ThePlayerSettings.PlayerFireRate = SaveData->GetPlayerStruct().PlayerFireRate;
-		ThePlayerSettings.PlayerHealth = SaveData->GetPlayerStruct().PlayerHealth;
-		ThePlayerSettings.PlayerLevel = SaveData->GetPlayerStruct().PlayerLevel;
 	}
 }
 

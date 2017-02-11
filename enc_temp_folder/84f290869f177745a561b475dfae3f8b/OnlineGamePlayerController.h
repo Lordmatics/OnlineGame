@@ -28,9 +28,6 @@ public:
 
 	AOnlineGamePlayerController();
 
-	FORCEINLINE FMyPlayerInfo GetPlayerData() const { return PlayerSettings; }
-	FORCEINLINE void SetPlayerData(FMyPlayerInfo NewStats) { PlayerSettings = NewStats; }
-
 	// Loads Player Info and Pass over to Server
 	virtual void BeginPlay() override;
 	
