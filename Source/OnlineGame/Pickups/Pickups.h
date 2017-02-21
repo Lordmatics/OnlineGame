@@ -18,7 +18,16 @@ private:
 	void PlayPickUpSound(const FVector& Location);
 
 	void PlayPickUpEffect(const FVector& Location);
+
+	UFUNCTION()
+		void HandleOverlap();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+		void ServerHandleOverlap();
 protected:
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 	/** Default Root Component for Object*/
 	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Base Class")
 		USceneComponent* MyRoot;
@@ -32,7 +41,7 @@ protected:
 		USoundBase* PickUpSound;
 
 	/** Visual feedback - for when you pick up an item - should replicate probably*/
-	UPROPERTY(EditAnywhere, Category = "C++ Base Class")
+	UPROPERTY(EditAnywhere, Category = "C++ Base Class", Replicated)
 		UParticleSystem* PickUpEffect;
 
 	/** Volume of sound - so it doesnt bite your ears off*/

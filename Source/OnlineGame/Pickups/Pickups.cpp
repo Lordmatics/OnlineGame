@@ -16,6 +16,15 @@ APickups::APickups()
 	MyStaticMesh->bGenerateOverlapEvents = true;
 	MyStaticMesh->OnComponentBeginOverlap.AddDynamic(this, &APickups::OnTriggerEnter);
 	MyStaticMesh->SetupAttachment(MyRoot);
+
+	bReplicates = true;
+}
+
+void APickups::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(APickups, PickUpEffect);
 }
 
 // Called when the game starts or when spawned
@@ -40,13 +49,52 @@ void APickups::OnTriggerEnter(UPrimitiveComponent* OverlappedComponent, AActor* 
 /** Call this Super::Function at the end of the overriden logic - since this handles the logic, that every pickup will do*/
 void APickups::TriggerEnter_Implementation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	// Adding in possiblity to move effect through code if lacking animations
-	// And doppler the sound but probably wont use it.
+	if (HasAuthority())
+	{
+		// Server
+		UE_LOG(LogTemp, Warning, TEXT("Trigger Activated - Server, : %s"), *OtherActor->GetName());
+
+		// Adding in possiblity to move effect through code if lacking animations
+		// And doppler the sound but probably wont use it.
+		const FVector SpawnLocation = GetActorLocation();
+		PlayPickUpSound(SpawnLocation);
+		HandleOverlap();
+	}
+	else
+	{
+		// Client
+
+		UE_LOG(LogTemp, Warning, TEXT("Trigger Activated - Client, : %s"), *OtherActor->GetName());
+
+		// Adding in possiblity to move effect through code if lacking animations
+		// And doppler the sound but probably wont use it.
+		const FVector SpawnLocation = GetActorLocation();
+		PlayPickUpSound(SpawnLocation);
+		//PlayPickUpEffect(SpawnLocation);
+		//// Might wanna delay this by 1s, and just "Fake Destroy" StaticMesh, we'll see
+		//Destroy();
+
+		ServerHandleOverlap();
+	}
+
+}
+
+void APickups::HandleOverlap()
+{
 	const FVector SpawnLocation = GetActorLocation();
-	PlayPickUpSound(SpawnLocation);
 	PlayPickUpEffect(SpawnLocation);
 	// Might wanna delay this by 1s, and just "Fake Destroy" StaticMesh, we'll see
 	Destroy();
+}
+
+void APickups::ServerHandleOverlap_Implementation()
+{
+	HandleOverlap();
+}
+
+bool APickups::ServerHandleOverlap_Validate()
+{
+	return true;
 }
 
 void APickups::PlayPickUpSound(const FVector& Location)
