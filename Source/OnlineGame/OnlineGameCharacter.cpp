@@ -19,7 +19,10 @@ void AOnlineGameCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	//DOREPLIFETIME(AOnlineGameCharacter, bIsDead);
+	DOREPLIFETIME(AOnlineGameCharacter, KeyCount);
+
+	DOREPLIFETIME(AOnlineGameCharacter, GoldCount);
+
 }
 
 AOnlineGameCharacter::AOnlineGameCharacter()

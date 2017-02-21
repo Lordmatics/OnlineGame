@@ -61,8 +61,11 @@ private:
 		///virtual void OnRep_ReplicatedBasedMovement();
 	// END OF DEATH VARIABLES
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = "true"), Replicated)
 		int KeyCount = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = "true"), Replicated)
+		float GoldCount = 0.0f;
 
 private:
 	// My Functions
@@ -183,6 +186,12 @@ public:
 	FORCEINLINE void UseKey() { KeyCount -= 1; KeyCount = FMath::Clamp(KeyCount, 0, 99); }
 	FORCEINLINE void GainKey() { KeyCount += 1; KeyCount = FMath::Clamp(KeyCount, 0, 99); }
 	FORCEINLINE bool HasKeys() { return KeyCount > 0 ? true : false; }
+
+	FORCEINLINE float GetGoldCount() const { return GoldCount; }
+	FORCEINLINE void SetKeyCount(float NewGold) { GoldCount = NewGold; }
+	FORCEINLINE void SpendGold(float Amount) { Amount > GoldCount ? GoldCount += 0.0f : GoldCount -= Amount; GoldCount = FMath::Clamp(GoldCount, 0.0f, 99999.0f); }
+	FORCEINLINE void ObtainGold(float Amount) { GoldCount += Amount; GoldCount = FMath::Clamp(GoldCount, 0.0f, 99999.0f); }
+	FORCEINLINE bool HasGold() { return GoldCount > 0.0f ? true : false; }
 
 };
 

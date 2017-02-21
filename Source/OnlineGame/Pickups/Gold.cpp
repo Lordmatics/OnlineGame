@@ -27,7 +27,8 @@ void AGold::TriggerEnter_Implementation(UPrimitiveComponent* OverlappedComponent
 	{
 		// Add Gold to players inventory or something
 		//
-
+		OnlineCharacter->ObtainGold(GoldValue);
+		UE_LOG(LogTemp, Warning, TEXT("%s has %f Gold"), *OnlineCharacter->GetName(), OnlineCharacter->GetGoldCount());
 		// Sound - Effect - Destroy
 		Super::TriggerEnter_Implementation(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
 	}
