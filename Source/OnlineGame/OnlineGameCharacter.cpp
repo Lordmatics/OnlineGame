@@ -233,7 +233,7 @@ void AOnlineGameCharacter::StartAttacking()
 			// waiting the Duration before first attack
 			// HENCE the need for the buffer, to prevent 
 			// Attacking at infinite attack rate
-			float Duration = Anim->GetPlayLength();
+			float Duration = Anim->GetPlayLength() / AttackSpeedMultiplier;
 			Attack();
 			World->GetTimerManager().SetTimer(BeginAttackHandle, this, &AOnlineGameCharacter::Attack, Duration, true);
 		}
@@ -250,7 +250,7 @@ void AOnlineGameCharacter::Attack()
 			if (World == nullptr) return;
 			// Shoot a raycast, slightly ahead of your position
 			// To determine if you have hit anything - Cast to Enemy etc
-			float Duration = PlayAnimMontage(Anim, 1.0f, NAME_None);
+			float Duration = PlayAnimMontage(Anim, 1.0f * AttackSpeedMultiplier, NAME_None);
 			FHitResult Hit = ShootRay();
 			// Test
 			AEnemyAI* EnemyHit = Cast<AEnemyAI>(Hit.GetActor());
@@ -263,7 +263,7 @@ void AOnlineGameCharacter::Attack()
 			else
 			{
 				FTimerHandle ProjectileTimerHandle;
-				World->GetTimerManager().SetTimer(ProjectileTimerHandle, this, &AOnlineGameCharacter::SpawnProjectile, Duration / 2);
+				World->GetTimerManager().SetTimer(ProjectileTimerHandle, this, &AOnlineGameCharacter::SpawnProjectile, Duration / (2 * AttackSpeedMultiplier));
 
 			}
 			// End Test
@@ -271,7 +271,7 @@ void AOnlineGameCharacter::Attack()
 
 			// Toggle attack buffer on, and start timer to end it
 			bAttackBufferActive = true;
-			World->GetTimerManager().SetTimer(BufferAttackHandle, this, &AOnlineGameCharacter::EndAttackBuffer, Duration);
+			World->GetTimerManager().SetTimer(BufferAttackHandle, this, &AOnlineGameCharacter::EndAttackBuffer, Duration / AttackSpeedMultiplier);
 		}
 	}
 }
@@ -323,27 +323,28 @@ void AOnlineGameCharacter::DealDamage(AActor* _Enemy)
 					UE_LOG(LogTemp, Warning, TEXT("Damage After Load , in Lobby, : %f"), Damage);
 				}
 			}
-		}
-		if (Enemy->TakeDamages(Damage))
-		{
-			// Enemy was Slain
-			// Gain Exp
-			// For Test Just gonna add Damage
-			if (LobbyPC != nullptr)
+			if (Enemy->TakeDamages(Damage))
 			{
-				FMyPlayerInfo CurrentStats = LobbyPC->GetPlayerSettings();
-				CurrentStats.PlayerDamage += 15.0f;
-				LobbyPC->SetPlayerSettings(CurrentStats);
-				UE_LOG(LogTemp, Warning, TEXT("Damage After Killing Enemy: %f"), CurrentStats.PlayerDamage);
-			}
-			if (MyPC != nullptr)
-			{
-				FMyPlayerInfo CurrentStats = MyPC->GetPlayerData();
-				CurrentStats.PlayerDamage += 15.0f;
-				MyPC->SetPlayerData(CurrentStats);
-				UE_LOG(LogTemp, Warning, TEXT("Damage After Killing Enemy: %f"), CurrentStats.PlayerDamage);
+				// Enemy was Slain
+				// Gain Exp
+				// For Test Just gonna add Damage
+				if (LobbyPC != nullptr)
+				{
+					FMyPlayerInfo CurrentStats = LobbyPC->GetPlayerSettings();
+					CurrentStats.PlayerDamage += 15.0f;
+					LobbyPC->SetPlayerSettings(CurrentStats);
+					UE_LOG(LogTemp, Warning, TEXT("Damage After Killing Enemy: %f"), CurrentStats.PlayerDamage);
+				}
+				if (MyPC != nullptr)
+				{
+					FMyPlayerInfo CurrentStats = MyPC->GetPlayerData();
+					CurrentStats.PlayerDamage += 15.0f;
+					MyPC->SetPlayerData(CurrentStats);
+					UE_LOG(LogTemp, Warning, TEXT("Damage After Killing Enemy: %f"), CurrentStats.PlayerDamage);
+				}
 			}
 		}
+
 	}
 }
 void AOnlineGameCharacter::EndAttackBuffer()

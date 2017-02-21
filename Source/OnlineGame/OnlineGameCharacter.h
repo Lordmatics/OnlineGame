@@ -43,6 +43,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = "C++ Variables")
 		float ForwardOffset = 100.0f;
 	
+	UPROPERTY(EditAnywhere, Category = "C++ Variables")
+		float AttackSpeedMultiplier = 2.0f;
+
 	FTimerHandle BeginAttackHandle;
 	FTimerHandle AttackHandle;
 	FTimerHandle BufferAttackHandle;
