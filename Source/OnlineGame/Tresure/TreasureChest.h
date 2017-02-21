@@ -14,6 +14,10 @@ private:
 	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Treasure Chest")
 		USceneComponent* MyRoot;
 
+	/** Gold Spawn Location Reference*/
+	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Treasure Chest")
+		USceneComponent* GoldSpawn;
+
 	// Solid Mesh until trigger zone activated
 	/** Skeletal Treasure chest for animation*/
 	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Treasure Chest")
@@ -42,6 +46,10 @@ private:
 	/** Animation Play speed*/
 	UPROPERTY(EditAnywhere, Category = "C++ Treasure Chest")
 		float PlaySpeed = 1.0f;
+
+	/** In case animation time is wonky*/
+	UPROPERTY(EditAnywhere, Category = "C++ Treasure Chest")
+		float AnimDurationOffset = 0.0f;
 
 	/** Animation to open up chest*/
 	UPROPERTY(EditAnywhere, Category = "C++ Treasure Chest")

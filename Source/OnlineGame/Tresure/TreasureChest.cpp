@@ -15,6 +15,9 @@ ATreasureChest::ATreasureChest()
 	MyRoot = CreateDefaultSubobject<USceneComponent>(TEXT("MyRootComponent"));
 	RootComponent = MyRoot;
 
+	GoldSpawn = CreateDefaultSubobject<USceneComponent>(TEXT("GoldSpawn"));
+	GoldSpawn->SetupAttachment(MyRoot);
+
 	MyTreasureChest = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MyTreasureChest"));
 	MyTreasureChest->bGenerateOverlapEvents = true;
 	MyTreasureChest->SetHiddenInGame(false);
@@ -73,7 +76,7 @@ void ATreasureChest::OnTriggerEnter(UPrimitiveComponent* OverlappedComponent, AA
 				// So Player can absorb the gold
 				float AnimDuration = AnimInstance->Montage_Play(OpenAnim, PlaySpeed);
 				FTimerHandle OpenChestHandle;
-				World->GetTimerManager().SetTimer(OpenChestHandle, this, &ATreasureChest::OnTreasureChestOpenned, AnimDuration);
+				World->GetTimerManager().SetTimer(OpenChestHandle, this, &ATreasureChest::OnTreasureChestOpenned, AnimDuration + AnimDurationOffset);
 			}
 		}
 	}
@@ -102,11 +105,11 @@ void ATreasureChest::SpawnGold()
 	UWorld* const World = GetWorld();
 	if (World == nullptr) return;
 	if (GoldClass == nullptr) return;
-	const FVector SpawnLocation = GetActorLocation() + SpawnOffset;
+	//const FVector SpawnLocation = GetActorLocation() + SpawnOffset;
 	const FRotator SpawnRotation = GetActorRotation();
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	APickups* Gold = World->SpawnActor<APickups>(GoldClass, SpawnLocation, SpawnRotation, SpawnParams);
+	APickups* Gold = World->SpawnActor<APickups>(GoldClass, GoldSpawn->GetComponentLocation(), SpawnRotation, SpawnParams);
 	if (Gold != nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Gold Spawned"));
