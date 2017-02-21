@@ -27,7 +27,8 @@ void AKeys::TriggerEnter_Implementation(UPrimitiveComponent* OverlappedComponent
 	{
 		// Add a key to players inventory or something
 		//
-
+		OnlineCharacter->GainKey();
+		UE_LOG(LogTemp, Warning, TEXT("%s has %d keys"), *OnlineCharacter->GetName(), OnlineCharacter->GetKeyCount());
 		// Sound - Effect - Destroy
 		Super::TriggerEnter_Implementation(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
 	}

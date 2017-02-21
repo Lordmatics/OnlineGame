@@ -60,6 +60,7 @@ void ATreasureChest::OnTriggerEnter(UPrimitiveComponent* OverlappedComponent, AA
 	AOnlineGameCharacter* OnlineCharacter = Cast<AOnlineGameCharacter>(OtherActor);
 	if (OnlineCharacter != nullptr)
 	{
+		if (!OnlineCharacter->HasKeys()) return;
 		UE_LOG(LogTemp, Warning, TEXT("Character Valid"));
 		UWorld* const World = GetWorld();
 		if (World == nullptr) return;
@@ -77,6 +78,9 @@ void ATreasureChest::OnTriggerEnter(UPrimitiveComponent* OverlappedComponent, AA
 				float AnimDuration = AnimInstance->Montage_Play(OpenAnim, PlaySpeed);
 				FTimerHandle OpenChestHandle;
 				World->GetTimerManager().SetTimer(OpenChestHandle, this, &ATreasureChest::OnTreasureChestOpenned, AnimDuration + AnimDurationOffset);
+				UE_LOG(LogTemp, Warning, TEXT("%s has %d keys before using one"), *OnlineCharacter->GetName(), OnlineCharacter->GetKeyCount());
+				OnlineCharacter->UseKey();
+				UE_LOG(LogTemp, Warning, TEXT("%s has %d keys after using one"), *OnlineCharacter->GetName(), OnlineCharacter->GetKeyCount());
 			}
 		}
 	}

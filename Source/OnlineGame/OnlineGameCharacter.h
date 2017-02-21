@@ -61,6 +61,9 @@ private:
 		///virtual void OnRep_ReplicatedBasedMovement();
 	// END OF DEATH VARIABLES
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = "true"))
+		int KeyCount = 0;
+
 private:
 	// My Functions
 	// DAMAGE ORIENTED FUNCTIONS
@@ -174,5 +177,12 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	FORCEINLINE int GetKeyCount() const { return KeyCount; }
+	FORCEINLINE void SetKeyCount(int Keys) { KeyCount = Keys; }
+	FORCEINLINE void UseKey() { KeyCount -= 1; KeyCount = FMath::Clamp(KeyCount, 0, 99); }
+	FORCEINLINE void GainKey() { KeyCount += 1; KeyCount = FMath::Clamp(KeyCount, 0, 99); }
+	FORCEINLINE bool HasKeys() { return KeyCount > 0 ? true : false; }
+
 };
 
