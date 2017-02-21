@@ -6,7 +6,7 @@
 
 AKeys::AKeys()
 {
-
+	bReplicates = true;
 }
 
 void AKeys::BeginPlay()

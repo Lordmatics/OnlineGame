@@ -6,7 +6,7 @@
 
 APowerups::APowerups()
 {
-
+	bReplicates = true;
 }
 
 void APowerups::BeginPlay()

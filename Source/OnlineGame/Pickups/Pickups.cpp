@@ -70,11 +70,12 @@ void APickups::TriggerEnter_Implementation(UPrimitiveComponent* OverlappedCompon
 		// And doppler the sound but probably wont use it.
 		const FVector SpawnLocation = GetActorLocation();
 		PlayPickUpSound(SpawnLocation);
+		HandleOverlap();
 		//PlayPickUpEffect(SpawnLocation);
 		//// Might wanna delay this by 1s, and just "Fake Destroy" StaticMesh, we'll see
 		//Destroy();
 
-		ServerHandleOverlap();
+		//ServerHandleOverlap();
 	}
 
 }

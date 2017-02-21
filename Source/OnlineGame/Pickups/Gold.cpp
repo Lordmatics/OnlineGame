@@ -6,7 +6,7 @@
 
 AGold::AGold()
 {
-
+	bReplicates = true;
 }
 
 void AGold::BeginPlay()
