@@ -52,7 +52,7 @@ void AEnemyAI::Tick( float DeltaTime )
 	{
 		//FString HealthString = FString::Printf(TEXT("Health: %d"), (int)EnemyHealth);
 		//HealthText->Text = FText::FromString(HealthString);
-		HealthText->SetText(FString::SanitizeFloat(EnemyHealth));
+		HealthText->SetText(FString::FromInt((int)EnemyHealth));
 	}
 }
 
