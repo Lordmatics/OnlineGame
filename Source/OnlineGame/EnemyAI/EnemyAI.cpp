@@ -19,22 +19,41 @@ AEnemyAI::AEnemyAI()
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
 	BoxCollision->SetupAttachment(GetCapsuleComponent());
 
+	HealthText = CreateDefaultSubobject<UTextRenderComponent>(TEXT("HealthText"));
+	HealthText->SetIsReplicated(true);
+	HealthText->SetupAttachment(GetCapsuleComponent());
+
 	GetCharacterMovement()->bUseRVOAvoidance = true;
 
+}
+
+void AEnemyAI::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AEnemyAI, EnemyHealth);
+	DOREPLIFETIME(AEnemyAI, HealthText);
 }
 
 // Called when the game starts or when spawned
 void AEnemyAI::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+
+	//UE_LOG(LogTemp, Warning, TEXT("EnemyHealth: %d"), (int)EnemyHealth);
+
 }
 
 // Called every frame
 void AEnemyAI::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
-
+	if (HealthText != nullptr)
+	{
+		//FString HealthString = FString::Printf(TEXT("Health: %d"), (int)EnemyHealth);
+		//HealthText->Text = FText::FromString(HealthString);
+		HealthText->SetText(FString::SanitizeFloat(EnemyHealth));
+	}
 }
 
 // Called to bind functionality to input
@@ -92,17 +111,23 @@ void AEnemyAI::Attack()
 //}
 bool AEnemyAI::TakeDamages(float DamageIn)
 {
-	EnemyHealth -= DamageIn;
+
 	if (Role < ROLE_Authority)
 	{
 		ServerTakeDamages(DamageIn);
 	}
-	UE_LOG(LogTemp, Warning, TEXT("EnemyHealth: %f"), EnemyHealth);
-	if (EnemyHealth <= 0.0f)
+	else
 	{
-		Die();
-		return true;
+		EnemyHealth -= DamageIn;
+		//HealthText->Text = FText::FromString(FString::Printf(TEXT("Health: %f"), EnemyHealth));
+		UE_LOG(LogTemp, Warning, TEXT("EnemyHealth: %f"), EnemyHealth);
+		if (EnemyHealth <= 0.0f)
+		{
+			Die();
+			return true;
+		}
 	}
+
 	return false;
 	//if (HasAuthority())
 	//{

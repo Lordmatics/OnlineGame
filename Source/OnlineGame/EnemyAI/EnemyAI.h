@@ -15,6 +15,10 @@ class ONLINEGAME_API AEnemyAI : public ACharacter
 private:
 	UPROPERTY(Category = Character, VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UBoxComponent* BoxCollision;
+
+	UPROPERTY(Category = Character, VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Replicated)
+		UTextRenderComponent* HealthText;
+
 public:
 	// Sets default values for this character's properties
 	AEnemyAI();
@@ -28,6 +32,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* _InputComponent) override;
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual void Attack();
 
 	//UFUNCTION(NetMulticast, Reliable)
@@ -50,6 +55,6 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Delegate")
 		FOnEnemyDestroyed OnEnemyDestroyed;
 
-	UPROPERTY(EditAnywhere, Category = "Health")
+	UPROPERTY(EditAnywhere, Category = "Health", Replicated)
 		float EnemyHealth = 100.0f;
 };
