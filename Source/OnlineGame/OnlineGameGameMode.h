@@ -44,4 +44,6 @@ public:
 	virtual void ServerRespawnPlayerNetwork_Implementation(APlayerController* _PlayerController, TSubclassOf<class ACharacter> _PlayerCharacter);
 	virtual bool ServerRespawnPlayerNetwork_Validate(APlayerController* _PlayerController, TSubclassOf<class ACharacter> _PlayerCharacter);
 
+	FORCEINLINE int GetPCInGame() const { return PlayerControllers.Num(); }
+
 };
