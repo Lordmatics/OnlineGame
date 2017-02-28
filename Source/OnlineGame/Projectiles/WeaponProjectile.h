@@ -24,6 +24,14 @@ private:
 	/** Projectile movement component */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 		class UProjectileMovementComponent* ProjectileMovement;
+
+	UPROPERTY(EditAnywhere, Category = "Delegate")
+		float RotationX = 10.0f;
+	UPROPERTY(EditAnywhere, Category = "Delegate")
+		float RotationY = 0.0f;
+	UPROPERTY(EditAnywhere, Category = "Delegate")
+		float RotationZ = 10.0f;
+
 public:	
 	// Sets default values for this actor's properties
 	AWeaponProjectile();
@@ -52,4 +60,6 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = "Players Projectile Damage")
 		float ProjectileDamage = 20.0f;
+
+
 };

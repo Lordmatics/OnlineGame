@@ -49,6 +49,9 @@ void AWeaponProjectile::BeginPlay()
 void AWeaponProjectile::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
+	FRotator CurrentRotation = ProjectileMesh->GetComponentRotation();
+	CurrentRotation.Add(DeltaTime*RotationY, DeltaTime*RotationZ, DeltaTime*RotationX);
+	ProjectileMesh->SetRelativeRotation(CurrentRotation);
 
 }
 
