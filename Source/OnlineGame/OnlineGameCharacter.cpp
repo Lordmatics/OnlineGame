@@ -11,6 +11,7 @@
 #include "Lobby/OnlineGameLobbyPlayerController.h"
 #include "Projectiles/WeaponProjectile.h"
 #include "EnemyAI/EnemyAI.h"
+#include "Barrels/Barrels.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AOnlineGameCharacter
@@ -349,6 +350,12 @@ void AOnlineGameCharacter::DealDamage(AActor* _Enemy)
 		}
 
 	}
+	ABarrels* Barrel = Cast<ABarrels>(_Enemy);
+	if (Barrel != nullptr)
+	{
+		Barrel->Fracture();
+	}
+
 }
 void AOnlineGameCharacter::EndAttackBuffer()
 {
