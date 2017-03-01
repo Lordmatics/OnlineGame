@@ -26,15 +26,24 @@ void APowerups::TriggerEnter_Implementation(UPrimitiveComponent* OverlappedCompo
 	if (OnlineCharacter != nullptr)
 	{
 		// Add a Powerup to players inventory or something
-		PowerUpObtained();
-
+		OnlineCharacter->ObtainPower(this);
+		UE_LOG(LogTemp, Warning, TEXT("BasePowerUps: PowerUp Obtained"));
 		// Sound - Effect - Destroy
 		Super::TriggerEnter_Implementation(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
 	}
 }
 
 /** Override this specific to each powerup - might be redundant not sure yet*/
-void APowerups::PowerUpObtained()
+void APowerups::UsePower()
 {
+	UE_LOG(LogTemp, Warning, TEXT("BasePowerUps: UsePower Activated"));
+	UseCharge();
+}
 
+void APowerups::UseCharge()
+{
+	if (PowerCharges == 0) return;
+	PowerCharges--;
+	UE_LOG(LogTemp, Warning, TEXT("Charges: %d"), PowerCharges);
+	PowerCharges = FMath::Clamp(PowerCharges, 0, MaxCharges);
 }

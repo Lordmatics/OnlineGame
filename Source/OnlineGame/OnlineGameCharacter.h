@@ -129,6 +129,14 @@ private:
 	UFUNCTION()
 		void OnDied();
 	// END OF DEATH FUNCTIONS
+
+	// POWER UPS
+	UFUNCTION()
+		void UseSelectedPower();
+
+	UPROPERTY(EditAnywhere, Category = "C++ Power Ups")
+		class APowerups* CurrentPowerUp;
+	// END of POWER UPS
 public:
 	AOnlineGameCharacter();
 
@@ -192,6 +200,8 @@ public:
 	FORCEINLINE void SpendGold(float Amount) { Amount > GoldCount ? GoldCount += 0.0f : GoldCount -= Amount; GoldCount = FMath::Clamp(GoldCount, 0.0f, 99999.0f); }
 	FORCEINLINE void ObtainGold(float Amount) { GoldCount += Amount; GoldCount = FMath::Clamp(GoldCount, 0.0f, 99999.0f); }
 	FORCEINLINE bool HasGold() { return GoldCount > 0.0f ? true : false; }
+
+	void ObtainPower(class APowerups* OverlappedPower);
 
 };
 

@@ -12,6 +12,7 @@
 #include "Projectiles/WeaponProjectile.h"
 #include "EnemyAI/EnemyAI.h"
 #include "Barrels/Barrels.h"
+#include "Pickups/Powerups/Powerups.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AOnlineGameCharacter
@@ -97,6 +98,7 @@ void AOnlineGameCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AOnlineGameCharacter::BeginContinuousAttack);
 	PlayerInputComponent->BindAction("Attack", IE_Released, this, &AOnlineGameCharacter::ResetAttack);
 
+	PlayerInputComponent->BindAction("UsePower", IE_Pressed, this, &AOnlineGameCharacter::UseSelectedPower);
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
 	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
@@ -167,15 +169,28 @@ void AOnlineGameCharacter::OnDied()
 	UE_LOG(LogTemp, Warning, TEXT("Dead !!! : %s"), bIsDead ? TEXT("True") : TEXT("False"));
 }
 
+void AOnlineGameCharacter::ObtainPower(APowerups* OverlappedPower)
+{
+	if (OverlappedPower != nullptr)
+	{
+		CurrentPowerUp = OverlappedPower;
+	}
+}
 
-
-
-
-
-
-
-
-
+void AOnlineGameCharacter::UseSelectedPower()
+{
+	if (CurrentPowerUp != nullptr)
+	{
+		if (CurrentPowerUp->GetPowerCharges() > 0)
+		{
+			CurrentPowerUp->UsePower();
+		}
+		else
+		{
+			CurrentPowerUp = nullptr;
+		}
+	}
+}
 
 
 

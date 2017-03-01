@@ -20,7 +20,15 @@ protected:
 	/** Overridable function to do something when overlapped*/
 	virtual void TriggerEnter_Implementation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
 
-	virtual void PowerUpObtained();
+	//virtual void PowerUpObtained();
+	UPROPERTY(EditAnywhere, Category = "C++ Power Ups")
+		int PowerCharges = 5;
+
+	UPROPERTY(EditAnywhere, Category = "C++ Power Ups")
+		int MaxCharges = 30;
+
+	/** Function to deduct a use from total amount*/
+	void UseCharge();
 public:
 	
 	// Sets default values for this actor's properties
@@ -31,4 +39,11 @@ public:
 
 	// Called every frame
 	virtual void Tick(float DeltaSeconds) override;
+
+	/** Function to actually do something - ie shoot fire*/
+	virtual void UsePower();
+
+	FORCEINLINE int GetPowerCharges() const { return PowerCharges; }
+
+
 };
