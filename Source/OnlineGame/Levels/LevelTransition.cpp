@@ -32,6 +32,8 @@ void ALevelTransition::BeginPlay()
 	UWorld* const World = GetWorld();
 	if (World == nullptr) return;
 	MyGameMode = Cast<AOnlineGameGameMode>(World->GetAuthGameMode());
+	if(MyGameMode != nullptr)
+		PlayersInGameCount = MyGameMode->GetPCInGame();
 }
 
 // Called every frame
@@ -43,8 +45,28 @@ void ALevelTransition::Tick( float DeltaTime )
 		GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Red, FString::Printf(TEXT("Counter: %d"), Counter));
 		if (MyGameMode != nullptr)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Red, FString::Printf(TEXT("Counter: %d"), MyGameMode->GetPCInGame()));
+			GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Red, FString::Printf(TEXT("PlayersInGame: %d"), MyGameMode->GetPCInGame()));
 		}
+	}
+}
+
+void ALevelTransition::ChangeServerLevel()
+{
+	if (HasAuthority())
+	{
+		UWorld* const World = GetWorld();
+		if (World == nullptr) return;
+		//APlayerController* PC = UGameplayStatics::GetPlayerController(World, 0);
+		//World->ServerTravel("/Game/Maps/Level_002", false);
+		UGameplayStatics::OpenLevel(World, FName("MainMenu"));
+		//World->ServerTravel("/Game/Maps/Lobby", false);
+
+		//World->Exec(World, (TEXT("servertravel Level_002")));
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, FString::Printf(TEXT("Has Authority")));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, FString::Printf(TEXT("Didnt have Authority")));
 	}
 }
 
@@ -54,6 +76,14 @@ void ALevelTransition::OnTriggerEnter(UPrimitiveComponent* OverlappedComp, AActo
 	if (Char != nullptr)
 	{
 		Counter++;
+		if (PlayersInGameCount > 0)
+		{
+			if (Counter >= PlayersInGameCount)
+			{
+				ChangeServerLevel();
+			}
+		}
+
 		UE_LOG(LogTemp, Warning, TEXT("Counter Increased: %d"), Counter);
 	}
 }

@@ -30,7 +30,13 @@ private:
 		int Counter = 0;
 
 	UPROPERTY(VisibleAnywhere, Category = "C++ LevelTransition")
+		int PlayersInGameCount = 0;
+
+	UPROPERTY(VisibleAnywhere, Category = "C++ LevelTransition")
 		class AOnlineGameGameMode* MyGameMode;
+
+	void ChangeServerLevel();
+
 public:	
 	// Sets default values for this actor's properties
 	ALevelTransition();
