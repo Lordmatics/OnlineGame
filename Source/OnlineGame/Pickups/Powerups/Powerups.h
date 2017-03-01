@@ -27,8 +27,13 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "C++ Power Ups")
 		int MaxCharges = 30;
 
+	UPROPERTY(EditAnywhere, Category = "C++ Power Ups")
+		FName AttachPoint = FName("PowerupAttachPoint");
 	/** Function to deduct a use from total amount*/
 	void UseCharge();
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Power Ups")
+		USkeletalMeshComponent* PowerupOwner;
 public:
 	
 	// Sets default values for this actor's properties
@@ -44,6 +49,7 @@ public:
 	virtual void UsePower();
 
 	FORCEINLINE int GetPowerCharges() const { return PowerCharges; }
-
+	FORCEINLINE void SetPowerUpOwner(USkeletalMeshComponent* _Owner) { PowerupOwner = _Owner; }
+	FORCEINLINE USkeletalMeshComponent* GetPowerupOwner() const { return PowerupOwner; }
 
 };

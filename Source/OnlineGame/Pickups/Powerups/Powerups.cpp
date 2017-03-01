@@ -27,6 +27,8 @@ void APowerups::TriggerEnter_Implementation(UPrimitiveComponent* OverlappedCompo
 	{
 		// Add a Powerup to players inventory or something
 		OnlineCharacter->ObtainPower(this);
+		// Set a ref to owner, for PS attachments in children
+		SetPowerUpOwner(OnlineCharacter->GetMesh());
 		UE_LOG(LogTemp, Warning, TEXT("BasePowerUps: PowerUp Obtained"));
 		// Sound - Effect - Destroy
 		Super::TriggerEnter_Implementation(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
