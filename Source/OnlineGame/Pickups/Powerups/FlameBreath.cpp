@@ -14,67 +14,114 @@ void AFlameBreath::BeginPlay()
 	Super::BeginPlay();
 }
 
+void AFlameBreath::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AFlameBreath, FlameBreath);
+	DOREPLIFETIME(AFlameBreath, FlameBreathParticleSystem);
+}
+
 void AFlameBreath::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
+	// Debug code - Custom Timer - Seems actor dead so couldnt run functions
+	//GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Red, FString::Printf(TEXT("RunningTime: %f"), RunningTime));
+
+	//if (bFlameOn)
+	//{
+	//	RunningTime += DeltaTime;
+	//	if (RunningTime >= TimeTillFlamesBurnOut)
+	//	{
+	//		bFlameOn = false;
+	//		RunningTime = 0.0f;
+	//		if (FlameBreath != nullptr)
+	//		{
+	//			UE_LOG(LogTemp, Warning, TEXT("KillFlames"));
+	//			FlameBreath->DeactivateSystem();
+	//			FlameBreath = nullptr;
+	//		}
+	//	}
+	//}
 }
 
 /** Override this specific to each powerup - might be redundant not sure yet*/
 void AFlameBreath::UsePower()
 {
 	UE_LOG(LogTemp, Warning, TEXT("FlameBreath: UsePower Activated"));
-	if (SpawnFlameBreath())
+	if (!bFlameOn)
 	{
+		MulticastRPCFunction_SpawnFlameBreath();
 		UWorld* const World = GetWorld();
 		if (World != nullptr)
 		{
 			//KillFlames();
-			PLEASE();
-			UE_LOG(LogTemp, Warning, TEXT("HELLO TIMER PLS: %f"), TimeTillFlamesBurnOut);
-			UE_LOG(LogTemp, Warning, TEXT("HELLO TIMER PLS: %s"), this == nullptr ? TEXT("YEA") : TEXT("NAH"));
+			bFlameOn = true;
+			FTimerHandle TempHandle;
+			World->GetTimerManager().SetTimer(TempHandle, this, &AFlameBreath::KillFlames, TimeTillFlamesBurnOut, false);
+			//UE_LOG(LogTemp, Warning, TEXT("HELLO TIMER PLS: %f"), TimeTillFlamesBurnOut);
+			//UE_LOG(LogTemp, Warning, TEXT("HELLO TIMER PLS: %s"), this == nullptr ? TEXT("YEA") : TEXT("NAH"));
 
 		}
 		Super::UsePower();
+		
 	}
+}
 
+void AFlameBreath::MulticastRPCFunction_SpawnFlameBreath_Implementation()
+{
+	UWorld* const World = GetWorld();
+	if ((World == nullptr || FlameBreathParticleSystem == nullptr) && FlameBreath != nullptr || PowerupOwner == nullptr) return;// false;
+	FlameBreath = UGameplayStatics::SpawnEmitterAttached(FlameBreathParticleSystem, PowerupOwner, AttachPoint);
+	if (FlameBreath != nullptr)
+	{
+		FlameBreath->SetIsReplicated(true);
+		//return true;
+	}
+	//return false;
 }
 
 bool AFlameBreath::SpawnFlameBreath()
 {
+	//if (HasAuthority())
+	//{
+	//	// Spawn on Server and Replicate to all clients
+	//	// Thinking OnRepNotify for deactivate but need halp
+	//}
+	//else
+	//{
+
+	//}
 	UWorld* const World = GetWorld();
 	if ((World == nullptr || FlameBreathParticleSystem == nullptr) && FlameBreath != nullptr || PowerupOwner == nullptr) return false;
 	FlameBreath = UGameplayStatics::SpawnEmitterAttached(FlameBreathParticleSystem, PowerupOwner, AttachPoint);
 	if (FlameBreath != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Flames On"));
+		FlameBreath->SetIsReplicated(true);
 		return true;
 	}
 	return false;
 	//World->GetTimerManager().SetTimer(TempHandle, this, &AFlameBreath::KillFlames, TimeTillFlamesBurnOut, false);
 }
 
-void AFlameBreath::KillFlames()
+void AFlameBreath::MulticastRPCFunction_KillFlames_Implementation()
 {
-	UE_LOG(LogTemp, Warning, TEXT("KillFlames NULL"));
-
 	if (FlameBreath != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("KillFlames"));
 		FlameBreath->DeactivateSystem();
 		FlameBreath = nullptr;
-	}
-	UWorld* const World = GetWorld();
-	if (World != nullptr)
-	{
-		World->GetTimerManager().ClearTimer(TempHandle);
+		bFlameOn = false;
 	}
 }
 
-void AFlameBreath::PLEASE()
+void AFlameBreath::KillFlames()
 {
-	UE_LOG(LogTemp, Warning, TEXT("PLEASE RAN"));
-	UWorld* const World = GetWorld();
-	if (World == nullptr) return;
-	World->GetTimerManager().SetTimer(TempHandle, this, &AFlameBreath::KillFlames, 1.0f, false, 1.0f);
-
+	MulticastRPCFunction_KillFlames();
+	//if (FlameBreath != nullptr)
+	//{
+	//	FlameBreath->DeactivateSystem();
+	//	FlameBreath = nullptr;
+	//	bFlameOn = false;
+	//}
 }

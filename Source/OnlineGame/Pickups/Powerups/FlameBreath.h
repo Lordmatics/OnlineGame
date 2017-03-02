@@ -12,26 +12,32 @@ UCLASS()
 class ONLINEGAME_API AFlameBreath : public APowerups
 {
 	GENERATED_BODY()
-	
+protected:
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 private:
+	UFUNCTION(NetMulticast, Reliable)
+		void MulticastRPCFunction_SpawnFlameBreath();
+
 	bool SpawnFlameBreath();
 	
-	UPROPERTY(EditAnywhere, Category = "C++ Power Ups")
+	UPROPERTY(EditAnywhere, Category = "C++ Power Ups", Replicated)
 		UParticleSystemComponent* FlameBreath;
 
-	UPROPERTY(EditAnywhere, Category = "C++ Power Ups")
+	UPROPERTY(EditAnywhere, Category = "C++ Power Ups", Replicated)
 		UParticleSystem* FlameBreathParticleSystem;
+
+	UFUNCTION(NetMulticast, Reliable)
+		void MulticastRPCFunction_KillFlames();
 
 	UFUNCTION()
 		void KillFlames();
 
-	UFUNCTION()
-		void PLEASE();
-
 	UPROPERTY(EditAnywhere, Category = "C++ Power Ups")
 		float TimeTillFlamesBurnOut = 1.0f;
 
-	FTimerHandle TempHandle;
+	UPROPERTY(EditAnywhere, Category = "C++ Power Ups")
+		uint32 bFlameOn : 1;
 
 public:
 

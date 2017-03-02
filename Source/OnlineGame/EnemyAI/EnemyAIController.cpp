@@ -10,6 +10,7 @@
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "EnemyAI/EnemyAI.h"
+#include "OnlineGameGameMode.h"
 
 AEnemyAIController::AEnemyAIController()
 {
@@ -22,6 +23,7 @@ AEnemyAIController::AEnemyAIController()
 	PerceptionComp->ConfigureSense(*HearingConfig);
 	PerceptionComp->SetDominantSense(SightConfig->GetSenseImplementation());
 	PerceptionComp->OnPerceptionUpdated.AddDynamic(this, &AEnemyAIController::UpdatePerception);
+	
 }
 
 void AEnemyAIController::UpdatePerception(TArray<AActor*>ActorsInSight)
@@ -29,17 +31,24 @@ void AEnemyAIController::UpdatePerception(TArray<AActor*>ActorsInSight)
 	//UE_LOG(LogTemp, Warning, TEXT("I see you"));
 	UWorld* const World = GetWorld();
 	if (World == nullptr) return;
-	APawn* TempCharacter = World->GetFirstPlayerController()->GetPawn();
-	if (TempCharacter != nullptr)
+	AOnlineGameGameMode* GM = Cast<AOnlineGameGameMode>(World->GetAuthGameMode());
+	if (GM != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("EnemyAIController: UpdatePerception: TempCharacterName: %s"), *TempCharacter->GetName());
-		for (int i = 0; i < ActorsInSight.Num(); i++)
+		for (size_t i = 0; i < GM->PlayerControllers.Num(); i++)
 		{
-			if (ActorsInSight[i] == TempCharacter)
+			APawn* TempCharacter = GM->PlayerControllers[i]->GetPawn();//World->GetFirstPlayerController()->GetPawn();
+			if (TempCharacter != nullptr)
 			{
-				// Maybe some check in here to see if value already set, then compare chase target
-				// Since multiplayer
-				BlackboardComponent->SetValueAsObject("AttackTarget", TempCharacter);
+				UE_LOG(LogTemp, Warning, TEXT("EnemyAIController: UpdatePerception: TempCharacterName: %s"), *TempCharacter->GetName());
+				for (int i = 0; i < ActorsInSight.Num(); i++)
+				{
+					if (ActorsInSight[i] == TempCharacter)
+					{
+						// Maybe some check in here to see if value already set, then compare chase target
+						// Since multiplayer
+						BlackboardComponent->SetValueAsObject("AttackTarget", TempCharacter);
+					}
+				}
 			}
 		}
 	}

@@ -34,6 +34,9 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Power Ups")
 		USkeletalMeshComponent* PowerupOwner;
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 public:
 	
 	// Sets default values for this actor's properties

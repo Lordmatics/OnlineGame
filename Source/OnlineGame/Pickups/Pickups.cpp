@@ -85,7 +85,12 @@ void APickups::HandleOverlap()
 	const FVector SpawnLocation = GetActorLocation();
 	PlayPickUpEffect(SpawnLocation);
 	// Might wanna delay this by 1s, and just "Fake Destroy" StaticMesh, we'll see
-	Destroy();
+	if (MyStaticMesh != nullptr)
+	{
+		MyStaticMesh->SetHiddenInGame(true);
+		MyStaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+	//Destroy();
 }
 
 void APickups::ServerHandleOverlap_Implementation()

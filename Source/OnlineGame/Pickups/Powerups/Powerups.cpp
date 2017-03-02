@@ -19,6 +19,13 @@ void APowerups::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void APowerups::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	//DOREPLIFETIME(APowerups, PickUpEffect);
+}
+
 /** Call this Super::Function at the end of the overriden logic - since this handles the logic, that every pickup will do*/
 void APowerups::TriggerEnter_Implementation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
