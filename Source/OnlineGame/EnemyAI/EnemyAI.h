@@ -19,6 +19,16 @@ private:
 	UPROPERTY(Category = Character, VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Replicated)
 		UTextRenderComponent* HealthText;
 
+	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Animation")
+		class UAnimationComponent* AnimationComponent;
+
+	UFUNCTION()
+		void LatentDestroy();
+
+	uint32 bIsDead : 1;
+
+	UPROPERTY(EditAnywhere, Category = "C++ Animation")
+		float AnimSpeed = 1.0f;
 public:
 	// Sets default values for this character's properties
 	AEnemyAI();

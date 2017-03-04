@@ -7,6 +7,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "OnlineGameCharacter.h"
 #include "EnemyAI/EnemyAIController.h"
+#include "Animation/AnimationComponent.h"
 
 // Sets default values
 AEnemyAI::AEnemyAI()
@@ -24,6 +25,8 @@ AEnemyAI::AEnemyAI()
 	HealthText->SetupAttachment(GetCapsuleComponent());
 
 	GetCharacterMovement()->bUseRVOAvoidance = true;
+
+	AnimationComponent = CreateDefaultSubobject<UAnimationComponent>(TEXT("AnimationComponent"));
 
 }
 
@@ -70,45 +73,9 @@ void AEnemyAI::Attack()
 	AOnlineGameCharacter* PlayerCharacter = Cast<AOnlineGameCharacter>(World->GetFirstPlayerController()->GetCharacter());
 	if (PlayerCharacter != nullptr)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("EnemyAI: Attack: PlayerCharacterName: %s"), *PlayerCharacter->GetName());
 
-		//PlayerCharacter->GetCharacterMovement()->AddImpulse(GetActorLocation() - PlayerCharacter->GetActorLocation());
-		//PlayerCharacter->DecreaseHealth(Damage);
-		//GetMesh()->SetVisibility(false);
-		//do attack stuff
-		//AEnemyAIController* TempController = Cast<AEnemyAIController>(GetController());
-		//if (TempController != nullptr)
-		//{
-			//UE_LOG(LogTemp, Warning, TEXT("EnemyAI: Attack: TempController != nullptr"));
-			//TempController->BlackboardComponent->SetValueAsBool("Dead", true);
-		//}
 	}
 }
-
-//void AEnemyAI::MulticastTakeDamages_Implementation(float DamageIn)
-//{
-//	TakeDamages(DamageIn);
-//}
-//
-//void AEnemyAI::ServerTakeDamages_Implementation(float DamageIn)
-//{
-//	MulticastTakeDamages(DamageIn);
-//}
-//
-//bool AEnemyAI::ServerTakeDamages_Validate(float DamageIn)
-//{
-//	return true;
-//}
-//
-//void AEnemyAI::CommitDamage(float DamageIn)
-//{
-//	EnemyHealth -= DamageIn;
-//	UE_LOG(LogTemp, Warning, TEXT("EnemyHealth: %f"), EnemyHealth);
-//	if (EnemyHealth <= 0.0f)
-//	{
-//		Die();
-//	}
-//}
 
 void AEnemyAI::TakeDamageOverTime(float DPS)
 {
@@ -197,5 +164,25 @@ void AEnemyAI::Die()
 		//TempController->GetBrainComponent()->StopLogic(TEXT("Dead"));
 		TempController->BlackboardComponent->SetValueAsBool("Dead", true);
 	}
+	UWorld* const World = GetWorld();
+	if (World == nullptr || AnimationComponent == nullptr)
+	{
+		Destroy(); 
+		return;
+	}
+	if (AnimationComponent->GetDeathAnimMontage() == nullptr)
+	{
+		Destroy();
+		return;
+	}
+	bIsDead = true;
+	HealthText->DestroyComponent();
+	FTimerHandle TempHandle;
+	float AnimDuration = PlayAnimMontage(AnimationComponent->GetDeathAnimMontage(), AnimSpeed);
+	World->GetTimerManager().SetTimer(TempHandle, this, &AEnemyAI::LatentDestroy, AnimDuration - 0.75f, false);
+}
+
+void AEnemyAI::LatentDestroy()
+{
 	Destroy();
 }
