@@ -47,6 +47,9 @@ public:
 	UFUNCTION()
 		bool TakeDamages(float DamageIn);
 
+	UFUNCTION()
+		void TakeDamagesNoRet(float DamageIn);
+
 	void Die();
 
 	UPROPERTY(Category = Character, EditAnywhere, BlueprintReadWrite)
@@ -57,4 +60,10 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Health", Replicated)
 		float EnemyHealth = 100.0f;
+
+	FTimerHandle DOTHandle;
+
+	void TakeDamageOverTime(float DPS);
+
+	void ClearDOT();
 };

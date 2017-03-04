@@ -69,10 +69,7 @@ private:
 
 private:
 	// My Functions
-	// DAMAGE ORIENTED FUNCTIONS
-	UFUNCTION()
-		void DealDamage(AActor* _Enemy);
-	// END OF DAMAGE FUNCTIONS
+
 	// SHOOTING FUNCTIONS
 	UFUNCTION()
 		void BeginContinuousAttack();
@@ -134,7 +131,7 @@ private:
 	UFUNCTION()
 		void UseSelectedPower();
 
-	UPROPERTY(EditAnywhere, Category = "C++ Power Ups")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "C++ Power Ups")
 		class APowerups* CurrentPowerUp;
 	// END of POWER UPS
 public:
@@ -147,6 +144,11 @@ public:
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
+
+	// DAMAGE ORIENTED FUNCTIONS
+	UFUNCTION()
+		void DealDamage(AActor* _Enemy);
+	// END OF DAMAGE FUNCTIONS
 
 protected:
 	

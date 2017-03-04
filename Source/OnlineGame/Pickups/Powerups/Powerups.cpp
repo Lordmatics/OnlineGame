@@ -33,9 +33,12 @@ void APowerups::TriggerEnter_Implementation(UPrimitiveComponent* OverlappedCompo
 	if (OnlineCharacter != nullptr)
 	{
 		// Add a Powerup to players inventory or something
-		OnlineCharacter->ObtainPower(this);
+		// Now done in each power up specifically, since flame breath needed to do logic
+		// When you pick the power up, up - ie. move trigger
+		//OnlineCharacter->ObtainPower(this);
 		// Set a ref to owner, for PS attachments in children
 		SetPowerUpOwner(OnlineCharacter->GetMesh());
+		SetPowerUpOwnerClass(OnlineCharacter);
 		UE_LOG(LogTemp, Warning, TEXT("BasePowerUps: PowerUp Obtained"));
 		// Sound - Effect - Destroy
 		Super::TriggerEnter_Implementation(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);

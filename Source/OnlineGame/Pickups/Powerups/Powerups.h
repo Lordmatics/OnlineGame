@@ -30,7 +30,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "C++ Power Ups")
 		FName AttachPoint = FName("PowerupAttachPoint");
 	/** Function to deduct a use from total amount*/
-	void UseCharge();
+	virtual void UseCharge();
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Power Ups")
+		class AOnlineGameCharacter* PowerupOwnerClass;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Power Ups")
 		USkeletalMeshComponent* PowerupOwner;
@@ -54,5 +57,8 @@ public:
 	FORCEINLINE int GetPowerCharges() const { return PowerCharges; }
 	FORCEINLINE void SetPowerUpOwner(USkeletalMeshComponent* _Owner) { PowerupOwner = _Owner; }
 	FORCEINLINE USkeletalMeshComponent* GetPowerupOwner() const { return PowerupOwner; }
+	FORCEINLINE void SetPowerUpOwnerClass(class AOnlineGameCharacter* _Owner) { PowerupOwnerClass = _Owner; }
+	FORCEINLINE class AOnlineGameCharacter* GetPowerupOwnerClass() const { return PowerupOwnerClass; }
+
 
 };

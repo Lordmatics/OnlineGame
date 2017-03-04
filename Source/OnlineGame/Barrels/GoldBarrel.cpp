@@ -38,5 +38,5 @@ void AGoldBarrel::DropItem()
 	if (World == nullptr || BarrelDrop == nullptr) return;
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	World->SpawnActor<APickups>(BarrelDrop, GetActorLocation(), GetActorRotation(), SpawnParams);
+	World->SpawnActor<APickups>(BarrelDrop, RadialForce->GetComponentLocation(), GetActorRotation(), SpawnParams);
 }

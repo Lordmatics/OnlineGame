@@ -40,7 +40,7 @@ void AEnemyAIController::UpdatePerception(TArray<AActor*>ActorsInSight)
 			if (TempCharacter != nullptr)
 			{
 				UE_LOG(LogTemp, Warning, TEXT("EnemyAIController: UpdatePerception: TempCharacterName: %s"), *TempCharacter->GetName());
-				for (int i = 0; i < ActorsInSight.Num(); i++)
+				for (int j = 0; j < ActorsInSight.Num(); j++)
 				{
 					if (ActorsInSight[i] == TempCharacter)
 					{

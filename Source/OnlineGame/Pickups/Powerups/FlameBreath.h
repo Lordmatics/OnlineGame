@@ -25,6 +25,9 @@ private:
 		UParticleSystemComponent* FlameBreath;
 
 	UPROPERTY(EditAnywhere, Category = "C++ Power Ups", Replicated)
+		UBoxComponent* FlameTrigger;
+
+	UPROPERTY(EditAnywhere, Category = "C++ Power Ups", Replicated)
 		UParticleSystem* FlameBreathParticleSystem;
 
 	UFUNCTION(NetMulticast, Reliable)
@@ -39,6 +42,23 @@ private:
 	UPROPERTY(EditAnywhere, Category = "C++ Power Ups")
 		uint32 bFlameOn : 1;
 
+	UPROPERTY(EditAnywhere, Category = "ActiveEnemiesInFireTrigger")
+		TArray<class AEnemyAI*> EnemyList;
+
+protected:
+	UFUNCTION()
+		virtual void OnFlameEnter(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	
+	UFUNCTION()
+		virtual void OnFlameExit(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	/** Overridable function to do something when overlapped*/
+	virtual void TriggerEnter_Implementation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
+
+	virtual void UseCharge() override;
+
+	UPROPERTY(EditAnywhere, Category = "C++ Power Ups")
+		float FlameDPS = 20.0f;
 public:
 
 	// Sets default values for this actor's properties

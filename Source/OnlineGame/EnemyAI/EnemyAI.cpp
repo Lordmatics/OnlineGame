@@ -74,14 +74,14 @@ void AEnemyAI::Attack()
 
 		//PlayerCharacter->GetCharacterMovement()->AddImpulse(GetActorLocation() - PlayerCharacter->GetActorLocation());
 		//PlayerCharacter->DecreaseHealth(Damage);
-		GetMesh()->SetVisibility(false);
+		//GetMesh()->SetVisibility(false);
 		//do attack stuff
-		AEnemyAIController* TempController = Cast<AEnemyAIController>(GetController());
-		if (TempController != nullptr)
-		{
+		//AEnemyAIController* TempController = Cast<AEnemyAIController>(GetController());
+		//if (TempController != nullptr)
+		//{
 			//UE_LOG(LogTemp, Warning, TEXT("EnemyAI: Attack: TempController != nullptr"));
 			//TempController->BlackboardComponent->SetValueAsBool("Dead", true);
-		}
+		//}
 	}
 }
 
@@ -109,6 +109,45 @@ void AEnemyAI::Attack()
 //		Die();
 //	}
 //}
+
+void AEnemyAI::TakeDamageOverTime(float DPS)
+{
+	UWorld* const World = GetWorld();
+	if (World != nullptr)
+	{
+		FTimerDelegate TimerDel;
+		TimerDel.BindUFunction(this, FName("TakeDamagesNoRet"), DPS / 2);
+		World->GetTimerManager().SetTimer(DOTHandle, TimerDel, 0.5f, true);
+	}
+}
+
+void AEnemyAI::ClearDOT()
+{
+	UWorld* const World = GetWorld();
+	if (World != nullptr)
+	{
+		World->GetTimerManager().ClearTimer(DOTHandle);
+	}
+}
+
+void AEnemyAI::TakeDamagesNoRet(float DamageIn)
+{
+	if (Role < ROLE_Authority)
+	{
+		ServerTakeDamages(DamageIn);
+	}
+	else
+	{
+		EnemyHealth -= DamageIn;
+		//HealthText->Text = FText::FromString(FString::Printf(TEXT("Health: %f"), EnemyHealth));
+		UE_LOG(LogTemp, Warning, TEXT("EnemyHealth: %f"), EnemyHealth);
+		if (EnemyHealth <= 0.0f)
+		{
+			Die();
+		}
+	}
+}
+
 bool AEnemyAI::TakeDamages(float DamageIn)
 {
 

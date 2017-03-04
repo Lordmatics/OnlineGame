@@ -184,7 +184,16 @@ void AOnlineGameCharacter::UseSelectedPower()
 		if (CurrentPowerUp->GetPowerCharges() > 0)
 		{
 			CurrentPowerUp->UsePower();
+			// If you use last charge, set it to null immediately
+			// as opposed to wait for you to try and use it 
+			// after it has expired
+			if (CurrentPowerUp->GetPowerCharges() == 1)
+			{
+				CurrentPowerUp = nullptr;
+			}
 		}
+		// Backup, in case i implement something that consumes multiple
+		// charges
 		else
 		{
 			CurrentPowerUp = nullptr;
@@ -273,11 +282,19 @@ void AOnlineGameCharacter::Attack()
 			FHitResult Hit = ShootRay();
 			// Test
 			AEnemyAI* EnemyHit = Cast<AEnemyAI>(Hit.GetActor());
+			ABarrels* Barrel = Cast<ABarrels>(Hit.GetActor());
 			if (EnemyHit != nullptr)
 			{
 				// Do normal Damage
 				DealDamage(EnemyHit);
 				//EnemyHit->TakeDamages(50.0f);
+			}
+			else if (Barrel != nullptr)
+			{
+				// Deal Damage, will know what logic to run
+				// Based on type
+				DealDamage(Barrel);
+				//Barrel->Fracture();
 			}
 			else
 			{
@@ -363,7 +380,6 @@ void AOnlineGameCharacter::DealDamage(AActor* _Enemy)
 				}
 			}
 		}
-
 	}
 	ABarrels* Barrel = Cast<ABarrels>(_Enemy);
 	if (Barrel != nullptr)
@@ -490,33 +506,65 @@ void AOnlineGameCharacter::MouseLook(float Rate)
 void AOnlineGameCharacter::MoveForward(float Value)
 {
 	// Cant move while attacking.
-	if (bAttackBufferActive) return;
-
-	if ((Controller != NULL) && (Value != 0.0f))
+	//if (bAttackBufferActive) return;
+	// TEST - If attacking ,can move at half speed
+	if (bAttackBufferActive)
 	{
-		// find out which way is forward
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
+		if ((Controller != NULL) && (Value != 0.0f))
+		{
+			// find out which way is forward
+			const FRotator Rotation = Controller->GetControlRotation();
+			const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-		// get forward vector
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		AddMovementInput(Direction, Value);
+			// get forward vector
+			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+			AddMovementInput(Direction, Value / 2);
+		}
+	}
+	else
+	{
+		if ((Controller != NULL) && (Value != 0.0f))
+		{
+			// find out which way is forward
+			const FRotator Rotation = Controller->GetControlRotation();
+			const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+			// get forward vector
+			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+			AddMovementInput(Direction, Value);
+		}
 	}
 }
 void AOnlineGameCharacter::MoveRight(float Value)
 {
 	// Can't move while attacking
-	if (bAttackBufferActive) return;
-
-	if ( (Controller != NULL) && (Value != 0.0f) )
+	//if (bAttackBufferActive) return;
+	if (bAttackBufferActive)
 	{
-		// find out which way is right
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-	
-		// get right vector 
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-		// add movement in that direction
-		AddMovementInput(Direction, Value);
+		if ((Controller != NULL) && (Value != 0.0f))
+		{
+			// find out which way is right
+			const FRotator Rotation = Controller->GetControlRotation();
+			const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+			// get right vector 
+			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+			// add movement in that direction
+			AddMovementInput(Direction, Value / 2);
+		}
+	}
+	else
+	{
+		if ((Controller != NULL) && (Value != 0.0f))
+		{
+			// find out which way is right
+			const FRotator Rotation = Controller->GetControlRotation();
+			const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+			// get right vector 
+			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+			// add movement in that direction
+			AddMovementInput(Direction, Value);
+		}
 	}
 }
