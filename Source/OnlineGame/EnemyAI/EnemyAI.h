@@ -29,6 +29,22 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "C++ Animation")
 		float AnimSpeed = 1.0f;
+
+	// DEATH FUNCTIONS
+
+	// Function that begins Death animation - Logic
+	UFUNCTION()
+		void DeathAnim();
+	// Function that runs PlayerDied on all clients / server
+	UFUNCTION(NetMulticast, Reliable)
+		void MulticastDeathAnim();
+	virtual void MulticastDeathAnim_Implementation();
+	// Same as above ... idk
+	UFUNCTION(Server, Reliable, WithValidation)
+		void ServerDeathAnim();
+	virtual void ServerDeathAnim_Implementation();
+	virtual bool ServerDeathAnim_Validate();
+	// END OF DEATH FUNCTIONS
 public:
 	// Sets default values for this character's properties
 	AEnemyAI();
@@ -76,4 +92,5 @@ public:
 	void TakeDamageOverTime(float DPS);
 
 	void ClearDOT();
+
 };

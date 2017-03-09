@@ -157,6 +157,10 @@ bool AEnemyAI::ServerTakeDamages_Validate(float DamageIn)
 }
 void AEnemyAI::Die()
 {
+	if (OnEnemyDestroyed.IsBound())
+	{
+		OnEnemyDestroyed.Broadcast(this);
+	}
 	//GetMesh()->SetVisibility(false);
 	AEnemyAIController* TempController = Cast<AEnemyAIController>(GetController());
 	if (TempController != nullptr)
@@ -176,13 +180,76 @@ void AEnemyAI::Die()
 		return;
 	}
 	bIsDead = true;
+	if(BoxCollision != nullptr)
+		BoxCollision->SetCollisionResponseToChannels(ECR_Ignore);
+	if (GetCapsuleComponent() != nullptr)
+		GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
 	HealthText->DestroyComponent();
 	FTimerHandle TempHandle;
-	float AnimDuration = PlayAnimMontage(AnimationComponent->GetDeathAnimMontage(), AnimSpeed);
-	World->GetTimerManager().SetTimer(TempHandle, this, &AEnemyAI::LatentDestroy, AnimDuration - 0.75f, false);
+	// This doesnt replicate to other clients atm
+	//if (HasAuthority())
+	//{
+		//float AnimDuration = PlayAnimMontage(AnimationComponent->GetDeathAnimMontage(), AnimSpeed);
+		//World->GetTimerManager().SetTimer(TempHandle, this, &AEnemyAI::LatentDestroy, AnimDuration - 0.75f, false);
+	//}
+	//else
+	//{
+	//	ServerPlayDeathAnim();
+	//}
+	// It looks like this makes no sense
+	// And  you could just use
+	// MulticastPlayerDied
+	// But i tested it, and
+	// You do need the Server one apparently
+		if (HasAuthority())
+		{
+			MulticastDeathAnim();
+		}
+		else
+		{
+			ServerDeathAnim();
+		}
 }
+
+//void AEnemyAI::ServerPlayDeathAnim_Implementation()
+//{
+//	UWorld* const World = GetWorld();
+//	if (World == nullptr) return;
+//	FTimerHandle TempHandle;
+//	float AnimDuration = PlayAnimMontage(AnimationComponent->GetDeathAnimMontage(), AnimSpeed);
+//	World->GetTimerManager().SetTimer(TempHandle, this, &AEnemyAI::LatentDestroy, AnimDuration - 0.75f, false);
+//}
+
+//bool AEnemyAI::ServerPlayDeathAnim_Validate()
+//{
+//	return true;
+//}
 
 void AEnemyAI::LatentDestroy()
 {
 	Destroy();
+}
+
+void AEnemyAI::MulticastDeathAnim_Implementation()
+{
+	DeathAnim();
+}
+
+void AEnemyAI::ServerDeathAnim_Implementation()
+{
+	MulticastDeathAnim();
+}
+
+bool AEnemyAI::ServerDeathAnim_Validate()
+{
+	return true;
+}
+
+void AEnemyAI::DeathAnim()
+{
+	UWorld* const World = GetWorld();
+	if (World == nullptr) return;
+	FTimerHandle TempHandle;
+	float AnimDuration = PlayAnimMontage(AnimationComponent->GetDeathAnimMontage(), AnimSpeed);
+	World->GetTimerManager().SetTimer(TempHandle, this, &AEnemyAI::LatentDestroy, AnimDuration - 0.75f, false);
 }

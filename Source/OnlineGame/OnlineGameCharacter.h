@@ -30,6 +30,12 @@ private:
 	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Weapon")
 		class URaycastComponent* RaycastComponent;
 
+	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Potions")
+		UParticleSystemComponent* PotionParticleComp;
+
+	UPROPERTY(EditAnywhere, Category = "C++ Potions")
+		UParticleSystem* PotionShield;
+
 	// LOGIC FOR DOING ATTACKS - FINISHED AND SMOOTH
 	UPROPERTY(EditDefaultsOnly, Category = "C++ Weapon")
 		TSubclassOf<class AWeaponProjectile> WeaponProjectileClass;
@@ -67,6 +73,8 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = "true"), Replicated)
 		float GoldCount = 0.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = "true"), Replicated)
+		int PotionCount = 5;
 private:
 	// My Functions
 
@@ -134,6 +142,20 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "C++ Power Ups")
 		class APowerups* CurrentPowerUp;
 	// END of POWER UPS
+
+	// POTIONS
+	UFUNCTION()
+		void ActivatePotion();
+
+	UFUNCTION()
+		void DeactivatePotion();
+
+	UPROPERTY(EditAnywhere, Category = "C++ Potions")
+		float PotionDuration = 5.0f;
+
+	UPROPERTY(EditAnywhere, Category = "C++ Potions")
+		uint32 bPotionActive : 1;
+	// END OF POTINOS
 public:
 	AOnlineGameCharacter();
 
@@ -202,6 +224,12 @@ public:
 	FORCEINLINE void SpendGold(float Amount) { Amount > GoldCount ? GoldCount += 0.0f : GoldCount -= Amount; GoldCount = FMath::Clamp(GoldCount, 0.0f, 99999.0f); }
 	FORCEINLINE void ObtainGold(float Amount) { GoldCount += Amount; GoldCount = FMath::Clamp(GoldCount, 0.0f, 99999.0f); }
 	FORCEINLINE bool HasGold() { return GoldCount > 0.0f ? true : false; }
+
+	FORCEINLINE int GetPotionCount() const { return PotionCount; }
+	FORCEINLINE void SetPotionCount(int NewPotionCount) { PotionCount = NewPotionCount; }
+	FORCEINLINE void UsePotion() { PotionCount -= 1; PotionCount = FMath::Clamp(PotionCount, 0, 99); }
+	FORCEINLINE void GainPotion() { PotionCount += 1; PotionCount = FMath::Clamp(PotionCount, 0, 99); }
+	FORCEINLINE bool HasPotions() { return PotionCount > 0 ? true : false; }
 
 	void ObtainPower(class APowerups* OverlappedPower);
 

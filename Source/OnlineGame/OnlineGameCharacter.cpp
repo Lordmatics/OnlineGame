@@ -25,6 +25,9 @@ void AOnlineGameCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 
 	DOREPLIFETIME(AOnlineGameCharacter, GoldCount);
 
+	DOREPLIFETIME(AOnlineGameCharacter, PotionCount);
+
+
 }
 
 AOnlineGameCharacter::AOnlineGameCharacter()
@@ -62,6 +65,9 @@ AOnlineGameCharacter::AOnlineGameCharacter()
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon"));
 	Weapon->SetupAttachment(GetMesh());
 	
+	PotionParticleComp = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("PotionParticleComp"));
+	PotionParticleComp->SetupAttachment(GetCapsuleComponent());
+
 	WeaponComponent = CreateDefaultSubobject<UOnlineGameWeapon>(TEXT("WeaponComponent"));
 
 	RaycastComponent = CreateDefaultSubobject<URaycastComponent>(TEXT("RaycastComponent"));
@@ -99,6 +105,8 @@ void AOnlineGameCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAction("Attack", IE_Released, this, &AOnlineGameCharacter::ResetAttack);
 
 	PlayerInputComponent->BindAction("UsePower", IE_Pressed, this, &AOnlineGameCharacter::UseSelectedPower);
+	PlayerInputComponent->BindAction("ConsumePotion", IE_Pressed, this, &AOnlineGameCharacter::ActivatePotion);
+
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
 	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
@@ -201,7 +209,37 @@ void AOnlineGameCharacter::UseSelectedPower()
 	}
 }
 
+void AOnlineGameCharacter::ActivatePotion()
+{
+	UWorld* const World = GetWorld();
+	if (World == nullptr) return;
+	if (HasPotions())
+	{
+		if (PotionShield != nullptr)
+		{
+			if (/*PotionParticleComp == nullptr &&*/ !bPotionActive)
+			{
+				UsePotion();
+				UE_LOG(LogTemp, Warning, TEXT("UsedPotion"));
+				bPotionActive = true;
+				PotionParticleComp = UGameplayStatics::SpawnEmitterAttached(PotionShield, GetMesh(), FName("AttachPoint"));
+				FTimerHandle TempHandle;
+				World->GetTimerManager().SetTimer(TempHandle, this, &AOnlineGameCharacter::DeactivatePotion, PotionDuration, false);
+			}
+		}
+		
+	}
+}
 
+void AOnlineGameCharacter::DeactivatePotion()
+{
+	if (PotionParticleComp != nullptr)
+	{
+		PotionParticleComp->DeactivateSystem();
+		PotionParticleComp = nullptr;
+		bPotionActive = false;
+	}
+}
 
 
 
