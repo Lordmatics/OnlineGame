@@ -13,6 +13,7 @@
 #include "EnemyAI/EnemyAI.h"
 #include "Barrels/Barrels.h"
 #include "Pickups/Powerups/Powerups.h"
+#include "EnemyAI/Spawning/EnemyGate.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AOnlineGameCharacter
@@ -321,6 +322,7 @@ void AOnlineGameCharacter::Attack()
 			// Test
 			AEnemyAI* EnemyHit = Cast<AEnemyAI>(Hit.GetActor());
 			ABarrels* Barrel = Cast<ABarrels>(Hit.GetActor());
+			AEnemyGate* Gate = Cast<AEnemyGate>(Hit.GetActor());
 			if (EnemyHit != nullptr)
 			{
 				// Do normal Damage
@@ -333,6 +335,10 @@ void AOnlineGameCharacter::Attack()
 				// Based on type
 				DealDamage(Barrel);
 				//Barrel->Fracture();
+			}
+			else if (Gate != nullptr)
+			{
+				DealDamage(Gate);
 			}
 			else
 			{
@@ -423,6 +429,12 @@ void AOnlineGameCharacter::DealDamage(AActor* _Enemy)
 	if (Barrel != nullptr)
 	{
 		Barrel->Fracture();
+	}
+
+	AEnemyGate* Gate = Cast<AEnemyGate>(_Enemy);
+	if (Gate != nullptr)
+	{
+		Gate->TakeDamages();
 	}
 
 }

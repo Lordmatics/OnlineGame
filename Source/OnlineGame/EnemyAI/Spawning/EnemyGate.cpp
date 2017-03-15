@@ -19,6 +19,39 @@ AEnemyGate::AEnemyGate()
 	bTestingSpawn = false;
 }
 
+void AEnemyGate::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AEnemyGate, HitPoints);
+}
+
+void AEnemyGate::TakeDamages()
+{
+	if (Role < ROLE_Authority)
+	{
+		ServerTakeDamages();
+	}
+	else
+	{
+		HitPoints--;
+		if (HitPoints <= 0)
+		{
+			Destroy();
+		}
+	}
+}
+
+void AEnemyGate::ServerTakeDamages_Implementation()
+{
+	TakeDamages();
+}
+
+bool AEnemyGate::ServerTakeDamages_Validate()
+{
+	return true;
+}
+
 // Called when the game starts or when spawned
 void AEnemyGate::BeginPlay()
 {

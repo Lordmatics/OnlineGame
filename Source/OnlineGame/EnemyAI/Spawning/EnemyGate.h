@@ -27,6 +27,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = "C++")
 		float SpawnFrequency = 3.0f;
 
+	UPROPERTY(EditAnywhere, Category = "C++", Replicated)
+		int HitPoints = 3;
+
 	UPROPERTY(EditAnywhere, Category = "C++")
 		int GateSpawnCap = 10;
 
@@ -49,6 +52,15 @@ private:
 	void PauseMyTimer();
 
 	void UnPauseMyTimer();
+
+	//UFUNCTION()
+	//	void OnTriggerEnter(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+		void ServerTakeDamages();
+	virtual void ServerTakeDamages_Implementation();
+	virtual bool ServerTakeDamages_Validate();
+
 public:	
 	// Sets default values for this actor's properties
 	AEnemyGate();
@@ -59,6 +71,11 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	// Function to reduce hitpoints- calls private server handling functions
+	UFUNCTION()
+		void TakeDamages();
 	
 	
 };
