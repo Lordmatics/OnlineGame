@@ -37,6 +37,25 @@ private:
 
 	void ChangeServerLevel();
 
+	void BeginLevelSwap();
+	UFUNCTION()
+		void ShowStats();
+	UFUNCTION()
+		void ClearTransition();
+	FTimerHandle TransitionHandle;
+
+
+	UPROPERTY(EditAnywhere, Category = "Timer")
+		float LevelChargeDelay = 3.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Charger")
+		float PanelGlow = 0.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Charger")
+		uint32 bEveryoneInZone : 1;
+
+	UPROPERTY(EditAnywhere)
+		UMaterialInterface* Material;
 public:	
 	// Sets default values for this actor's properties
 	ALevelTransition();

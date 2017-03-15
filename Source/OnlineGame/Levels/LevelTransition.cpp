@@ -34,6 +34,14 @@ void ALevelTransition::BeginPlay()
 	MyGameMode = Cast<AOnlineGameGameMode>(World->GetAuthGameMode());
 	if(MyGameMode != nullptr)
 		PlayersInGameCount = MyGameMode->GetPCInGame();
+
+	//create dynamic material anywhere u like, Constructor or anywhere .
+	UMaterialInstanceDynamic* DynMaterial = UMaterialInstanceDynamic::Create(Material, this);
+	//set paramater with Set***ParamaterValue
+	DynMaterial->SetScalarParameterValue("Glow", PanelGlow);
+	MyStaticMesh->SetMaterial(0, DynMaterial);
+
+	
 }
 
 // Called every frame
@@ -47,6 +55,16 @@ void ALevelTransition::Tick( float DeltaTime )
 		{
 			GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Red, FString::Printf(TEXT("PlayersInGame: %d"), MyGameMode->GetPCInGame()));
 		}
+	}
+	if (bEveryoneInZone)
+	{
+		PanelGlow += DeltaTime * (1 / LevelChargeDelay);
+		PanelGlow = FMath::Clamp(PanelGlow, 0.0f, 1.0f);
+	}
+	else
+	{
+		PanelGlow -= DeltaTime * (1 / LevelChargeDelay);
+		PanelGlow = FMath::Clamp(PanelGlow, 0.0f, 1.0f);
 	}
 }
 
@@ -80,7 +98,8 @@ void ALevelTransition::OnTriggerEnter(UPrimitiveComponent* OverlappedComp, AActo
 		{
 			if (Counter >= PlayersInGameCount)
 			{
-				ChangeServerLevel();
+				BeginLevelSwap();
+				//ChangeServerLevel();
 			}
 		}
 
@@ -95,5 +114,37 @@ void ALevelTransition::OnTriggerExit(UPrimitiveComponent* OverlappedComp, AActor
 	{
 		Counter--;
 		UE_LOG(LogTemp, Warning, TEXT("Counter Decreased: %d"), Counter);
+		bEveryoneInZone = false;
+		ClearTransition();
+
 	}
+}
+
+void ALevelTransition::BeginLevelSwap()
+{
+	UWorld* const World = GetWorld();
+	if (World == nullptr) return;
+	bEveryoneInZone = true;
+	World->GetTimerManager().SetTimer(TransitionHandle, this, &ALevelTransition::ShowStats, LevelChargeDelay, false);
+}
+
+void ALevelTransition::ShowStats()
+{
+	if (HasAuthority())
+	{
+		UWorld* const World = GetWorld();
+		if (World == nullptr) return;
+		//APlayerController* PC = UGameplayStatics::GetPlayerController(World, 0);
+		//World->ServerTravel("/Game/Maps/Level_002", false);
+		UGameplayStatics::OpenLevel(World, FName("MainMenu"));
+		//UGameplayStatics::OpenLevel(World, FName("AfterLevelStats"));
+
+	}
+}
+
+void ALevelTransition::ClearTransition()
+{
+	UWorld* const World = GetWorld();
+	if (World == nullptr) return;
+	World->GetTimerManager().ClearTimer(TransitionHandle);
 }
