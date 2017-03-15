@@ -35,11 +35,15 @@ void ALevelTransition::BeginPlay()
 	if(MyGameMode != nullptr)
 		PlayersInGameCount = MyGameMode->GetPCInGame();
 
-	//create dynamic material anywhere u like, Constructor or anywhere .
-	UMaterialInstanceDynamic* DynMaterial = UMaterialInstanceDynamic::Create(Material, this);
-	//set paramater with Set***ParamaterValue
-	DynMaterial->SetScalarParameterValue("Glow", PanelGlow);
-	MyStaticMesh->SetMaterial(0, DynMaterial);
+	// This Method Didn't Appear To Work
+	////create dynamic material anywhere u like, Constructor or anywhere .
+	//UMaterialInstanceDynamic* DynMaterial = UMaterialInstanceDynamic::Create(DynamicMaterial, this);
+	////set paramater with Set***ParamaterValue
+	//DynMaterial->SetScalarParameterValue("Glow", PanelGlow);
+	//MyStaticMesh->SetMaterial(0, DynMaterial);
+
+	// Creates Dynamic Material of Equipped Material
+	DynamicMaterial = MyStaticMesh->CreateDynamicMaterialInstance(0);
 
 	
 }
@@ -59,11 +63,15 @@ void ALevelTransition::Tick( float DeltaTime )
 	if (bEveryoneInZone)
 	{
 		PanelGlow += DeltaTime * (1 / LevelChargeDelay);
+		if(DynamicMaterial != nullptr)
+			DynamicMaterial->SetScalarParameterValue(FName("Glow"), PanelGlow);
 		PanelGlow = FMath::Clamp(PanelGlow, 0.0f, 1.0f);
 	}
 	else
 	{
 		PanelGlow -= DeltaTime * (1 / LevelChargeDelay);
+		if (DynamicMaterial != nullptr)
+			DynamicMaterial->SetScalarParameterValue(FName("Glow"), PanelGlow);
 		PanelGlow = FMath::Clamp(PanelGlow, 0.0f, 1.0f);
 	}
 }

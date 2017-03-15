@@ -54,8 +54,8 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Charger")
 		uint32 bEveryoneInZone : 1;
 
-	UPROPERTY(EditAnywhere)
-		UMaterialInterface* Material;
+	UPROPERTY(EditAnywhere, Category = "Charge")
+		UMaterialInstanceDynamic* DynamicMaterial;
 public:	
 	// Sets default values for this actor's properties
 	ALevelTransition();

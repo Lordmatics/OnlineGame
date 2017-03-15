@@ -183,11 +183,7 @@ void AEnemyAI::Die()
 	if(BoxCollision != nullptr)
 		BoxCollision->SetCollisionResponseToChannels(ECR_Ignore);
 	if (GetCapsuleComponent() != nullptr)
-	{
 		GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
-		// Should be Projectile
-		GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_GameTraceChannel3, ECR_Ignore);
-	}
 	HealthText->DestroyComponent();
 	FTimerHandle TempHandle;
 	// This doesnt replicate to other clients atm
