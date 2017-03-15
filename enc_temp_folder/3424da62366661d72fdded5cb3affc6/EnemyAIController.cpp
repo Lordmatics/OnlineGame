@@ -42,7 +42,7 @@ void AEnemyAIController::UpdatePerception(TArray<AActor*>ActorsInSight)
 				UE_LOG(LogTemp, Warning, TEXT("EnemyAIController: UpdatePerception: TempCharacterName: %s"), *TempCharacter->GetName());
 				for (int j = 0; j < ActorsInSight.Num(); j++)
 				{
-					if (ActorsInSight[j] == TempCharacter)
+					if (ActorsInSight[i] == TempCharacter)
 					{
 						// Maybe some check in here to see if value already set, then compare chase target
 						// Since multiplayer
