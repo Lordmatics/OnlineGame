@@ -108,6 +108,9 @@ void AOnlineGameCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAction("UsePower", IE_Pressed, this, &AOnlineGameCharacter::UseSelectedPower);
 	PlayerInputComponent->BindAction("ConsumePotion", IE_Pressed, this, &AOnlineGameCharacter::ActivatePotion);
 
+	PlayerInputComponent->BindAction("UseTurbo", IE_Pressed, this, &AOnlineGameCharacter::UseTurboAttack);
+
+
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
 	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
@@ -121,6 +124,87 @@ void AOnlineGameCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 
 	PlayerInputComponent->BindAction("Die", IE_Pressed, this, &AOnlineGameCharacter::Die);
 
+}
+
+void AOnlineGameCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	ChargePowerUpBar(DeltaTime);
+}
+
+void AOnlineGameCharacter::UseTurboAttack()
+{
+	FVector NewScale;
+	// Full
+	if (TurboBoost >= MaxTurboBoost)
+	{
+		// In Red
+		TurboBoost -= MaxTurboBoost;
+		UE_LOG(LogTemp, Warning, TEXT("Turboed - Red"));
+		NewScale = FVector(3.0f);
+	}
+	// Else > 2/3
+	else if (TurboBoost > MaxTurboBoost * 0.66f)
+	{
+		TurboBoost -= MaxTurboBoost * 0.66f;
+		UE_LOG(LogTemp, Warning, TEXT("Turboed - Yellow"));
+		NewScale = FVector(1.3f);
+	}
+	// > 1/3
+	else if (TurboBoost > MaxTurboBoost* 0.33f)
+	{
+		TurboBoost -= MaxTurboBoost * 0.33f;
+		UE_LOG(LogTemp, Warning, TEXT("Turboed - Green"));
+		NewScale = FVector(0.6f);
+	}
+	if (TurboPS != nullptr)
+	{
+		UParticleSystemComponent* PSC = UGameplayStatics::SpawnEmitterAtLocation(this, TurboPS, GetActorLocation());
+		if (PSC != nullptr)
+		{
+			UWorld* const World = GetWorld();
+			if (World == nullptr) return;
+			PSC->SetWorldScale3D(NewScale);
+			FVector NewLocation = URaycastComponent::RayDown(World, PSC->GetComponentLocation()).Location;
+			PSC->SetWorldLocation(NewLocation, true);
+
+			AActor* ActorToIgnore = this;
+			FVector Start = GetActorLocation();
+			FVector End = GetActorLocation();
+			float Radius = 5000.0f;
+			TArray<FHitResult> HitOut;
+			ECollisionChannel TraceChannel = ECC_GameTraceChannel4;
+			FCollisionQueryParams CQP;
+			CQP.bTraceComplex = true;
+			//TraceParams.bTraceAsyncScene = true;
+			CQP.bReturnPhysicalMaterial = false;
+			//Ignore Actors
+			CQP.AddIgnoredActor(ActorToIgnore);
+			//Re-initialize hit info
+			//HitOut = FHitResult(ForceInit);
+
+			if (World->SweepMultiByChannel(HitOut, Start, End, FQuat(), TraceChannel, FCollisionShape::MakeSphere(Radius), CQP))
+			{
+				for (size_t i = 0; i < HitOut.Num(); i++)
+				{
+					AActor* HitActor = HitOut[i].GetActor();
+					if (HitActor == nullptr) continue;
+					UE_LOG(LogTemp, Warning, TEXT("Something AOE Hit: %s"), *HitActor->GetName());
+				}
+			}
+			//if(UKismetSystemLibrary::SphereTraceMulti_NEW(this, GetActorLocation(), GetActorLocation(), 5000.0f, ECC_Visibility, true, IgnoredActors, EDrawDebugTrace::Persistent, ThingsHit))
+			//{
+
+			//}
+			
+		}
+	}
+}
+
+void AOnlineGameCharacter::ChargePowerUpBar(float DeltaTime)
+{
+	TurboBoost += DeltaTime * ChargeRate;
+	TurboBoost = FMath::Clamp(TurboBoost, 0.0f, MaxTurboBoost);
 }
 
 void AOnlineGameCharacter::MulticastPlayerDied_Implementation()

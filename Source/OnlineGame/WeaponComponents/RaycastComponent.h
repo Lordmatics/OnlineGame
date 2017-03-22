@@ -44,4 +44,6 @@ public:
 
 	FORCEINLINE UMaterialInterface* GetBulletHoleDecal() const { return BulletHoleDecal; }
 
+	static FHitResult RayDown(const UWorld* WorldObject, const FVector& Start);
+
 };

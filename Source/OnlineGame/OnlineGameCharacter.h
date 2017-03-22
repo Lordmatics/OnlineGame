@@ -141,6 +141,21 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "C++ Power Ups")
 		class APowerups* CurrentPowerUp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "C++ Power Ups")
+		float ChargeRate = 1.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "C++ Power Ups")
+		float TurboBoost = 0.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "C++ Power Ups")
+		float MaxTurboBoost = 15.0f;
+
+	UPROPERTY(EditAnywhere, Category = "C++ Power Ups")
+		UParticleSystem* TurboPS;
+	UFUNCTION()
+		void UseTurboAttack();
+	void ChargePowerUpBar(float DeltaTime);
 	// END of POWER UPS
 
 	// POTIONS
@@ -206,6 +221,8 @@ protected:
 	virtual void PostInitializeComponents() override;
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	virtual void Tick(float DeltaTime) override;
 
 public:
 	/** Returns CameraBoom subobject **/

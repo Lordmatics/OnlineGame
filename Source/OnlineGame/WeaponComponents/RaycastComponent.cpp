@@ -97,3 +97,19 @@ void URaycastComponent::CreateBulletHole(FHitResult HitResult)
 		UGameplayStatics::SpawnDecalAtLocation(World, BulletHoleDecal, BulletHoleSizxe, HitResult.ImpactPoint, HitResult.ImpactNormal.Rotation(), BulletDecalLifetime);
 	}
 }
+
+FHitResult URaycastComponent::RayDown(const UWorld* WorldObject, const FVector& Start)
+{
+	if (WorldObject != nullptr)
+	{
+		FHitResult Hit;
+		FVector Down = -FVector::UpVector;
+		FVector End = Start + Down * 500.0f;
+		FCollisionQueryParams CQP;
+		if(WorldObject->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, CQP))
+		{
+			return Hit;
+		}
+	}
+	return FHitResult();
+}
