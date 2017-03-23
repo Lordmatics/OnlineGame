@@ -62,7 +62,7 @@ void AEnemyAI::Tick( float DeltaTime )
 	}
 	if (bIsDead)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ISDEAD"));
+		//UE_LOG(LogTemp, Warning, TEXT("ISDEAD"));
 		if (DissolveMat != nullptr)
 		{
 			Alpha -= DeltaTime * DissolveRate;
