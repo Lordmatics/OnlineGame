@@ -45,6 +45,14 @@ private:
 	virtual void ServerDeathAnim_Implementation();
 	virtual bool ServerDeathAnim_Validate();
 	// END OF DEATH FUNCTIONS
+
+	UMaterialInstanceDynamic* DissolveMat;
+
+	UPROPERTY(EditAnywhere, Category = "C++ Dissolve")
+		float Alpha = 1.0f;
+
+	UPROPERTY(EditAnywhere, Category = "C++ Dissolve")
+		float DissolveRate = 0.1f;
 public:
 	// Sets default values for this character's properties
 	AEnemyAI();

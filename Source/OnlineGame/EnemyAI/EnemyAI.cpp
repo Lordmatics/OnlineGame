@@ -28,6 +28,7 @@ AEnemyAI::AEnemyAI()
 
 	AnimationComponent = CreateDefaultSubobject<UAnimationComponent>(TEXT("AnimationComponent"));
 
+
 }
 
 void AEnemyAI::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -41,6 +42,8 @@ void AEnemyAI::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetime
 void AEnemyAI::BeginPlay()
 {
 	Super::BeginPlay();
+	DissolveMat = GetMesh()->CreateDynamicMaterialInstance(0);
+	GetMesh()->SetMaterial(0, DissolveMat);
 
 
 	//UE_LOG(LogTemp, Warning, TEXT("EnemyHealth: %d"), (int)EnemyHealth);
@@ -56,6 +59,22 @@ void AEnemyAI::Tick( float DeltaTime )
 		//FString HealthString = FString::Printf(TEXT("Health: %d"), (int)EnemyHealth);
 		//HealthText->Text = FText::FromString(HealthString);
 		HealthText->SetText(FString::FromInt((int)EnemyHealth));
+	}
+	if (bIsDead)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ISDEAD"));
+		if (DissolveMat != nullptr)
+		{
+			Alpha -= DeltaTime * DissolveRate;
+			UE_LOG(LogTemp, Warning, TEXT("Alpha Going Down: %f"), Alpha);
+
+			
+			DissolveMat->SetScalarParameterValue(TEXT("Dissolve"), Alpha);
+			if (Alpha <= 0.0f)
+			{
+				Destroy();
+			}
+		}
 	}
 }
 
@@ -171,20 +190,21 @@ void AEnemyAI::Die()
 	UWorld* const World = GetWorld();
 	if (World == nullptr || AnimationComponent == nullptr)
 	{
-		Destroy(); 
+		//Destroy(); 
+		GetMesh()->SetSimulatePhysics(true);
 		return;
 	}
 	if (AnimationComponent->GetDeathAnimMontage() == nullptr)
 	{
-		Destroy();
+		//Destroy();
+		GetMesh()->SetSimulatePhysics(true);
 		return;
 	}
-	bIsDead = true;
-	if(BoxCollision != nullptr)
-		BoxCollision->SetCollisionResponseToChannels(ECR_Ignore);
+//	if(BoxCollision != nullptr)
+		//BoxCollision->SetCollisionResponseToChannels(ECR_Ignore);
 	if (GetCapsuleComponent() != nullptr)
 	{
-		GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+		//GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
 		// Should be Projectile
 		GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_GameTraceChannel3, ECR_Ignore);
 	}
@@ -231,7 +251,9 @@ void AEnemyAI::Die()
 
 void AEnemyAI::LatentDestroy()
 {
-	Destroy();
+	//Destroy();
+	GetMesh()->SetSimulatePhysics(true);
+	bIsDead = true;
 }
 
 void AEnemyAI::MulticastDeathAnim_Implementation()
