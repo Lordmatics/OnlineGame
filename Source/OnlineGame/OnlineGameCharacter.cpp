@@ -52,6 +52,12 @@ AOnlineGameCharacter::AOnlineGameCharacter()
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
 
+	//GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AOnlineGameCharacter::OnTriggerEnter);
+	PotionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("PotionSphere"));
+	PotionSphere->SetupAttachment(GetCapsuleComponent());
+	PotionSphere->bGenerateOverlapEvents = true;
+	PotionSphere->OnComponentBeginOverlap.AddDynamic(this, &AOnlineGameCharacter::OnTriggerEnter);
+
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
@@ -326,7 +332,22 @@ void AOnlineGameCharacter::DeactivatePotion()
 	}
 }
 
-
+void AOnlineGameCharacter::OnTriggerEnter(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	AEnemyAI* Enemy = Cast<AEnemyAI>(OtherActor);
+	if (Enemy != nullptr)
+	{
+		if (bPotionActive)
+		{
+			if (Enemy->TakeDamages(Enemy->EnemyHealth))
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Enemy Vaporised"));
+				// Play Sound? 
+				// Play Vaproise Particle if I can find one
+			}
+		}
+	}
+}
 
 
 

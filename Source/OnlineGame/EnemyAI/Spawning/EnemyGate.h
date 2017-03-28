@@ -22,7 +22,28 @@ private:
 		UStaticMeshComponent* SpawnerGate;
 
 	UPROPERTY(EditAnywhere, Category = "C++")
+		UParticleSystemComponent* PSC;
+
+	UPROPERTY(EditAnywhere, Category = "C++")
+		UMaterialInstance* DeactivatedMaterial;
+
+	UPROPERTY(EditAnywhere, Category = "C++")
+		UStaticMesh* HitOnceMesh;
+
+	UPROPERTY(EditAnywhere, Category = "C++")
+		UStaticMesh* HitTwiceMesh;
+
+	UPROPERTY(EditAnywhere, Category = "C++")
+		UStaticMesh* HitThreeMesh;
+
+	UPROPERTY(EditAnywhere, Category = "C++")
+		UStaticMesh* BrokenGateMesh;
+
+	UPROPERTY(EditAnywhere, Category = "C++")
 		TSubclassOf<class AEnemyAI> EnemyClassToSpawn;
+
+	UPROPERTY(EditAnywhere, Category = "C++")
+		uint32 bDeactivated : 1;
 
 	UPROPERTY(EditAnywhere, Category = "C++")
 		float SpawnFrequency = 3.0f;
@@ -61,6 +82,7 @@ private:
 	virtual void ServerTakeDamages_Implementation();
 	virtual bool ServerTakeDamages_Validate();
 
+	void CheckForNewMesh();
 public:	
 	// Sets default values for this actor's properties
 	AEnemyGate();

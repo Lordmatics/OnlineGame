@@ -21,6 +21,9 @@ private:
 	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Weapon")
 		USkeletalMeshComponent* Weapon;
 
+	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Weapon")
+		USphereComponent* PotionSphere;
+
 	UPROPERTY(EditDefaultsOnly, Category = "C++ Weapon")
 		class UOnlineGameWeapon* WeaponComponent;
 
@@ -171,6 +174,11 @@ private:
 	UPROPERTY(EditAnywhere, Category = "C++ Potions")
 		uint32 bPotionActive : 1;
 	// END OF POTINOS
+
+	// OVERLAP
+	UFUNCTION()
+		void OnTriggerEnter(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	// END OVERLAP
 public:
 	AOnlineGameCharacter();
 

@@ -16,6 +16,9 @@ AEnemyGate::AEnemyGate()
 	SpawnerGate = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SpawnerGate"));
 	SpawnerGate->SetupAttachment(MyRoot);
 
+	PSC = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("PortalPSC"));
+	PSC->SetupAttachment(SpawnerGate);
+
 	bTestingSpawn = false;
 }
 
@@ -37,8 +40,50 @@ void AEnemyGate::TakeDamages()
 		HitPoints--;
 		if (HitPoints <= 0)
 		{
-			Destroy();
+			//Destroy();
+			if (SpawnerGate != nullptr)
+			{
+				bDeactivated = true;
+				ClearSpawnTimer();
+				SpawnerGate->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+				SpawnerGate->SetCollisionResponseToAllChannels(ECR_Ignore);
+				if (DeactivatedMaterial != nullptr)
+					SpawnerGate->SetMaterial(0, DeactivatedMaterial);
+				if(PSC != nullptr)
+					PSC->DestroyComponent();
+			}
 		}
+	}
+	CheckForNewMesh();
+}
+
+void AEnemyGate::CheckForNewMesh()
+{
+	if (SpawnerGate == nullptr) return;
+
+	// Dead
+	if (HitPoints < 1)
+	{
+		if (BrokenGateMesh != nullptr)
+			SpawnerGate->SetStaticMesh(BrokenGateMesh);
+	}
+	// HP = 1
+	else if (HitPoints < 2)
+	{
+		if(HitThreeMesh != nullptr)
+			SpawnerGate->SetStaticMesh(HitThreeMesh);
+	}
+	// HP = 2
+	else if (HitPoints < 3)
+	{
+		if(HitTwiceMesh != nullptr)
+			SpawnerGate->SetStaticMesh(HitTwiceMesh);
+	}
+	// HP = 3
+	else if (HitPoints < 4)
+	{
+		if(HitOnceMesh != nullptr)
+			SpawnerGate->SetStaticMesh(HitOnceMesh);
 	}
 }
 
@@ -80,7 +125,7 @@ void AEnemyGate::BeginSpawning()
 void AEnemyGate::SpawnEnemy()
 {
 	UWorld* const World = GetWorld();
-	if (World == nullptr)return;
+	if (World == nullptr || bDeactivated) return;
 	if (EnemySpawn.Num() >= GateSpawnCap)
 	{
 		PauseMyTimer();
