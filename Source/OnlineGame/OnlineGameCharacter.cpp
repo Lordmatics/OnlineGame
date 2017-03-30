@@ -14,6 +14,7 @@
 #include "Barrels/Barrels.h"
 #include "Pickups/Powerups/Powerups.h"
 #include "EnemyAI/Spawning/EnemyGate.h"
+#include "DrawDebugHelpers.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AOnlineGameCharacter
@@ -27,7 +28,6 @@ void AOnlineGameCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 	DOREPLIFETIME(AOnlineGameCharacter, GoldCount);
 
 	DOREPLIFETIME(AOnlineGameCharacter, PotionCount);
-
 
 }
 
@@ -168,29 +168,63 @@ void AOnlineGameCharacter::UseTurboAttack()
 		UParticleSystemComponent* PSC = UGameplayStatics::SpawnEmitterAtLocation(this, TurboPS, GetActorLocation());
 		if (PSC != nullptr)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("ParticleSystem Made"));
 			UWorld* const World = GetWorld();
 			if (World == nullptr) return;
 			PSC->SetWorldScale3D(NewScale);
 			FVector NewLocation = URaycastComponent::RayDown(World, PSC->GetComponentLocation()).Location;
 			PSC->SetWorldLocation(NewLocation, true);
+			UE_LOG(LogTemp, Warning, TEXT("snapped to ground"));
 
 			AActor* ActorToIgnore = this;
 			FVector Start = GetActorLocation();
 			FVector End = GetActorLocation();
 			float Radius = 5000.0f;
-			TArray<FHitResult> HitOut;
+			TArray<FHitResult> HitOut;			
 			ECollisionChannel TraceChannel = ECC_GameTraceChannel4;
 			FCollisionQueryParams CQP;
 			CQP.bTraceComplex = true;
 			//TraceParams.bTraceAsyncScene = true;
 			CQP.bReturnPhysicalMaterial = false;
+			CQP.bTraceAsyncScene = true;
 			//Ignore Actors
 			CQP.AddIgnoredActor(ActorToIgnore);
 			//Re-initialize hit info
 			//HitOut = FHitResult(ForceInit);
-
-			if (World->SweepMultiByChannel(HitOut, Start, End, FQuat(), TraceChannel, FCollisionShape::MakeSphere(Radius), CQP))
+			//UKismetSystemLibrary::SphereTraceMulti_NEW(this, Start, End, Radius, ETraceTypeQuery::TraceTypeQuery1, false, IgnoredActors, HitOut, true);
+			if (World->SweepMultiByChannel(HitOut, Start, End, FQuat(), ECC_Visibility, FCollisionShape::MakeSphere(Radius), CQP))
 			{
+				UE_LOG(LogTemp, Warning, TEXT("Sweep Multi By Channel Made"));
+				//if (DrawDebugType != EDrawDebugTrace::None)
+				//{
+				bool bPersistent = true;//DrawDebugType == EDrawDebugTrace::Persistent;
+					//float LifeTime = (DrawDebugType == EDrawDebugTrace::ForDuration) ? UKismetSystemLibrary::KISMET_TRACE_DEBUG_DRAW_DURATION : 0.f;
+
+					if (HitOut.Last().bBlockingHit)
+					{
+						UE_LOG(LogTemp, Warning, TEXT("Draw Sphere Pls"));
+						// Red up to the blocking hit, green thereafter
+						FVector const BlockingHitPoint = HitOut.Last().Location;
+						DrawDebugSphere(World, Start, Radius, 15.0f, FColor::Green, bPersistent);
+						//::DrawDebugSweptSphere(World, Start, BlockingHitPoint, Radius, FColor::Red, bPersistent);
+						
+						//UKismetSystemLibrary::DrawDebugSweptSphere(World, BlockingHitPoint, End, Radius, FColor::Green, bPersistent);
+					}
+					else
+					{
+						// no hit means all red
+						//UKismetSystemLibrary::DrawDebugSweptSphere(World, Start, End, Radius, FColor::Red, bPersistent);
+					}
+
+					// draw hits
+					for (int32 HitIdx = 0; HitIdx<HitOut.Num(); ++HitIdx)
+					{
+						FHitResult const& Hit = HitOut[HitIdx];
+						::DrawDebugPoint(World, Hit.ImpactPoint, 50.0f, (Hit.bBlockingHit ? FColor::Red : FColor::Green), bPersistent);
+					}
+				//}				
+				
+				//World->SweepMultiByChannel(OutHits, Start, End, FQuat::Identity, TraceChannel, FCollisionShape::MakeSphere(Radius), Params);
 				for (size_t i = 0; i < HitOut.Num(); i++)
 				{
 					AActor* HitActor = HitOut[i].GetActor();

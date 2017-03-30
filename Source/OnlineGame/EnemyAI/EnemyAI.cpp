@@ -66,7 +66,7 @@ void AEnemyAI::Tick( float DeltaTime )
 		if (DissolveMat != nullptr)
 		{
 			Alpha -= DeltaTime * DissolveRate;
-			UE_LOG(LogTemp, Warning, TEXT("Alpha Going Down: %f"), Alpha);
+			//UE_LOG(LogTemp, Warning, TEXT("Alpha Going Down: %f"), Alpha);
 
 			
 			DissolveMat->SetScalarParameterValue(TEXT("Dissolve"), Alpha);
@@ -126,7 +126,7 @@ void AEnemyAI::TakeDamagesNoRet(float DamageIn)
 	{
 		EnemyHealth -= DamageIn;
 		//HealthText->Text = FText::FromString(FString::Printf(TEXT("Health: %f"), EnemyHealth));
-		UE_LOG(LogTemp, Warning, TEXT("EnemyHealth: %f"), EnemyHealth);
+		//UE_LOG(LogTemp, Warning, TEXT("EnemyHealth: %f"), EnemyHealth);
 		if (EnemyHealth <= 0.0f)
 		{
 			Die();
@@ -145,7 +145,7 @@ bool AEnemyAI::TakeDamages(float DamageIn)
 	{
 		EnemyHealth -= DamageIn;
 		//HealthText->Text = FText::FromString(FString::Printf(TEXT("Health: %f"), EnemyHealth));
-		UE_LOG(LogTemp, Warning, TEXT("EnemyHealth: %f"), EnemyHealth);
+		//UE_LOG(LogTemp, Warning, TEXT("EnemyHealth: %f"), EnemyHealth);
 		if (EnemyHealth <= 0.0f)
 		{
 			Die();
