@@ -101,4 +101,5 @@ public:
 
 	void ClearDOT();
 
+	FORCEINLINE bool IsDead() const { return bIsDead; }
 };

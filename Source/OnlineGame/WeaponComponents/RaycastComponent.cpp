@@ -98,13 +98,13 @@ void URaycastComponent::CreateBulletHole(FHitResult HitResult)
 	}
 }
 
-FHitResult URaycastComponent::RayDown(const UWorld* WorldObject, const FVector& Start)
+FHitResult URaycastComponent::RayDown(const UWorld* WorldObject, const FVector& Start, float Length)
 {
 	if (WorldObject != nullptr)
 	{
 		FHitResult Hit;
 		FVector Down = -FVector::UpVector;
-		FVector End = Start + Down * 500.0f;
+		FVector End = Start + (Down * Length);
 		FCollisionQueryParams CQP;
 		if(WorldObject->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, CQP))
 		{

@@ -15,6 +15,9 @@ private:
 		UAnimMontage* AttackAnim;
 
 	UPROPERTY(EditAnywhere, Category = "C++ Animations")
+		UAnimMontage* AlternateAttackAnim;
+
+	UPROPERTY(EditAnywhere, Category = "C++ Animations")
 		UAnimMontage* DeathAnim;
 
 public:	
@@ -30,6 +33,7 @@ public:
 		
 	// Forceinlines
 	FORCEINLINE UAnimMontage* GetAttackAnimMontage() const { return AttackAnim; }
+	FORCEINLINE UAnimMontage* GetAltAttackAnimMontage() const { return AlternateAttackAnim; }
 	FORCEINLINE UAnimMontage* GetDeathAnimMontage() const { return DeathAnim; }
 
 

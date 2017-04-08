@@ -2,6 +2,7 @@
 
 #include "OnlineGame.h"
 #include "WeaponProjectile.h"
+#include "WeaponComponents/RaycastComponent.h"
 
 // Sets default values
 AWeaponProjectile::AWeaponProjectile()
@@ -34,6 +35,8 @@ AWeaponProjectile::AWeaponProjectile()
 	ProjectileMovement->UpdatedComponent = CollisionComp;
 	ProjectileMovement->bRotationFollowsVelocity = true;
 
+
+	RaycastComp = CreateDefaultSubobject<URaycastComponent>(TEXT("RaycastComp"));
 	// Die after 3 seconds by default
 	InitialLifeSpan = 3.0f;
 }
@@ -53,6 +56,27 @@ void AWeaponProjectile::Tick( float DeltaTime )
 	CurrentRotation.Add(DeltaTime*RotationY, DeltaTime*RotationZ, DeltaTime*RotationX);
 	ProjectileMesh->SetRelativeRotation(CurrentRotation);
 
+	SnapToGround(DeltaTime);
+
+}
+
+void AWeaponProjectile::SnapToGround(float DeltaTime)
+{
+	//cast to ground
+	//get hit point
+		//offset z axis by snap length
+		//location z = hit_point.z + snap length
+	UWorld* const World = GetWorld();
+	if (World == nullptr) return;
+	if (RaycastComp != nullptr)
+	{
+		FHitResult Hit = RaycastComp->RayDown(World, GetActorLocation(), (5.0f * SnapLength));
+		FVector HitPoint = Hit.ImpactPoint;
+		FVector Location = GetActorLocation();
+		FVector EndLocation = Location;
+		EndLocation.Z = HitPoint.Z + SnapLength;
+		SetActorLocation(EndLocation);
+	}
 }
 
 void AWeaponProjectile::OnTriggerEnter(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

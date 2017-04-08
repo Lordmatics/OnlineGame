@@ -92,7 +92,25 @@ void AEnemyAI::Attack()
 	AOnlineGameCharacter* PlayerCharacter = Cast<AOnlineGameCharacter>(World->GetFirstPlayerController()->GetCharacter());
 	if (PlayerCharacter != nullptr)
 	{
-
+		if (AnimationComponent != nullptr)
+		{
+			int Rand = FMath::RandHelper(2);
+			float AnimDuration = 0.0f;
+			if (Rand == 0)
+			{
+				if (AnimationComponent->GetAttackAnimMontage() != nullptr)
+				{
+					AnimDuration = PlayAnimMontage(AnimationComponent->GetAttackAnimMontage(), AnimSpeed);
+				}
+			}
+			else
+			{
+				if (AnimationComponent->GetAltAttackAnimMontage() != nullptr)
+				{
+					AnimDuration = PlayAnimMontage(AnimationComponent->GetAltAttackAnimMontage(), AnimSpeed);
+				}
+			}
+		}
 	}
 }
 
@@ -207,6 +225,10 @@ void AEnemyAI::Die()
 		//GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
 		// Should be Projectile
 		GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_GameTraceChannel3, ECR_Ignore);
+	}
+	if (GetMesh() != nullptr)
+	{
+		GetMesh()->SetCollisionResponseToChannel(ECC_GameTraceChannel3, ECR_Ignore);
 	}
 	if(HealthText != nullptr)
 		HealthText->DestroyComponent();

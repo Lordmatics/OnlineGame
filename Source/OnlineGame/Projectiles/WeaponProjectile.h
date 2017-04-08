@@ -32,6 +32,14 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Delegate")
 		float RotationZ = 10.0f;
 
+private:
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Raycast")
+		float SnapLength = 75.0f;
+	
+	void SnapToGround(float DeltaTime);
+	UPROPERTY(VisibleDefaultsOnly, Category = "Raycast")
+		class URaycastComponent* RaycastComp;
 public:	
 	// Sets default values for this actor's properties
 	AWeaponProjectile();

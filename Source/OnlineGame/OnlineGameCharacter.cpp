@@ -140,7 +140,12 @@ void AOnlineGameCharacter::Tick(float DeltaTime)
 
 void AOnlineGameCharacter::UseTurboAttack()
 {
+	if (TurboBoost <= MaxTurboBoost * 0.33f) return;
+
 	FVector NewScale;
+	float Radius = 100.0f;
+	float Damage = 25.0f;
+
 	// Full
 	if (TurboBoost >= MaxTurboBoost)
 	{
@@ -148,6 +153,8 @@ void AOnlineGameCharacter::UseTurboAttack()
 		TurboBoost -= MaxTurboBoost;
 		UE_LOG(LogTemp, Warning, TEXT("Turboed - Red"));
 		NewScale = FVector(3.0f);
+		Radius = 500.0f;
+		Damage = 100.0f;
 	}
 	// Else > 2/3
 	else if (TurboBoost > MaxTurboBoost * 0.66f)
@@ -155,6 +162,8 @@ void AOnlineGameCharacter::UseTurboAttack()
 		TurboBoost -= MaxTurboBoost * 0.66f;
 		UE_LOG(LogTemp, Warning, TEXT("Turboed - Yellow"));
 		NewScale = FVector(1.3f);
+		Radius = 300.0f;
+		Damage = 50.0f;
 	}
 	// > 1/3
 	else if (TurboBoost > MaxTurboBoost* 0.33f)
@@ -162,6 +171,8 @@ void AOnlineGameCharacter::UseTurboAttack()
 		TurboBoost -= MaxTurboBoost * 0.33f;
 		UE_LOG(LogTemp, Warning, TEXT("Turboed - Green"));
 		NewScale = FVector(0.6f);
+		Radius = 200.0f;
+		Damage = 25.0f;
 	}
 	if (TurboPS != nullptr)
 	{
@@ -178,58 +189,70 @@ void AOnlineGameCharacter::UseTurboAttack()
 
 			AActor* ActorToIgnore = this;
 			FVector Start = GetActorLocation();
-			FVector End = GetActorLocation();
-			float Radius = 5000.0f;
+			FVector End = GetActorLocation() + GetActorForwardVector() * 1;
 			TArray<FHitResult> HitOut;			
-			ECollisionChannel TraceChannel = ECC_GameTraceChannel4;
+			//ECollisionChannel EnemyChannel = ECC_GameTraceChannel4;
+
+			//ECollisionChannel BarrelChannel = ECC_GameTraceChannel2;
+
 			FCollisionQueryParams CQP;
 			CQP.bTraceComplex = true;
 			//TraceParams.bTraceAsyncScene = true;
 			CQP.bReturnPhysicalMaterial = false;
 			CQP.bTraceAsyncScene = true;
 			//Ignore Actors
-			CQP.AddIgnoredActor(ActorToIgnore);
+			//CQP.AddIgnoredActor(ActorToIgnore);
 			//Re-initialize hit info
 			//HitOut = FHitResult(ForceInit);
 			//UKismetSystemLibrary::SphereTraceMulti_NEW(this, Start, End, Radius, ETraceTypeQuery::TraceTypeQuery1, false, IgnoredActors, HitOut, true);
+			
+		    //World->SweepMultiByChannel(HitOut, Start, End, FQuat(), ECC_Visibility, FCollisionShape::MakeSphere(Radius), CQP);
 			if (World->SweepMultiByChannel(HitOut, Start, End, FQuat(), ECC_Visibility, FCollisionShape::MakeSphere(Radius), CQP))
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Sweep Multi By Channel Made"));
+				UE_LOG(LogTemp, Warning, TEXT("%d"), HitOut.Num());
+
+				//UE_LOG(LogTemp, Warning, TEXT("%d"), HitOut.Num());
+				//UE_LOG(LogTemp, Warning, TEXT("Sweep Multi By Channel Made"));
 				//if (DrawDebugType != EDrawDebugTrace::None)
 				//{
-				bool bPersistent = true;//DrawDebugType == EDrawDebugTrace::Persistent;
-					//float LifeTime = (DrawDebugType == EDrawDebugTrace::ForDuration) ? UKismetSystemLibrary::KISMET_TRACE_DEBUG_DRAW_DURATION : 0.f;
+				//bool bPersistent = true;//DrawDebugType == EDrawDebugTrace::Persistent;
+				//	//float LifeTime = (DrawDebugType == EDrawDebugTrace::ForDuration) ? UKismetSystemLibrary::KISMET_TRACE_DEBUG_DRAW_DURATION : 0.f;
 
-					if (HitOut.Last().bBlockingHit)
-					{
-						UE_LOG(LogTemp, Warning, TEXT("Draw Sphere Pls"));
-						// Red up to the blocking hit, green thereafter
-						FVector const BlockingHitPoint = HitOut.Last().Location;
-						DrawDebugSphere(World, Start, Radius, 15.0f, FColor::Green, bPersistent);
-						//::DrawDebugSweptSphere(World, Start, BlockingHitPoint, Radius, FColor::Red, bPersistent);
-						
-						//UKismetSystemLibrary::DrawDebugSweptSphere(World, BlockingHitPoint, End, Radius, FColor::Green, bPersistent);
-					}
-					else
-					{
-						// no hit means all red
-						//UKismetSystemLibrary::DrawDebugSweptSphere(World, Start, End, Radius, FColor::Red, bPersistent);
-					}
+				//	if (HitOut.Last().bBlockingHit)
+				//	{
+				//		UE_LOG(LogTemp, Warning, TEXT("Draw Sphere Pls"));
+				//		// Red up to the blocking hit, green thereafter
+				//		FVector const BlockingHitPoint = HitOut.Last().Location;
+				//		DrawDebugSphere(World, Start, Radius, 15.0f, FColor::Green, bPersistent);
+				//		//::DrawDebugSweptSphere(World, Start, BlockingHitPoint, Radius, FColor::Red, bPersistent);
+				//		
+				//		//UKismetSystemLibrary::DrawDebugSweptSphere(World, BlockingHitPoint, End, Radius, FColor::Green, bPersistent);
+				//	}
+				//	else
+				//	{
+				//		// no hit means all red
+				//		//UKismetSystemLibrary::DrawDebugSweptSphere(World, Start, End, Radius, FColor::Red, bPersistent);
+				//	}
 
-					// draw hits
-					for (int32 HitIdx = 0; HitIdx<HitOut.Num(); ++HitIdx)
-					{
-						FHitResult const& Hit = HitOut[HitIdx];
-						::DrawDebugPoint(World, Hit.ImpactPoint, 50.0f, (Hit.bBlockingHit ? FColor::Red : FColor::Green), bPersistent);
-					}
-				//}				
+				//	// draw hits
+				//	for (int32 HitIdx = 0; HitIdx<HitOut.Num(); ++HitIdx)
+				//	{
+				//		FHitResult const& Hit = HitOut[HitIdx];
+				//		::DrawDebugPoint(World, Hit.ImpactPoint, 50.0f, (Hit.bBlockingHit ? FColor::Red : FColor::Green), bPersistent);
+				//	}
 				
 				//World->SweepMultiByChannel(OutHits, Start, End, FQuat::Identity, TraceChannel, FCollisionShape::MakeSphere(Radius), Params);
 				for (size_t i = 0; i < HitOut.Num(); i++)
 				{
 					AActor* HitActor = HitOut[i].GetActor();
 					if (HitActor == nullptr) continue;
-					UE_LOG(LogTemp, Warning, TEXT("Something AOE Hit: %s"), *HitActor->GetName());
+					AEnemyAI* Enemy = Cast<AEnemyAI>(HitActor);
+					if (Enemy == nullptr) continue;
+					Enemy->TakeDamages(Damage);
+					ABarrels* Barrel = Cast<ABarrels>(HitActor);
+					if (Barrel == nullptr) continue;
+					Barrel->Fracture();
+					//UE_LOG(LogTemp, Warning, TEXT("Something AOE Hit: %s"), *HitActor->GetName());
 				}
 			}
 			//if(UKismetSystemLibrary::SphereTraceMulti_NEW(this, GetActorLocation(), GetActorLocation(), 5000.0f, ECC_Visibility, true, IgnoredActors, EDrawDebugTrace::Persistent, ThingsHit))
@@ -518,6 +541,7 @@ void AOnlineGameCharacter::DealDamage(AActor* _Enemy)
 	AEnemyAI* Enemy = Cast<AEnemyAI>(_Enemy);
 	if (Enemy != nullptr)
 	{
+		if (Enemy->IsDead()) return;
 		float Damage = 0.0f;
 		//UE_LOG(LogTemp, Warning, TEXT("Damage Before Load: %f"), Damage);
 		APlayerController* PC = Cast<APlayerController>(Controller);
