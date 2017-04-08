@@ -68,9 +68,9 @@ void AWeaponProjectile::SnapToGround(float DeltaTime)
 		//location z = hit_point.z + snap length
 	UWorld* const World = GetWorld();
 	if (World == nullptr) return;
-	if (RaycastComp != nullptr)
+	if (RaycastComp != nullptr && ProjectileMesh != nullptr)
 	{
-		FHitResult Hit = RaycastComp->RayDown(World, GetActorLocation(), (5.0f * SnapLength));
+		FHitResult Hit = RaycastComp->RayDown(World, ProjectileMesh->GetComponentLocation(), (2.0f * SnapLength));
 		FVector HitPoint = Hit.ImpactPoint;
 		FVector Location = GetActorLocation();
 		FVector EndLocation = Location;

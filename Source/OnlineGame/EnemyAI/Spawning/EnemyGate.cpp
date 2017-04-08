@@ -16,6 +16,10 @@ AEnemyGate::AEnemyGate()
 	SpawnerGate = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SpawnerGate"));
 	SpawnerGate->SetupAttachment(MyRoot);
 
+	SpawnerGatePortal = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SpawnerGatePortal"));
+	SpawnerGatePortal->SetupAttachment(MyRoot);
+
+	
 	PSC = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("PortalPSC"));
 	PSC->SetupAttachment(SpawnerGate);
 
@@ -51,6 +55,8 @@ void AEnemyGate::TakeDamages()
 					SpawnerGate->SetMaterial(0, DeactivatedMaterial);
 				if(PSC != nullptr)
 					PSC->DestroyComponent();
+				if (SpawnerGatePortal != nullptr)
+					SpawnerGatePortal->DestroyComponent();
 			}
 		}
 	}

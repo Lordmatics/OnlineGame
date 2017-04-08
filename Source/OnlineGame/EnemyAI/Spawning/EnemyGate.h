@@ -21,6 +21,9 @@ private:
 	UPROPERTY(VisibleDefaultsOnly, Category = "C++")
 		UStaticMeshComponent* SpawnerGate;
 
+	UPROPERTY(VisibleDefaultsOnly, Category = "C++")
+		UStaticMeshComponent* SpawnerGatePortal;
+
 	UPROPERTY(EditAnywhere, Category = "C++")
 		UParticleSystemComponent* PSC;
 

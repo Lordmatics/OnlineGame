@@ -4,7 +4,7 @@
 #include "LevelTransition.h"
 #include "OnlineGameGameMode.h"
 #include "OnlineGameCharacter.h"
-#include "Engine.h"
+//#include "Engine.h"
 
 // Sets default values
 ALevelTransition::ALevelTransition()
@@ -52,14 +52,14 @@ void ALevelTransition::BeginPlay()
 void ALevelTransition::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Red, FString::Printf(TEXT("Counter: %d"), Counter));
-		if (MyGameMode != nullptr)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Red, FString::Printf(TEXT("PlayersInGame: %d"), MyGameMode->GetPCInGame()));
-		}
-	}
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Red, FString::Printf(TEXT("Counter: %d"), Counter));
+	//	if (MyGameMode != nullptr)
+	//	{
+	//		GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Red, FString::Printf(TEXT("PlayersInGame: %d"), MyGameMode->GetPCInGame()));
+	//	}
+	//}
 	if (bEveryoneInZone)
 	{
 		PanelGlow += DeltaTime * (1 / LevelChargeDelay);
