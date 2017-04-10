@@ -34,7 +34,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	FHitResult RaycastTP(USkeletalMeshComponent* Mesh, FVector ForwardVector, float CustomLength = 5000.0f);
+	TArray<FHitResult> RaycastTP(USkeletalMeshComponent* Mesh, FVector ForwardVector, float CustomLength = 5000.0f, float Radius = 100.0f);
 
 	FHitResult RaycastFP(UCameraComponent* FirstPersonCamera, float CustomLength = 5000.0f);
 

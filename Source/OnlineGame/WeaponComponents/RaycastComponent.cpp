@@ -35,21 +35,48 @@ void URaycastComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 }
 
 // Third Person View
-FHitResult URaycastComponent::RaycastTP(USkeletalMeshComponent* Mesh, FVector ForwardVector, float CustomLength)
+TArray<FHitResult> URaycastComponent::RaycastTP(USkeletalMeshComponent* Mesh, FVector ForwardVector, float CustomLength, float Radius)
 {
 	UWorld* const World = GetWorld();
-	if (World == nullptr) return FHitResult();
-	FHitResult Hit;
+	if (World == nullptr) return TArray<FHitResult>(); 
 	FVector Start = Mesh->GetComponentLocation() + FVector(0.0f, 0.0f, 100.0f);
 	// Forward Vector is different for TP since u can turn camera but not turn facing
 	FVector End = Start + (ForwardVector * CustomLength);
+
+	//FVector Start = GetActorLocation();
+	//FVector End = GetActorLocation() + GetActorForwardVector() * 1;
+	TArray<FHitResult> HitOut;
 	FCollisionQueryParams CQP;
-	//DrawDebugLine(World, Start, End, FColor::Red, true);
-	if (World->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, CQP))
+	CQP.bTraceComplex = true;
+	CQP.bReturnPhysicalMaterial = false;
+	CQP.bTraceAsyncScene = true;
+	//
+	// MeleeTrace - Block
+	if (World->SweepMultiByChannel(HitOut, Start, End, FQuat(), ECC_EngineTraceChannel1, FCollisionShape::MakeSphere(Radius), CQP))
 	{
-		return Hit;
+		//UE_LOG(LogTemp, Warning, TEXT("%d"), HitOut.Num());
+		//UE_LOG(LogTemp, Warning, TEXT("Sweep Multi By Channel Made"));
+		//if (HitOut.Last().bBlockingHit)
+		//{
+		//	UE_LOG(LogTemp, Warning, TEXT("Draw Sphere Pls"));
+		//	// Red up to the blocking hit, green thereafter
+		//	FVector const BlockingHitPoint = HitOut.Last().Location;
+		//	DrawDebugSphere(World, Start, Radius, 15.0f, FColor::Green, true);
+		//}
+		// draw hits
+		//for (int32 HitIdx = 0; HitIdx<HitOut.Num(); ++HitIdx)
+		//{
+		//	FHitResult const& Hit = HitOut[HitIdx];
+		//	::DrawDebugPoint(World, Hit.ImpactPoint, 50.0f, (Hit.bBlockingHit ? FColor::Red : FColor::Green), true);
+		//}
+		return HitOut;
 	}
-	else return FHitResult();
+	else return TArray<FHitResult>();
+	//if (World->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, CQP))
+	//{
+	//	return Hit;
+	//}
+	//else return FHitResult();
 }
 
 // First Person View

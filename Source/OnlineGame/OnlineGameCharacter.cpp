@@ -191,13 +191,8 @@ void AOnlineGameCharacter::UseTurboAttack()
 			FVector Start = GetActorLocation();
 			FVector End = GetActorLocation() + GetActorForwardVector() * 1;
 			TArray<FHitResult> HitOut;			
-			//ECollisionChannel EnemyChannel = ECC_GameTraceChannel4;
-
-			//ECollisionChannel BarrelChannel = ECC_GameTraceChannel2;
-
 			FCollisionQueryParams CQP;
 			CQP.bTraceComplex = true;
-			//TraceParams.bTraceAsyncScene = true;
 			CQP.bReturnPhysicalMaterial = false;
 			CQP.bTraceAsyncScene = true;
 			//Ignore Actors
@@ -480,37 +475,49 @@ void AOnlineGameCharacter::Attack()
 			// Shoot a raycast, slightly ahead of your position
 			// To determine if you have hit anything - Cast to Enemy etc
 			float Duration = PlayAnimMontage(Anim, 1.0f * AttackSpeedMultiplier, NAME_None);
-			FHitResult Hit = ShootRay();
+			TArray<FHitResult> Hits = ShootRay();
 			// Test
-			AEnemyAI* EnemyHit = Cast<AEnemyAI>(Hit.GetActor());
-			ABarrels* Barrel = Cast<ABarrels>(Hit.GetActor());
-			AEnemyGate* Gate = Cast<AEnemyGate>(Hit.GetActor());
-			if (EnemyHit != nullptr)
-			{
-				// Do normal Damage
-				DealDamage(EnemyHit);
-				//EnemyHit->TakeDamages(50.0f);
-			}
-			else if (Barrel != nullptr)
-			{
-				// Deal Damage, will know what logic to run
-				// Based on type
-				DealDamage(Barrel);
-				//Barrel->Fracture();
-			}
-			else if (Gate != nullptr)
-			{
-				DealDamage(Gate);
-			}
-			else
+			UE_LOG(LogTemp, Warning, TEXT("NumberOfHits: %d"), Hits.Num());
+			if (Hits.Num() == 0)
 			{
 				FTimerHandle ProjectileTimerHandle;
 				World->GetTimerManager().SetTimer(ProjectileTimerHandle, this, &AOnlineGameCharacter::SpawnProjectile, Duration / (2 * AttackSpeedMultiplier));
-
+				UE_LOG(LogTemp, Warning, TEXT("ProjectileSpawned"));
 			}
+			else
+			{
+				for (FHitResult Hit : Hits)
+				{
+
+					AActor* HitActor = Hit.GetActor();
+					if (HitActor != nullptr)
+					{
+						UE_LOG(LogTemp, Warning, TEXT("HitActorName: %s"), *HitActor->GetName());
+					}
+					AEnemyAI* EnemyHit = Cast<AEnemyAI>(Hit.GetActor());
+					ABarrels* Barrel = Cast<ABarrels>(Hit.GetActor());
+					AEnemyGate* Gate = Cast<AEnemyGate>(Hit.GetActor());
+					if (EnemyHit != nullptr)
+					{
+						// Do normal Damage
+						DealDamage(EnemyHit);
+						//EnemyHit->TakeDamages(50.0f);
+					}
+					else if (Barrel != nullptr)
+					{
+						// Deal Damage, will know what logic to run
+						// Based on type
+						DealDamage(Barrel);
+						//Barrel->Fracture();
+					}
+					else if (Gate != nullptr)
+					{
+						DealDamage(Gate);
+					}
+				}
+			}
+
 			// End Test
-
-
 			// Toggle attack buffer on, and start timer to end it
 			bAttackBufferActive = true;
 			World->GetTimerManager().SetTimer(BufferAttackHandle, this, &AOnlineGameCharacter::EndAttackBuffer, Duration / AttackSpeedMultiplier);
@@ -651,16 +658,16 @@ void AOnlineGameCharacter::AttackReset()
 	World->GetTimerManager().ClearTimer(BeginAttackHandle);
 	bAttackPressedCached = false;
 }
-FHitResult AOnlineGameCharacter::ShootRay()
+TArray<FHitResult> AOnlineGameCharacter::ShootRay()
 {
 	if (RaycastComponent != nullptr)
 	{
 		// Fire a raycast through the component
 		// And return what it hits
 		FVector Direction = GetActorForwardVector();
-		return RaycastComponent->RaycastTP(GetMesh(), Direction, 150.0f);
+		return RaycastComponent->RaycastTP(GetMesh(), Direction, 100.0f, 100.0f);
 	}
-	return FHitResult();
+	return TArray<FHitResult>();
 }
 // Looking Around
 void AOnlineGameCharacter::TurnAtRate(float Rate)

@@ -117,7 +117,7 @@ private:
 		void ServerAttackReset();
 	virtual void ServerAttackReset_Implementation();
 	virtual bool ServerAttackReset_Validate();
-	FHitResult ShootRay();
+	TArray<FHitResult> ShootRay();
 	// END SHOOTING FUNCTIONS
 
 	// DEATH FUNCTIONS

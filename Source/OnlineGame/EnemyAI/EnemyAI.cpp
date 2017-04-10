@@ -225,10 +225,16 @@ void AEnemyAI::Die()
 		//GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
 		// Should be Projectile
 		GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_GameTraceChannel3, ECR_Ignore);
+		GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+		GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_EngineTraceChannel1, ECR_Ignore);
+
 	}
 	if (GetMesh() != nullptr)
 	{
 		GetMesh()->SetCollisionResponseToChannel(ECC_GameTraceChannel3, ECR_Ignore);
+		GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+		GetMesh()->SetCollisionResponseToChannel(ECC_EngineTraceChannel1, ECR_Ignore);
+
 	}
 	if(HealthText != nullptr)
 		HealthText->DestroyComponent();
