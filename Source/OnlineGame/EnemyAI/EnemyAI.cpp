@@ -8,6 +8,7 @@
 #include "OnlineGameCharacter.h"
 #include "EnemyAI/EnemyAIController.h"
 #include "Animation/AnimationComponent.h"
+#include "WeaponComponents/RaycastComponent.h"
 
 // Sets default values
 AEnemyAI::AEnemyAI()
@@ -27,7 +28,7 @@ AEnemyAI::AEnemyAI()
 	GetCharacterMovement()->bUseRVOAvoidance = true;
 
 	AnimationComponent = CreateDefaultSubobject<UAnimationComponent>(TEXT("AnimationComponent"));
-
+	RaycastComponent = CreateDefaultSubobject<URaycastComponent>(TEXT("RaycastComponent"));
 
 }
 
@@ -96,11 +97,13 @@ void AEnemyAI::Attack()
 		{
 			int Rand = FMath::RandHelper(2);
 			float AnimDuration = 0.0f;
+			FTimerHandle TempHandle;
 			if (Rand == 0)
 			{
 				if (AnimationComponent->GetAttackAnimMontage() != nullptr)
 				{
 					AnimDuration = PlayAnimMontage(AnimationComponent->GetAttackAnimMontage(), AnimSpeed);
+					World->GetTimerManager().SetTimer(TempHandle, this, &AEnemyAI::DoDamage, AnimDuration * 0.66f, false);
 				}
 			}
 			else
@@ -108,7 +111,28 @@ void AEnemyAI::Attack()
 				if (AnimationComponent->GetAltAttackAnimMontage() != nullptr)
 				{
 					AnimDuration = PlayAnimMontage(AnimationComponent->GetAltAttackAnimMontage(), AnimSpeed);
+					World->GetTimerManager().SetTimer(TempHandle, this, &AEnemyAI::DoDamage, AnimDuration * 0.66f, false);
 				}
+			}
+		}
+	}
+}
+
+void AEnemyAI::DoDamage()
+{
+	if (RaycastComponent != nullptr)
+	{
+		// Fire a raycast through the component
+		// And return what it hits
+		FVector Direction = GetActorForwardVector();
+		TArray<FHitResult> Hits =  RaycastComponent->RaycastTP(GetMesh(), Direction, 100.0f, 100.0f);	
+		if (Hits.Num() == 0) return;
+		for (FHitResult Hit : Hits)
+		{
+			AOnlineGameCharacter* Ally = Cast<AOnlineGameCharacter>(Hit.GetActor());
+			if (Ally != nullptr)
+			{
+				Ally->DecreaseHealth(EnemyDamage);
 			}
 		}
 	}

@@ -29,6 +29,8 @@ void AOnlineGameCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 
 	DOREPLIFETIME(AOnlineGameCharacter, PotionCount);
 
+	DOREPLIFETIME(AOnlineGameCharacter, Health);
+
 }
 
 AOnlineGameCharacter::AOnlineGameCharacter()
@@ -242,20 +244,62 @@ void AOnlineGameCharacter::UseTurboAttack()
 					AActor* HitActor = HitOut[i].GetActor();
 					if (HitActor == nullptr) continue;
 					AEnemyAI* Enemy = Cast<AEnemyAI>(HitActor);
-					if (Enemy == nullptr) continue;
-					Enemy->TakeDamages(Damage);
+					if (Enemy != nullptr)
+					{
+						//UE_LOG(LogTemp, Warning, TEXT("Damage Before Load: %f"), Damage);
+						if (Enemy->TakeDamages(Damage))
+						{
+							UpdateStats();
+							UE_LOG(LogTemp, Warning, TEXT("Enemy Vaporised"));
+							// Play Sound? 
+							// Play Vaproise Particle if I can find one
+						}
+					}
 					ABarrels* Barrel = Cast<ABarrels>(HitActor);
 					if (Barrel == nullptr) continue;
 					Barrel->Fracture();
-					//UE_LOG(LogTemp, Warning, TEXT("Something AOE Hit: %s"), *HitActor->GetName());
+
 				}
 			}
 			//if(UKismetSystemLibrary::SphereTraceMulti_NEW(this, GetActorLocation(), GetActorLocation(), 5000.0f, ECC_Visibility, true, IgnoredActors, EDrawDebugTrace::Persistent, ThingsHit))
 			//{
 
 			//}
-			
 		}
+	}
+}
+
+void AOnlineGameCharacter::UpdateStats()
+{
+	APlayerController* PC = Cast<APlayerController>(Controller);
+	AOnlineGamePlayerController* MyPC = Cast<AOnlineGamePlayerController>(PC);
+	AOnlineGameLobbyPlayerController* LobbyPC = Cast<AOnlineGameLobbyPlayerController>(PC);
+	if (LobbyPC != nullptr)
+	{
+		FMyPlayerInfo CurrentStats = LobbyPC->GetPlayerSettings();
+		CurrentStats.PlayerExperiencePoints += 100.0f;
+		if (CurrentStats.PlayerExperiencePoints >= 500.0f * CurrentStats.PlayerLevel)
+		{
+			CurrentStats.PlayerLevel += 1;
+			CurrentStats.PlayerExperiencePoints = 0.0f;
+			CurrentStats.PlayerDamage = CurrentStats.PlayerLevel * 15.0f;
+		}
+		//CurrentStats.PlayerDamage = 15.0f;
+		LobbyPC->SetPlayerSettings(CurrentStats);
+		UE_LOG(LogTemp, Warning, TEXT("Damage After Killing Enemy: %f"), CurrentStats.PlayerDamage);
+	}
+	if (MyPC != nullptr)
+	{
+		FMyPlayerInfo CurrentStats = MyPC->GetPlayerData();
+		CurrentStats.PlayerExperiencePoints += 100.0f;
+		if (CurrentStats.PlayerExperiencePoints >= 500.0f * CurrentStats.PlayerLevel)
+		{
+			CurrentStats.PlayerLevel += 1;
+			CurrentStats.PlayerExperiencePoints = 0.0f;
+			CurrentStats.PlayerDamage = CurrentStats.PlayerLevel * 15.0f;
+		}					//CurrentStats.PlayerDamage = 15.0f;
+		MyPC->SetPlayerData(CurrentStats);
+		UE_LOG(LogTemp, Warning, TEXT("Damage After Killing Enemy: %f"), CurrentStats.PlayerDamage);
 	}
 }
 
@@ -393,11 +437,23 @@ void AOnlineGameCharacter::OnTriggerEnter(UPrimitiveComponent* OverlappedCompone
 		{
 			if (Enemy->TakeDamages(Enemy->EnemyHealth))
 			{
+				UpdateStats();
 				UE_LOG(LogTemp, Warning, TEXT("Enemy Vaporised"));
 				// Play Sound? 
 				// Play Vaproise Particle if I can find one
 			}
 		}
+	}
+	ABarrels* Barrel = Cast<ABarrels>(OtherActor);
+	if (Barrel != nullptr)
+	{
+		DealDamage(Barrel);
+	}
+
+	AEnemyGate* EnemyGate = Cast<AEnemyGate>(OtherActor);
+	if (EnemyGate != nullptr)
+	{
+		DealDamage(EnemyGate);
 	}
 }
 
@@ -543,6 +599,21 @@ void AOnlineGameCharacter::SpawnProjectile()
 	}
 }
 
+void AOnlineGameCharacter::DecreaseHealth(float Amount)
+{
+	Health -= Amount;
+	Health = FMath::Clamp(Health, 0.0f, 99999.0f);
+	UE_LOG(LogTemp, Warning, TEXT("Health: %f"), Health);
+	APlayerController* MyPC = Cast<APlayerController>(GetController());
+	if (MyPC != nullptr && HitShake != nullptr)
+	{
+		MyPC->ClientPlayCameraShake(HitShake);
+	}
+	if (Health <= 0.0f)
+	{
+		UGameplayStatics::OpenLevel(this, FName("MainMenu"));
+	}
+}
 void AOnlineGameCharacter::DealDamage(AActor* _Enemy)
 {
 	AEnemyAI* Enemy = Cast<AEnemyAI>(_Enemy);
@@ -581,14 +652,27 @@ void AOnlineGameCharacter::DealDamage(AActor* _Enemy)
 				if (LobbyPC != nullptr)
 				{
 					FMyPlayerInfo CurrentStats = LobbyPC->GetPlayerSettings();
-					CurrentStats.PlayerDamage += 15.0f;
+					CurrentStats.PlayerExperiencePoints += 100.0f;
+					if (CurrentStats.PlayerExperiencePoints >= 500.0f * CurrentStats.PlayerLevel)
+					{
+						CurrentStats.PlayerLevel += 1;
+						CurrentStats.PlayerExperiencePoints = 0.0f;
+						CurrentStats.PlayerDamage = CurrentStats.PlayerLevel * 15.0f;
+					}
+					//CurrentStats.PlayerDamage = 15.0f;
 					LobbyPC->SetPlayerSettings(CurrentStats);
 					UE_LOG(LogTemp, Warning, TEXT("Damage After Killing Enemy: %f"), CurrentStats.PlayerDamage);
 				}
 				if (MyPC != nullptr)
 				{
 					FMyPlayerInfo CurrentStats = MyPC->GetPlayerData();
-					CurrentStats.PlayerDamage += 15.0f;
+					CurrentStats.PlayerExperiencePoints += 100.0f;
+					if (CurrentStats.PlayerExperiencePoints >= 500.0f * CurrentStats.PlayerLevel)
+					{
+						CurrentStats.PlayerLevel += 1;
+						CurrentStats.PlayerExperiencePoints = 0.0f;
+						CurrentStats.PlayerDamage = CurrentStats.PlayerLevel * 15.0f;
+					}					//CurrentStats.PlayerDamage = 15.0f;
 					MyPC->SetPlayerData(CurrentStats);
 					UE_LOG(LogTemp, Warning, TEXT("Damage After Killing Enemy: %f"), CurrentStats.PlayerDamage);
 				}

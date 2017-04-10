@@ -81,8 +81,16 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = "true"), Replicated)
 		int PotionCount = 5;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++ Variables", meta = (AllowPrivateAccess = "true"), Replicated)
+		float Health = 500.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Shake")
+		TSubclassOf<UCameraShake> HitShake;
 private:
 	// My Functions
+
+	void UpdateStats();
 
 	// SHOOTING FUNCTIONS
 	UFUNCTION()
@@ -196,7 +204,12 @@ public:
 	// DAMAGE ORIENTED FUNCTIONS
 	UFUNCTION()
 		void DealDamage(AActor* _Enemy);
+
+	UFUNCTION()
+		void DecreaseHealth(float Amount);
 	// END OF DAMAGE FUNCTIONS
+
+
 
 protected:
 	

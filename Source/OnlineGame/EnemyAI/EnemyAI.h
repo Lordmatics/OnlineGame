@@ -22,8 +22,16 @@ private:
 	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Animation")
 		class UAnimationComponent* AnimationComponent;
 
+	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Attack")
+		class URaycastComponent* RaycastComponent;
+
 	UFUNCTION()
 		void LatentDestroy();
+
+	UFUNCTION()
+		void DoDamage();
+
+	float EnemyDamage = 15.0f;
 
 	uint32 bIsDead : 1;
 
