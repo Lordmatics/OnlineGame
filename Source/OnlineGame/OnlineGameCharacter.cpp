@@ -758,11 +758,13 @@ void AOnlineGameCharacter::TurnAtRate(float Rate)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("TurnAtRate: %f"), Rate);
 	// calculate delta for this frame from the rate information
-	if (bAttackBufferActive && FMath::Abs(Rate) > 0.0f)
-	{
-		FRotator NewRot = FollowCamera->GetComponentRotation();
-		GetCapsuleComponent()->SetRelativeRotation(FRotator(0.0f, NewRot.Yaw, 0.0f));
-	}
+	//if (bAttackBufferActive && FMath::Abs(Rate) > 0.0f)
+	//{
+	//	FRotator NewRot = FollowCamera->GetComponentRotation();
+	//	GetCapsuleComponent()->SetRelativeRotation(FRotator(0.0f, NewRot.Yaw, 0.0f));
+	//}
+
+
 	// In Theory this would be nice, but it actually makes it worse
 	//if (bAttackBufferActive && FMath::Abs(Rate) > 0.0f)
 	//{
@@ -785,11 +787,11 @@ void AOnlineGameCharacter::LookUpAtRate(float Rate)
 
 void AOnlineGameCharacter::MouseTurn(float Rate)
 {
-	if (bAttackBufferActive && FMath::Abs(Rate) > 0.0f)
-	{
-		FRotator NewRot = FollowCamera->GetComponentRotation();
-		GetCapsuleComponent()->SetRelativeRotation(FRotator(0.0f, NewRot.Yaw, 0.0f));
-	}
+	//if (bAttackBufferActive && FMath::Abs(Rate) > 0.0f)
+	//{
+	//	FRotator NewRot = FollowCamera->GetComponentRotation();
+	//	GetCapsuleComponent()->SetRelativeRotation(FRotator(0.0f, NewRot.Yaw, 0.0f));
+	//}
 	if (Rate != 0.f && Controller && Controller->IsLocalPlayerController())
 	{
 		APlayerController* const PC = CastChecked<APlayerController>(Controller);
