@@ -13,6 +13,15 @@ class ONLINEGAME_API AEnemyGate : public AActor
 private:
 	
 	UPROPERTY(EditAnywhere, Category = "C++")
+		uint32 bWantsToSpawnAButton : 1;
+	
+	UPROPERTY(EditAnywhere, Category = "C++")
+		class AButtonSpawnConditions* SpawnerRef;
+
+	UPROPERTY(EditAnywhere, Category = "C++")
+		int SpawnRequirement = 5;
+
+	UPROPERTY(EditAnywhere, Category = "C++")
 		uint32 bTestingSpawn : 1;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "C++")

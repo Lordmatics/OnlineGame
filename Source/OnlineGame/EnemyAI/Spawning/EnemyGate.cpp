@@ -3,6 +3,8 @@
 #include "OnlineGame.h"
 #include "EnemyAI/Spawning/EnemyGate.h"
 #include "EnemyAI/EnemyAI.h"
+#include "ButtonSpawnConditions.h"
+#include "EngineUtils.h"
 
 // Sets default values
 AEnemyGate::AEnemyGate()
@@ -107,6 +109,16 @@ bool AEnemyGate::ServerTakeDamages_Validate()
 void AEnemyGate::BeginPlay()
 {
 	Super::BeginPlay();
+	UWorld* const World = GetWorld();
+	if (World != nullptr)
+	{
+		for (TActorIterator<AButtonSpawnConditions> ActorItr(World); ActorItr; ++ActorItr)
+		{
+			// Fill in Respawn PlayerStarts Array
+			SpawnerRef = *ActorItr;
+		}
+	}
+
 	if (bTestingSpawn)
 		BeginSpawning();
 }
@@ -120,6 +132,7 @@ void AEnemyGate::Tick( float DeltaTime )
 
 void AEnemyGate::BeginSpawning()
 {
+	
 	if (HasAuthority())
 	{
 		UWorld* const World = GetWorld();
@@ -181,6 +194,24 @@ void AEnemyGate::RemoveFromGateSpawn(AEnemyAI* _Enemy)
 {
 	if (_Enemy != nullptr && EnemySpawn.Num() > 0)
 	{
+		if (bWantsToSpawnAButton)
+		{
+			SpawnRequirement--;
+			UE_LOG(LogTemp, Warning, TEXT("Spawn Req: %d"), SpawnRequirement);
+			if (SpawnRequirement <= 0)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Target Met for Spawn"));
+
+				if (SpawnerRef != nullptr)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("SpawnedButton"));
+
+					SpawnerRef->SpawnButton();
+				}
+				bWantsToSpawnAButton = false;
+			}
+		}
+		
 		EnemySpawn.Remove(_Enemy);
 	}
 }

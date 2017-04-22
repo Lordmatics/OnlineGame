@@ -4,6 +4,7 @@
 #include "Gates/KeyGate.h"
 #include "OnlineGameCharacter.h"
 #include "Classes/Animation/AnimInstance.h"
+#include "Gates/ButtonSwitch.h"
 
 // Sets default values
 AKeyGate::AKeyGate()
@@ -60,6 +61,16 @@ void AKeyGate::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
+
+		// If there is time, optimise this
+
+	if (Button != nullptr)
+	{
+		if (Button->GetPressed() && bButtonNotKey && !bGateOpen)
+		{
+			OpenGate();
+		}
+	}
 }
 
 bool AKeyGate::OpenGate()
@@ -74,6 +85,13 @@ bool AKeyGate::OpenGate()
 		{
 			bGateOpen = true;
 			float AnimDuration = AnimInstance->Montage_Play(OpenAnim, PlaySpeed);
+			//OnGateOpen();
+			if(MyGate != nullptr)
+				MyGate->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+			if(MyGateEndSM != nullptr)
+				MyGateEndSM->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+
+
 			FTimerHandle OpenGateHandle;
 			World->GetTimerManager().SetTimer(OpenGateHandle, this, &AKeyGate::OnGateOpen, AnimDuration + AnimDurationOffset);
 			//UE_LOG(LogTemp, Warning, TEXT("Duration: %f"), AnimDuration + AnimDurationOffset);
@@ -92,13 +110,13 @@ void AKeyGate::OnGateOpen()
 		//UE_LOG(LogTemp, Warning, TEXT("Timer Succeeded"));
 
 		//MyGate->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
-		MyGate->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		//MyGate->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 		//MyGate->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		MyGate->SetHiddenInGame(true);
 	}
 	if (MyGateEndSM != nullptr)
 	{
-		MyGateEndSM->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+		//MyGateEndSM->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
 		//MyGateEnd->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 		MyGateEndSM->SetHiddenInGame(false);
 	}
@@ -112,7 +130,7 @@ void AKeyGate::OnTriggerEnter(UPrimitiveComponent* OverlappedComponent, AActor* 
 	AOnlineGameCharacter* MyCharacter = Cast<AOnlineGameCharacter>(OtherActor);
 	if (MyCharacter != nullptr)
 	{
-		if (MyCharacter->HasKeys())
+		if (MyCharacter->HasKeys() && !bButtonNotKey)
 		{
 			if (OpenGate())
 			{

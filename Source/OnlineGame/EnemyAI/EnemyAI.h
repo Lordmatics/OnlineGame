@@ -100,8 +100,11 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Delegate")
 		FOnEnemyDestroyed OnEnemyDestroyed;
 
-	UPROPERTY(EditAnywhere, Category = "Health", Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health", Replicated)
 		float EnemyHealth = 100.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health", Replicated)
+		float MaxEnemyHealth = 100.0f;
 
 	FTimerHandle DOTHandle;
 

@@ -21,9 +21,9 @@ AEnemyAI::AEnemyAI()
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
 	BoxCollision->SetupAttachment(GetCapsuleComponent());
 
-	HealthText = CreateDefaultSubobject<UTextRenderComponent>(TEXT("HealthText"));
-	HealthText->SetIsReplicated(true);
-	HealthText->SetupAttachment(GetCapsuleComponent());
+	//HealthText = CreateDefaultSubobject<UTextRenderComponent>(TEXT("HealthText"));
+	//HealthText->SetIsReplicated(true);
+	//HealthText->SetupAttachment(GetCapsuleComponent());
 
 	GetCharacterMovement()->bUseRVOAvoidance = true;
 
@@ -36,7 +36,9 @@ void AEnemyAI::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetime
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(AEnemyAI, EnemyHealth);
-	DOREPLIFETIME(AEnemyAI, HealthText);
+	DOREPLIFETIME(AEnemyAI, MaxEnemyHealth);
+
+	//DOREPLIFETIME(AEnemyAI, HealthText);
 }
 
 // Called when the game starts or when spawned
@@ -46,7 +48,7 @@ void AEnemyAI::BeginPlay()
 	DissolveMat = GetMesh()->CreateDynamicMaterialInstance(0);
 	GetMesh()->SetMaterial(0, DissolveMat);
 
-
+	MaxEnemyHealth = EnemyHealth;
 	//UE_LOG(LogTemp, Warning, TEXT("EnemyHealth: %d"), (int)EnemyHealth);
 
 }
@@ -55,12 +57,12 @@ void AEnemyAI::BeginPlay()
 void AEnemyAI::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
-	if (HealthText != nullptr)
-	{
-		//FString HealthString = FString::Printf(TEXT("Health: %d"), (int)EnemyHealth);
-		//HealthText->Text = FText::FromString(HealthString);
-		HealthText->SetText(FString::FromInt((int)EnemyHealth));
-	}
+	//if (HealthText != nullptr)
+	//{
+	//	//FString HealthString = FString::Printf(TEXT("Health: %d"), (int)EnemyHealth);
+	//	//HealthText->Text = FText::FromString(HealthString);
+	//	HealthText->SetText(FString::FromInt((int)EnemyHealth));
+	//}
 	if (bIsDead)
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("ISDEAD"));
@@ -220,6 +222,7 @@ void AEnemyAI::Die()
 {
 	if (OnEnemyDestroyed.IsBound())
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Enemy Has Started Broadcasting"));
 		OnEnemyDestroyed.Broadcast(this);
 	}
 	//GetMesh()->SetVisibility(false);
@@ -260,8 +263,8 @@ void AEnemyAI::Die()
 		GetMesh()->SetCollisionResponseToChannel(ECC_EngineTraceChannel1, ECR_Ignore);
 
 	}
-	if(HealthText != nullptr)
-		HealthText->DestroyComponent();
+	//if(HealthText != nullptr)
+		//HealthText->DestroyComponent();
 	FTimerHandle TempHandle;
 	// This doesnt replicate to other clients atm
 	//if (HasAuthority())
