@@ -19,6 +19,15 @@ private:
 	UPROPERTY(VisibleDefaultsOnly, Category = "C++ ButtonSwitch")
 		UBoxComponent* MyTrigger;
 
+	UPROPERTY(VisibleDefaultsOnly, Category = "C++ ButtonSwitch")
+		UParticleSystemComponent* PSC;
+
+	UPROPERTY(EditAnywhere, Category = "C++ ButtonSwitch")
+		UParticleSystem* ActivePS;
+
+	UPROPERTY(EditAnywhere, Category = "C++ ButtonSwitch")
+		UParticleSystem* InactivePS;
+
 	UPROPERTY(VisibleAnywhere, Category = "C++ ButtonSwitch")
 		bool bPressed;
 
@@ -26,6 +35,9 @@ private:
 	UFUNCTION()
 		void OnTriggerEnter(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	void ActivatePS();
+
+	void DeactivatePS();
 public:	
 	// Sets default values for this actor's properties
 	AButtonSwitch();

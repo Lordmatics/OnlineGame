@@ -21,6 +21,9 @@ AButtonSwitch::AButtonSwitch()
 	MyTrigger->OnComponentBeginOverlap.AddDynamic(this, &AButtonSwitch::OnTriggerEnter);
 	MyTrigger->SetupAttachment(MyRoot);
 
+	PSC = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("PSC"));
+	PSC->SetupAttachment(MyRoot);
+
 	bPressed = false;
 }
 
@@ -28,7 +31,24 @@ AButtonSwitch::AButtonSwitch()
 void AButtonSwitch::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	ActivatePS();
+}
+
+void AButtonSwitch::ActivatePS()
+{
+	if (ActivePS != nullptr && PSC != nullptr)
+	{
+		PSC->SetTemplate(ActivePS);
+	}
+}
+
+void AButtonSwitch::DeactivatePS()
+{
+	if (InactivePS == nullptr && PSC != nullptr)
+	{
+		PSC->SetTemplate(InactivePS);
+	}
 }
 
 // Called every frame
@@ -49,5 +69,6 @@ void AButtonSwitch::OnTriggerEnter(UPrimitiveComponent* OverlappedComponent, AAc
 	if (Character != nullptr)
 	{
 		SetPressed(true);
+		DeactivatePS();
 	}
 }
