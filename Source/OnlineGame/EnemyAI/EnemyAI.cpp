@@ -105,7 +105,7 @@ void AEnemyAI::Attack()
 				if (AnimationComponent->GetAttackAnimMontage() != nullptr)
 				{
 					AnimDuration = PlayAnimMontage(AnimationComponent->GetAttackAnimMontage(), AnimSpeed);
-					World->GetTimerManager().SetTimer(TempHandle, this, &AEnemyAI::DoDamage, AnimDuration * 0.66f, false);
+					World->GetTimerManager().SetTimer(TempHandle, this, &AEnemyAI::DoDamage, 0.1f, false);
 				}
 			}
 			else
@@ -113,7 +113,7 @@ void AEnemyAI::Attack()
 				if (AnimationComponent->GetAltAttackAnimMontage() != nullptr)
 				{
 					AnimDuration = PlayAnimMontage(AnimationComponent->GetAltAttackAnimMontage(), AnimSpeed);
-					World->GetTimerManager().SetTimer(TempHandle, this, &AEnemyAI::DoDamage, AnimDuration * 0.66f, false);
+					World->GetTimerManager().SetTimer(TempHandle, this, &AEnemyAI::DoDamage, 0.1f, false);
 				}
 			}
 		}
@@ -127,7 +127,7 @@ void AEnemyAI::DoDamage()
 		// Fire a raycast through the component
 		// And return what it hits
 		FVector Direction = GetActorForwardVector();
-		TArray<FHitResult> Hits =  RaycastComponent->RaycastTP(GetMesh(), Direction, 100.0f, 100.0f);	
+		TArray<FHitResult> Hits =  RaycastComponent->RaycastTP(GetMesh(), Direction, 100.0f, 125.0f);	
 		if (Hits.Num() == 0) return;
 		for (FHitResult Hit : Hits)
 		{
