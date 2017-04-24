@@ -114,9 +114,9 @@ void AOnlineGameCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAction("Attack", IE_Released, this, &AOnlineGameCharacter::ResetAttack);
 
 	PlayerInputComponent->BindAction("UsePower", IE_Pressed, this, &AOnlineGameCharacter::UseSelectedPower);
-	PlayerInputComponent->BindAction("ConsumePotion", IE_Pressed, this, &AOnlineGameCharacter::ActivatePotion);
+	PlayerInputComponent->BindAction("ConsumePotion", IE_Pressed, this, &AOnlineGameCharacter::InitiatePotion);
 
-	PlayerInputComponent->BindAction("UseTurbo", IE_Pressed, this, &AOnlineGameCharacter::UseTurboAttack);
+	PlayerInputComponent->BindAction("UseTurbo", IE_Pressed, this, &AOnlineGameCharacter::InitiateTurbo);
 
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
@@ -139,6 +139,35 @@ void AOnlineGameCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	ChargePowerUpBar(DeltaTime);
 }
+
+void AOnlineGameCharacter::InitiateTurbo()
+{
+	if (HasAuthority())
+	{
+		MulticastUseTurboAttack();
+	}
+	else
+	{
+		ServerUseTurboAttack();
+	}
+}
+
+
+void AOnlineGameCharacter::MulticastUseTurboAttack_Implementation()
+{
+	UseTurboAttack();
+}
+
+void AOnlineGameCharacter::ServerUseTurboAttack_Implementation()
+{
+	MulticastUseTurboAttack();
+}
+
+bool AOnlineGameCharacter::ServerUseTurboAttack_Validate()
+{
+	return true;
+}
+
 
 void AOnlineGameCharacter::UseTurboAttack()
 {
@@ -393,6 +422,34 @@ void AOnlineGameCharacter::UseSelectedPower()
 		{
 			CurrentPowerUp = nullptr;
 		}
+	}
+}
+
+
+void AOnlineGameCharacter::MulticastActivatePotion_Implementation()
+{
+	ActivatePotion();
+}
+
+void AOnlineGameCharacter::ServerActivatePotion_Implementation()
+{
+	MulticastActivatePotion();
+}
+
+bool AOnlineGameCharacter::ServerActivatePotion_Validate()
+{
+	return true;
+}
+
+void AOnlineGameCharacter::InitiatePotion()
+{
+	if (HasAuthority())
+	{
+		MulticastActivatePotion();
+	}
+	else
+	{
+		ServerActivatePotion();
 	}
 }
 

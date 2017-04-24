@@ -165,6 +165,18 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "C++ Power Ups")
 		float MaxTurboBoost = 15.0f;
 
+	UFUNCTION(NetMulticast, Reliable)
+		void MulticastUseTurboAttack();
+	virtual void MulticastUseTurboAttack_Implementation();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+		void ServerUseTurboAttack();
+	virtual void ServerUseTurboAttack_Implementation();
+	virtual bool ServerUseTurboAttack_Validate();
+
+	UFUNCTION()
+		void InitiateTurbo();
+
 	UPROPERTY(EditAnywhere, Category = "C++ Power Ups")
 		UParticleSystem* TurboPS;
 	UFUNCTION()
@@ -173,6 +185,19 @@ private:
 	// END of POWER UPS
 
 	// POTIONS
+
+	UFUNCTION(NetMulticast, Reliable)
+		void MulticastActivatePotion();
+	virtual void MulticastActivatePotion_Implementation();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+		void ServerActivatePotion();
+	virtual void ServerActivatePotion_Implementation();
+	virtual bool ServerActivatePotion_Validate();
+
+	UFUNCTION()
+		void InitiatePotion();
+
 	UFUNCTION()
 		void ActivatePotion();
 
