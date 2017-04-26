@@ -52,23 +52,23 @@ TArray<FHitResult> URaycastComponent::RaycastTP(USkeletalMeshComponent* Mesh, FV
 	CQP.bTraceAsyncScene = true;
 	//
 	// MeleeTrace - Block
-	if (World->SweepMultiByChannel(HitOut, Start, End, FQuat(), ECC_EngineTraceChannel1, FCollisionShape::MakeSphere(Radius), CQP))
+	if (World->SweepMultiByChannel(HitOut, Start, End, FQuat(), ECC_WorldStatic, FCollisionShape::MakeSphere(Radius), CQP))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%d"), HitOut.Num());
-		UE_LOG(LogTemp, Warning, TEXT("Sweep Multi By Channel Made"));
-		if (HitOut.Last().bBlockingHit)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Draw Sphere Pls"));
-			// Red up to the blocking hit, green thereafter
-			FVector const BlockingHitPoint = HitOut.Last().Location;
-			DrawDebugSphere(World, Start, Radius, 15.0f, FColor::Green, true);
-		}
-		 //draw hits
-		for (int32 HitIdx = 0; HitIdx<HitOut.Num(); ++HitIdx)
-		{
-			FHitResult const& Hit = HitOut[HitIdx];
-			::DrawDebugPoint(World, Hit.ImpactPoint, 50.0f, (Hit.bBlockingHit ? FColor::Red : FColor::Green), true);
-		}
+		//UE_LOG(LogTemp, Warning, TEXT("%d"), HitOut.Num());
+		//UE_LOG(LogTemp, Warning, TEXT("Sweep Multi By Channel Made"));
+		//if (HitOut.Last().bBlockingHit)
+		//{
+		//	UE_LOG(LogTemp, Warning, TEXT("Draw Sphere Pls"));
+		//	// Red up to the blocking hit, green thereafter
+		//	FVector const BlockingHitPoint = HitOut.Last().Location;
+		//	DrawDebugSphere(World, Start, Radius, 15.0f, FColor::Green, true);
+		//}
+		// //draw hits
+		//for (int32 HitIdx = 0; HitIdx<HitOut.Num(); ++HitIdx)
+		//{
+		//	FHitResult const& Hit = HitOut[HitIdx];
+		//	::DrawDebugPoint(World, Hit.ImpactPoint, 50.0f, (Hit.bBlockingHit ? FColor::Red : FColor::Green), true);
+		//}
 		return HitOut;
 	}
 	else return TArray<FHitResult>();

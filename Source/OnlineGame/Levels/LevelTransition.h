@@ -56,6 +56,12 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Charge")
 		UMaterialInstanceDynamic* DynamicMaterial;
+
+	UPROPERTY()
+		class AOnlineGameCharacter* CharRef;
+
+	UFUNCTION()
+		void ChangeMap();
 public:	
 	// Sets default values for this actor's properties
 	ALevelTransition();

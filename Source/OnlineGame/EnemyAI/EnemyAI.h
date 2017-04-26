@@ -31,9 +31,10 @@ private:
 	UFUNCTION()
 		void DoDamage();
 
-	float EnemyDamage = 15.0f;
+	float EnemyDamage = 2.5f;
 
 	uint32 bIsDead : 1;
+	uint32 bIgnoreRays : 1;
 
 	UPROPERTY(EditAnywhere, Category = "C++ Animation")
 		float AnimSpeed = 1.0f;

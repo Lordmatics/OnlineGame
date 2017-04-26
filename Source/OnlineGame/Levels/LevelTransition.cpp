@@ -144,10 +144,24 @@ void ALevelTransition::ShowStats()
 		if (World == nullptr) return;
 		//APlayerController* PC = UGameplayStatics::GetPlayerController(World, 0);
 		//World->ServerTravel("/Game/Maps/Level_002", false);
-		UGameplayStatics::OpenLevel(World, FName("MainMenu"));
+		CharRef = Cast<AOnlineGameCharacter>(UGameplayStatics::GetPlayerCharacter(World, 0));
+		if (CharRef != nullptr)
+		{
+			CharRef->SetGameOver();
+			FTimerHandle TempHandle;
+			World->GetTimerManager().SetTimer(TempHandle, this, &ALevelTransition::ChangeMap, 5.0f, false);
+		}
+		//UGameplayStatics::OpenLevel(World, FName("MainMenu"));
 		//UGameplayStatics::OpenLevel(World, FName("AfterLevelStats"));
 
 	}
+}
+
+void ALevelTransition::ChangeMap()
+{
+	UWorld* const World = GetWorld();
+	if (World == nullptr) return;
+	UGameplayStatics::OpenLevel(World, FName("MainMenu"));
 }
 
 void ALevelTransition::ClearTransition()

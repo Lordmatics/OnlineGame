@@ -190,7 +190,7 @@ bool AEnemyAI::TakeDamages(float DamageIn)
 		EnemyHealth -= DamageIn;
 		//HealthText->Text = FText::FromString(FString::Printf(TEXT("Health: %f"), EnemyHealth));
 		//UE_LOG(LogTemp, Warning, TEXT("EnemyHealth: %f"), EnemyHealth);
-		if (EnemyHealth <= 0.0f)
+		if (EnemyHealth <= 0.0f && !bIgnoreRays)
 		{
 			Die();
 			return true;
@@ -220,6 +220,7 @@ bool AEnemyAI::ServerTakeDamages_Validate(float DamageIn)
 }
 void AEnemyAI::Die()
 {
+	bIgnoreRays = true;
 	if (OnEnemyDestroyed.IsBound())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Enemy Has Started Broadcasting"));

@@ -273,6 +273,8 @@ protected:
 
 	virtual void Tick(float DeltaTime) override;
 
+	uint32 bIsGameOver : 1;
+
 public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
@@ -298,6 +300,10 @@ public:
 	FORCEINLINE bool HasPotions() { return PotionCount > 0 ? true : false; }
 
 	void ObtainPower(class APowerups* OverlappedPower);
+	FORCEINLINE void SetGameOver() { bIsGameOver = true; }
+	UFUNCTION(BlueprintCallable, Category = "GameOver")
+		bool GetGameOver() const;
+
 
 };
 

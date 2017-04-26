@@ -579,45 +579,40 @@ void AOnlineGameCharacter::Attack()
 			TArray<FHitResult> Hits = ShootRay();
 			// Test
 			UE_LOG(LogTemp, Warning, TEXT("NumberOfHits: %d"), Hits.Num());
-			if (Hits.Num() == 0)
-			{
 				FTimerHandle ProjectileTimerHandle;
 				World->GetTimerManager().SetTimer(ProjectileTimerHandle, this, &AOnlineGameCharacter::SpawnProjectile, Duration / (2 * AttackSpeedMultiplier));
-				UE_LOG(LogTemp, Warning, TEXT("ProjectileSpawned"));
-			}
-			else
-			{
-				for (FHitResult Hit : Hits)
+				if (Hits.Num() > 0)
 				{
+					for (FHitResult Hit : Hits)
+					{
 
-					AActor* HitActor = Hit.GetActor();
-					if (HitActor != nullptr)
-					{
-						UE_LOG(LogTemp, Warning, TEXT("HitActorName: %s"), *HitActor->GetName());
-					}
-					AEnemyAI* EnemyHit = Cast<AEnemyAI>(Hit.GetActor());
-					ABarrels* Barrel = Cast<ABarrels>(Hit.GetActor());
-					AEnemyGate* Gate = Cast<AEnemyGate>(Hit.GetActor());
-					if (EnemyHit != nullptr)
-					{
-						// Do normal Damage
-						DealDamage(EnemyHit);
-						//EnemyHit->TakeDamages(50.0f);
-					}
-					else if (Barrel != nullptr)
-					{
-						// Deal Damage, will know what logic to run
-						// Based on type
-						DealDamage(Barrel);
-						//Barrel->Fracture();
-					}
-					else if (Gate != nullptr)
-					{
-						DealDamage(Gate);
+						AActor* HitActor = Hit.GetActor();
+						if (HitActor != nullptr)
+						{
+							UE_LOG(LogTemp, Warning, TEXT("HitActorName: %s"), *HitActor->GetName());
+						}
+						AEnemyAI* EnemyHit = Cast<AEnemyAI>(Hit.GetActor());
+						ABarrels* Barrel = Cast<ABarrels>(Hit.GetActor());
+						AEnemyGate* Gate = Cast<AEnemyGate>(Hit.GetActor());
+						if (EnemyHit != nullptr)
+						{
+							// Do normal Damage
+							DealDamage(EnemyHit);
+							//EnemyHit->TakeDamages(50.0f);
+						}
+						else if (Barrel != nullptr)
+						{
+							// Deal Damage, will know what logic to run
+							// Based on type
+							DealDamage(Barrel);
+							//Barrel->Fracture();
+						}
+						else if (Gate != nullptr)
+						{
+							DealDamage(Gate);
+						}
 					}
 				}
-			}
-
 			// End Test
 			// Toggle attack buffer on, and start timer to end it
 			bAttackBufferActive = true;
@@ -656,6 +651,8 @@ void AOnlineGameCharacter::DecreaseHealth(float Amount)
 	}
 	if (Health <= 0.0f)
 	{
+		// If i had more time, make it so play animation, and look into spectator camera stuff
+		// super hard to test coz of steam though + enemies dont attack unless its a build
 		UGameplayStatics::OpenLevel(this, FName("MainMenu"));
 	}
 }
@@ -918,4 +915,9 @@ void AOnlineGameCharacter::MoveRight(float Value)
 			AddMovementInput(Direction, Value);
 		}
 	}
+}
+
+bool AOnlineGameCharacter::GetGameOver() const
+{
+	return bIsGameOver;
 }
