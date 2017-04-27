@@ -27,6 +27,14 @@ AButtonSwitch::AButtonSwitch()
 	bPressed = false;
 }
 
+void AButtonSwitch::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AButtonSwitch, bPressed);
+
+}
+
 // Called when the game starts or when spawned
 void AButtonSwitch::BeginPlay()
 {
@@ -49,6 +57,26 @@ void AButtonSwitch::DeactivatePS()
 	{
 		PSC->SetTemplate(InactivePS);
 	}
+}
+
+void AButtonSwitch::OnRep_Pressed()
+{
+	ServerSetPressed(true);
+
+	//SetPressed(true);
+	DeactivatePS();
+}
+
+void AButtonSwitch::ServerSetPressed_Implementation(bool _Pressed)
+{
+	SetPressed(_Pressed);
+	DeactivatePS();
+
+}
+
+bool AButtonSwitch::ServerSetPressed_Validate(bool _Pressed)
+{
+	return true;
 }
 
 // Called every frame

@@ -38,6 +38,16 @@ AKeyGate::AKeyGate()
 	bGateOpen = false;
 }
 
+void AKeyGate::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	//DOREPLIFETIME(AKeyGate, bGateOpen);
+
+	//DOREPLIFETIME(AKeyGate, bButtonNotKey);
+
+}
+
 // Called when the game starts or when spawned
 void AKeyGate::BeginPlay()
 {
@@ -68,9 +78,37 @@ void AKeyGate::Tick( float DeltaTime )
 	{
 		if (Button->GetPressed() && bButtonNotKey && !bGateOpen)
 		{
-			OpenGate();
+			InitiateOpen();
+			//OpenGate();
 		}
 	}
+}
+
+void AKeyGate::InitiateOpen()
+{
+	if (HasAuthority())
+	{
+		MulticastOpenGate();
+	}
+	else
+	{
+		ServerOpenGate();
+	}
+}
+
+void AKeyGate::MulticastOpenGate_Implementation()
+{
+	OpenGate();
+}
+
+void AKeyGate::ServerOpenGate_Implementation()
+{
+	MulticastOpenGate();
+}
+
+bool AKeyGate::ServerOpenGate_Validate()
+{
+	return true;
 }
 
 bool AKeyGate::OpenGate()
