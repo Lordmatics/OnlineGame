@@ -152,7 +152,6 @@ void AOnlineGameCharacter::InitiateTurbo()
 	}
 }
 
-
 void AOnlineGameCharacter::MulticastUseTurboAttack_Implementation()
 {
 	UseTurboAttack();

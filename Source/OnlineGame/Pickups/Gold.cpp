@@ -32,5 +32,4 @@ void AGold::TriggerEnter_Implementation(UPrimitiveComponent* OverlappedComponent
 		// Sound - Effect - Destroy
 		Super::TriggerEnter_Implementation(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
 	}
-
 }
