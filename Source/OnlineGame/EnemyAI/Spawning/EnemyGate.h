@@ -94,6 +94,16 @@ private:
 	virtual void ServerTakeDamages_Implementation();
 	virtual bool ServerTakeDamages_Validate();
 
+	UFUNCTION(NetMulticast, Reliable)
+		void MulticastCheckForNewMesh();
+	virtual void MulticastCheckForNewMesh_Implementation();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+		void ServerCheckForNewMesh();
+	virtual void ServerCheckForNewMesh_Implementation();
+	virtual bool ServerCheckForNewMesh_Validate();
+
+	void InitiateCheck();
 	void CheckForNewMesh();
 public:	
 	// Sets default values for this actor's properties

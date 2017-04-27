@@ -34,7 +34,7 @@ private:
 		UBoxComponent* MyTriggerZone;
 
 	/** Bool to determine whether Gate can be openned*/
-	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Treasure Chest")
+	UPROPERTY(VisibleDefaultsOnly, Category = "C++ Treasure Chest" , Replicated)
 		uint32 bGateOpen : 1;
 
 	/** Gold set to always spawn - can offset its location from this actor with this*/
@@ -53,13 +53,25 @@ private:
 	UPROPERTY(EditAnywhere, Category = "C++ Treasure Chest")
 		UAnimMontage* OpenAnim;
 
-	UPROPERTY(EditAnywhere, Category = "C++ Event Gate")
+	UPROPERTY(EditAnywhere, Category = "C++ Event Gate", Replicated)
 		uint32 bButtonNotKey : 1;
 
 	UPROPERTY(EditAnywhere, Category = "C++ Event Gate")
 		class AButtonSwitch* Button;
 private:
 	
+	UFUNCTION(NetMulticast, Reliable)
+		void MulticastOpenGate();
+	virtual void MulticastOpenGate_Implementation();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+		void ServerOpenGate();
+	virtual void ServerOpenGate_Implementation();
+	virtual bool ServerOpenGate_Validate();
+
+	void InitiateOpen();
+
+
 	bool OpenGate();
 
 	UFUNCTION()
@@ -73,6 +85,8 @@ public:
 	
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	/** Function to disable BoxZone and SM Collision after anim duration*/
 	UFUNCTION()

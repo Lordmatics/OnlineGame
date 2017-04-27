@@ -40,10 +40,16 @@ void AEnemyGate::TakeDamages()
 	if (Role < ROLE_Authority)
 	{
 		ServerTakeDamages();
+		InitiateCheck();
+
+		//InitiateCheck();
 	}
 	else
 	{
 		HitPoints--;
+		InitiateCheck();
+
+		//InitiateCheck();
 		if (HitPoints <= 0)
 		{
 			//Destroy();
@@ -51,8 +57,8 @@ void AEnemyGate::TakeDamages()
 			{
 				bDeactivated = true;
 				ClearSpawnTimer();
-				SpawnerGate->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-				SpawnerGate->SetCollisionResponseToAllChannels(ECR_Ignore);
+				//SpawnerGate->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+				//SpawnerGate->SetCollisionResponseToAllChannels(ECR_Ignore);
 				if (DeactivatedMaterial != nullptr)
 					SpawnerGate->SetMaterial(0, DeactivatedMaterial);
 				if(PSC != nullptr)
@@ -62,37 +68,58 @@ void AEnemyGate::TakeDamages()
 			}
 		}
 	}
-	CheckForNewMesh();
+	// Tried everything - couldn't get this to replicate at all.
+	// I'll leave the various attempts in, so you can see the attempt
+}
+
+void AEnemyGate::InitiateCheck()
+{
+	if (HasAuthority())
+	{
+		MulticastCheckForNewMesh();
+	}
+	else
+	{
+		ServerCheckForNewMesh();
+	}
 }
 
 void AEnemyGate::CheckForNewMesh()
 {
-	if (SpawnerGate == nullptr) return;
+	//if (HasAuthority())
+	//{
+		if (SpawnerGate == nullptr) return;
 
-	// Dead
-	if (HitPoints < 1)
-	{
-		if (BrokenGateMesh != nullptr)
-			SpawnerGate->SetStaticMesh(BrokenGateMesh);
-	}
-	// HP = 1
-	else if (HitPoints < 2)
-	{
-		if(HitThreeMesh != nullptr)
-			SpawnerGate->SetStaticMesh(HitThreeMesh);
-	}
-	// HP = 2
-	else if (HitPoints < 3)
-	{
-		if(HitTwiceMesh != nullptr)
-			SpawnerGate->SetStaticMesh(HitTwiceMesh);
-	}
-	// HP = 3
-	else if (HitPoints < 4)
-	{
-		if(HitOnceMesh != nullptr)
-			SpawnerGate->SetStaticMesh(HitOnceMesh);
-	}
+		// Dead
+		if (HitPoints <= 0)
+		{
+			if (BrokenGateMesh != nullptr)
+				SpawnerGate->SetStaticMesh(BrokenGateMesh);
+		}
+		// HP = 1
+		else if (HitPoints < 2)
+		{
+			if (HitThreeMesh != nullptr)
+				SpawnerGate->SetStaticMesh(HitThreeMesh);
+		}
+		// HP = 2
+		else if (HitPoints < 3)
+		{
+			if (HitTwiceMesh != nullptr)
+				SpawnerGate->SetStaticMesh(HitTwiceMesh);
+		}
+		// HP = 3
+		else if (HitPoints < 4)
+		{
+			if (HitOnceMesh != nullptr)
+				SpawnerGate->SetStaticMesh(HitOnceMesh);
+		}
+	//}
+	//else
+	//{
+		//ServerCheckForNewMesh();
+	//}
+
 }
 
 void AEnemyGate::ServerTakeDamages_Implementation()
@@ -101,6 +128,21 @@ void AEnemyGate::ServerTakeDamages_Implementation()
 }
 
 bool AEnemyGate::ServerTakeDamages_Validate()
+{
+	return true;
+}
+
+void AEnemyGate::MulticastCheckForNewMesh_Implementation()
+{
+	CheckForNewMesh();
+}
+
+void AEnemyGate::ServerCheckForNewMesh_Implementation()
+{
+	MulticastCheckForNewMesh();
+}
+
+bool AEnemyGate::ServerCheckForNewMesh_Validate()
 {
 	return true;
 }
